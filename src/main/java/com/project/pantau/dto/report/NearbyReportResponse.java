@@ -1,0 +1,19 @@
+package com.project.pantau.dto.report;
+
+import com.project.pantau.dto.category.CategoryResponse;
+import com.project.pantau.enums.ReportStatus;
+import lombok.Builder;
+
+import java.time.OffsetDateTime;
+import java.util.UUID;
+
+@Builder
+public record NearbyReportResponse(
+        UUID id,
+        CategoryResponse category,
+        ReportStatus status,
+        double latitude,
+        double longitude,
+        OffsetDateTime createdAt
+) {
+}

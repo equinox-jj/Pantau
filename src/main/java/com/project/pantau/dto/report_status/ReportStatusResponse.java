@@ -4,7 +4,7 @@ import com.project.pantau.enums.ReportStatus;
 import com.project.pantau.enums.UserRole;
 import lombok.Builder;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
@@ -14,6 +14,6 @@ public record ReportStatusResponse(
         ReportStatus toStatus,
         String note,
         UserRole actorRole,
-        OffsetDateTime createdAt
+        LocalDateTime createdAt
 ) {
 }

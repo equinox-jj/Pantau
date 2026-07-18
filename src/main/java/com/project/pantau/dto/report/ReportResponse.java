@@ -4,7 +4,7 @@ import com.project.pantau.dto.category.CategoryResponse;
 import com.project.pantau.enums.ReportStatus;
 import lombok.Builder;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
@@ -16,7 +16,7 @@ public record ReportResponse(
         Double latitude,
         Double longitude,
         ReportStatus status,
-        OffsetDateTime createdAt,
-        OffsetDateTime updatedAt
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 ) {
 }

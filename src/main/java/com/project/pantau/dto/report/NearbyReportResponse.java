@@ -4,7 +4,7 @@ import com.project.pantau.dto.category.CategoryResponse;
 import com.project.pantau.enums.ReportStatus;
 import lombok.Builder;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
@@ -14,6 +14,6 @@ public record NearbyReportResponse(
         ReportStatus status,
         double latitude,
         double longitude,
-        OffsetDateTime createdAt
+        LocalDateTime createdAt
 ) {
 }

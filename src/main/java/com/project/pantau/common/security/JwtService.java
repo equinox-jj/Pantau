@@ -1,11 +1,12 @@
 package com.project.pantau.common.security;
 
+import com.project.pantau.common.config.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecureDigestAlgorithm;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -15,12 +16,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
+@RequiredArgsConstructor
 public class JwtService {
-    @Value("${jwt.secret-key}")
-    private String jwtSecret;
-
-    @Value("${jwt.expiration}")
-    private long jwtExpiration;
+    private final JwtProperties jwtProperties;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -37,7 +35,7 @@ public class JwtService {
                 .claims(extraClaims)
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .expiration(new Date(System.currentTimeMillis() + jwtProperties.expiration()))
                 .signWith(getSigningKey(), algorithm)
                 .compact();
     }
@@ -68,7 +66,7 @@ public class JwtService {
     }
 
     private SecretKey getSigningKey() {
-        final byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
+        final byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.secretKey());
 
         return Keys.hmacShaKeyFor(keyBytes);
     }

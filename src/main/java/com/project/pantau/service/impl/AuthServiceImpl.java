@@ -2,6 +2,7 @@ package com.project.pantau.service.impl;
 
 import com.project.pantau.common.config.JwtProperties;
 import com.project.pantau.common.exception.EmailAlreadyExistsException;
+import com.project.pantau.common.exception.ResourceNotFoundException;
 import com.project.pantau.common.security.CustomUserDetails;
 import com.project.pantau.common.security.JwtService;
 import com.project.pantau.dto.auth.AuthResponse;
@@ -16,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
                 )
         );
         User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new UsernameNotFoundException("Cannot find user with email: " + request.email()));
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot find user with email: " + request.email()));
 
         return buildAuthResponse(user);
     }

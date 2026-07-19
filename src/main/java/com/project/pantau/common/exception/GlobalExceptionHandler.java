@@ -34,10 +34,6 @@ import java.util.NoSuchElementException;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    // ------------------------------------------------------------------
-    // Domain exceptions (existing)
-    // ------------------------------------------------------------------
-
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleResourceNotFound(ResourceNotFoundException ex) {
         return error(HttpStatus.NOT_FOUND, ex.getMessage());
@@ -73,10 +69,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
-    // ------------------------------------------------------------------
-    // Bean validation (method-level: @Validated on @RequestParam/@PathVariable)
-    // ------------------------------------------------------------------
-
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ApiResponse<List<FieldErrorItem>>> handleConstraintViolation(ConstraintViolationException ex) {
         List<FieldErrorItem> errors = ex.getConstraintViolations().stream()
@@ -85,10 +77,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT)
                 .body(new ApiResponse<>(false, "Validation failed", errors));
     }
-
-    // ------------------------------------------------------------------
-    // Persistence / data layer
-    // ------------------------------------------------------------------
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleEntityNotFound(EntityNotFoundException ex) {
@@ -111,10 +99,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return error(HttpStatus.CONFLICT, "The resource was modified by another request. Please retry.");
     }
 
-    // ------------------------------------------------------------------
-    // Security
-    // ------------------------------------------------------------------
-
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiResponse<Void>> handleAccessDenied(AccessDeniedException ex) {
         return error(HttpStatus.FORBIDDEN, "You do not have permission to perform this action");
@@ -124,10 +108,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleAuthentication(AuthenticationException ex) {
         return error(HttpStatus.UNAUTHORIZED, "Authentication failed");
     }
-
-    // ------------------------------------------------------------------
-    // Generic
-    // ------------------------------------------------------------------
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiResponse<Void>> handleIllegalArgument(IllegalArgumentException ex) {
@@ -146,18 +126,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 String.format("Parameter '%s' should be of type %s", ex.getName(), requiredType));
     }
 
-    /**
-     * Last-resort fallback. Never leaks stack traces to the client.
-     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception ex) {
         return error(HttpStatus.INTERNAL_SERVER_ERROR,
                 "An unexpected error occurred. Please contact support if the problem persists.");
     }
-
-    // ------------------------------------------------------------------
-    // Overrides of ResponseEntityExceptionHandler's built-in Spring MVC exceptions
-    // ------------------------------------------------------------------
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -271,10 +244,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                         errors
                 ));
     }
-
-    // ------------------------------------------------------------------
-    // Shared helper
-    // ------------------------------------------------------------------
 
     private ResponseEntity<ApiResponse<Void>> error(HttpStatus status, String message) {
         return ResponseEntity.status(status).body(new ApiResponse<>(false, message, null));

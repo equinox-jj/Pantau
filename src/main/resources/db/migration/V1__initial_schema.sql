@@ -83,39 +83,23 @@ CREATE TABLE categories
 );
 
 -- -----------------------------------------------------------------------------
--- uploads
--- -----------------------------------------------------------------------------
-CREATE TABLE uploads
-(
-    id            uuid PRIMARY KEY,
-    size          bigint,
-    public_id     varchar(255),
-    secure_url    text        NOT NULL,
-    resource_type varchar(50),
-    format        varchar(50) NOT NULL,
-    created_at    timestamptz NOT NULL DEFAULT now()
-);
-
--- -----------------------------------------------------------------------------
 -- reports
 -- -----------------------------------------------------------------------------
 CREATE TABLE reports
 (
-    id             uuid PRIMARY KEY       DEFAULT gen_random_uuid(),
-    reporter_id    uuid          NOT NULL,
-    category_id    bigint        NOT NULL,
-    upload_file_id uuid          NOT NULL,
-    description    text,
-    location       geography(Point, 4326) NOT NULL,
-    status         report_status NOT NULL DEFAULT 'REPORTED',
-    created_at     timestamptz   NOT NULL DEFAULT now(),
-    updated_at     timestamptz   NOT NULL DEFAULT now(),
+    id          uuid PRIMARY KEY       DEFAULT gen_random_uuid(),
+    reporter_id uuid          NOT NULL,
+    category_id bigint        NOT NULL,
+    photo_url   text          NOT NULL,
+    description text,
+    location    geography(Point, 4326) NOT NULL,
+    status      report_status NOT NULL DEFAULT 'REPORTED',
+    created_at  timestamptz   NOT NULL DEFAULT now(),
+    updated_at  timestamptz   NOT NULL DEFAULT now(),
     CONSTRAINT reports_reporter_fk FOREIGN KEY (reporter_id)
         REFERENCES users (id) ON DELETE RESTRICT,
     CONSTRAINT reports_category_fk FOREIGN KEY (category_id)
-        REFERENCES categories (id) ON DELETE RESTRICT,
-    CONSTRAINT reports_upload_fk FOREIGN KEY (upload_file_id)
-        REFERENCES uploads (id) ON DELETE RESTRICT
+        REFERENCES categories (id) ON DELETE RESTRICT
 );
 
 CREATE TRIGGER trg_reports_updated_at

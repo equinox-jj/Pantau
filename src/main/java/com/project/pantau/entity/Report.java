@@ -43,12 +43,8 @@ public class Report {
     )
     private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "upload_file_id",
-            foreignKey = @ForeignKey(name = "reports_upload_fk")
-    )
-    private Upload upload;
+    @Column(name = "photo_url", nullable = false)
+    private String photoUrl;
 
     @Column(name = "description")
     private String description;

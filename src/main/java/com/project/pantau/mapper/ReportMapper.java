@@ -13,7 +13,6 @@ import java.util.List;
         uses = CategoryMapper.class
 )
 public interface ReportMapper {
-    @Mapping(target = "photoUrl", source = "upload.secureUrl")
     @Mapping(target = "latitude", source = "latitude")
     @Mapping(target = "longitude", source = "longitude")
     ReportResponse toResponse(Report entity);

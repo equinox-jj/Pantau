@@ -71,7 +71,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ApiResponse<List<FieldErrorItem>>> handleConstraintViolation(ConstraintViolationException ex) {
-        List<FieldErrorItem> errors = ex.getConstraintViolations().stream()
+        var errors = ex.getConstraintViolations().stream()
                 .map(v -> new FieldErrorItem(v.getPropertyPath().toString(), v.getMessage()))
                 .toList();
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT)
@@ -121,7 +121,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ApiResponse<Void>> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
-        String requiredType = ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "unknown";
+        var requiredType = ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "unknown";
         return error(HttpStatus.BAD_REQUEST,
                 String.format("Parameter '%s' should be of type %s", ex.getName(), requiredType));
     }
@@ -139,7 +139,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             @NonNull HttpStatusCode status,
             @NonNull WebRequest request
     ) {
-        List<FieldErrorItem> errors = ex.getBindingResult().getFieldErrors().stream()
+        var errors = ex.getBindingResult().getFieldErrors().stream()
                 .map(fe -> new FieldErrorItem(fe.getField(), fe.getDefaultMessage()))
                 .toList();
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT)
@@ -230,7 +230,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             @NonNull HttpStatusCode status,
             @NonNull WebRequest request) {
 
-        List<FieldErrorItem> errors = ex.getAllErrors()
+        var errors = ex.getAllErrors()
                 .stream()
                 .map(error -> new FieldErrorItem(
                         "param",

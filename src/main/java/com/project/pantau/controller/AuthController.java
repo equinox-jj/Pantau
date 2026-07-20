@@ -24,7 +24,7 @@ public class AuthController {
     public ResponseEntity<ApiResponse<AuthResponse>> register(
             @Valid @RequestBody RegisterRequest request
     ) {
-        AuthResponse response = authService.register(request);
+        var response = authService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(
                         true,
@@ -37,7 +37,7 @@ public class AuthController {
     public ResponseEntity<ApiResponse<AuthResponse>> login(
             @Valid @RequestBody LoginRequest request
     ) {
-        AuthResponse response = authService.login(request);
+        var response = authService.login(request);
         return ResponseEntity.ok(new ApiResponse<>(
                 true,
                 "Login successful",

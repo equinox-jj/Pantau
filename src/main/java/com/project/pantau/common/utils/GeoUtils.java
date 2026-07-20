@@ -14,7 +14,7 @@ public class GeoUtils {
     }
 
     public static Point point(double latitude, double longitude) {
-        Point point = GEOMETRY_FACTORY.createPoint(new Coordinate(longitude, latitude));
+        var point = GEOMETRY_FACTORY.createPoint(new Coordinate(longitude, latitude));
         point.setSRID(SRID_WGS84);
         return point;
     }

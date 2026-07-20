@@ -20,7 +20,7 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<CategoryResponse>>> getActiveCategories() {
-        List<CategoryResponse> response = categoryService.getActiveCategories();
+        var response = categoryService.getActiveCategories();
         return ResponseEntity.ok(new ApiResponse<>(
                 true,
                 "Successfully retrieved categories",
@@ -31,7 +31,7 @@ public class CategoryController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<CategoryResponse>> getCategoryById(
             @PathVariable Long id) {
-        CategoryResponse response = categoryService.getCategoryById(id);
+        var response = categoryService.getCategoryById(id);
         return ResponseEntity.ok(new ApiResponse<>(
                 true,
                 "Successfully retrieved category",
@@ -42,7 +42,7 @@ public class CategoryController {
     @GetMapping("/slug/{slug}")
     public ResponseEntity<ApiResponse<CategoryResponse>> getCategoryBySlug(
             @PathVariable String slug) {
-        CategoryResponse response = categoryService.getCategoryBySlug(slug);
+        var response = categoryService.getCategoryBySlug(slug);
         return ResponseEntity.ok(new ApiResponse<>(
                 true,
                 "Successfully retrieved category",

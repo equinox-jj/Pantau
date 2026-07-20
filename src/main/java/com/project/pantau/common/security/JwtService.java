@@ -5,7 +5,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SecureDigestAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -28,7 +27,7 @@ public class JwtService {
             Map<String, Object> extraClaims,
             UserDetails userDetails
     ) {
-        final SecureDigestAlgorithm<SecretKey, SecretKey> algorithm = Jwts.SIG.HS256;
+        var algorithm = Jwts.SIG.HS256;
 
         return Jwts
                 .builder()
@@ -41,13 +40,13 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
+        var username = extractUsername(token);
 
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
+        var claims = extractAllClaims(token);
 
         return claimsResolver.apply(claims);
     }
@@ -66,7 +65,7 @@ public class JwtService {
     }
 
     private SecretKey getSigningKey() {
-        final byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.secretKey());
+        var keyBytes = Decoders.BASE64.decode(jwtProperties.secretKey());
 
         return Keys.hmacShaKeyFor(keyBytes);
     }

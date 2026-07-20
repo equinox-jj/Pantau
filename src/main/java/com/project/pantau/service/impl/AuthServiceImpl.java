@@ -21,14 +21,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
-
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -42,13 +40,13 @@ public class AuthServiceImpl implements AuthService {
             throw new EmailAlreadyExistsException("An account with the email address already exists.");
         }
 
-        User user = User.builder()
+        var user = User.builder()
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
                 .displayName(request.displayName())
                 .role(UserRole.CITIZEN)
                 .build();
-        User savedUser = userRepository.saveAndFlush(user);
+        var savedUser = userRepository.saveAndFlush(user);
 
         return buildAuthResponse(savedUser);
     }
@@ -62,24 +60,24 @@ public class AuthServiceImpl implements AuthService {
                         request.password()
                 )
         );
-        User user = userRepository.findByEmail(request.email())
+        var user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot find user with email: " + request.email()));
 
         return buildAuthResponse(user);
     }
 
     private AuthResponse buildAuthResponse(User user) {
-        CustomUserDetails userDetails = new CustomUserDetails(user);
-        List<String> roles = userDetails.getAuthorities()
+        var userDetails = new CustomUserDetails(user);
+        var roles = userDetails.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList();
-        Map<String, Object> claims = Map.of(
+        var claims = Map.of(
                 "uid", user.getId(),
                 "email", user.getEmail(),
                 "role", roles
         );
-        String token = jwtService.generateToken(claims, userDetails);
+        var token = jwtService.generateToken(claims, userDetails);
 
         return authMapper.toResponse(
                 token,

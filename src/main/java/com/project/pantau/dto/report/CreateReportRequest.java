@@ -11,6 +11,7 @@ public record CreateReportRequest(
         @Size(max = 2000)
         String description,
 
+        @NotNull
         MultipartFile photo,
 
         @NotNull

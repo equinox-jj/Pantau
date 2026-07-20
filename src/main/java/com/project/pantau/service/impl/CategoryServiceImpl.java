@@ -2,7 +2,6 @@ package com.project.pantau.service.impl;
 
 import com.project.pantau.common.exception.ResourceNotFoundException;
 import com.project.pantau.dto.category.CategoryResponse;
-import com.project.pantau.entity.Category;
 import com.project.pantau.mapper.CategoryMapper;
 import com.project.pantau.repository.CategoryRepository;
 import com.project.pantau.service.CategoryService;
@@ -30,7 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional(readOnly = true)
     public CategoryResponse getCategoryById(Long id) {
-        Category category = categoryRepository.findById(id)
+        var category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot find category with id: " + id));
 
         return categoryMapper.toResponse(category);
@@ -39,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional(readOnly = true)
     public CategoryResponse getCategoryBySlug(String slug) {
-        Category category = categoryRepository.findBySlug(slug)
+        var category = categoryRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot find category with slug: " + slug));
 
         return categoryMapper.toResponse(category);

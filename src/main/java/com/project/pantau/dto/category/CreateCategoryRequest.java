@@ -6,13 +6,13 @@ import jakarta.validation.constraints.Size;
 
 public record CreateCategoryRequest(
         @NotBlank
-        @Size(max = 100)
+        @Size(max = 50, message = "Maximum category name is 50 character")
         String name,
 
         @NotBlank
         @Pattern(
                 regexp = "^[a-z0-9]+(-[a-z0-9]+)*$",
-                message = "slug must be lowercase kebab-case"
+                message = "Slug must be lowercase kebab-case"
         )
         String slug
 ) {

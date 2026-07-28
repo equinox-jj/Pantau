@@ -25,7 +25,7 @@ import java.util.UUID;
 public class ReportController {
     private final ReportService reportService;
 
-    @PreAuthorize("hasAuthority('CITIZEN')")
+    @PreAuthorize("hasRole('CITIZEN')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<ReportResponse>> createReport(
             @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -70,7 +70,7 @@ public class ReportController {
         ));
     }
 
-    @PreAuthorize("hasAuthority('CITIZEN')")
+    @PreAuthorize("hasRole('CITIZEN')")
     @GetMapping("/mine")
     public ResponseEntity<ApiResponse<List<ReportResponse>>> getMyReports(
             @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -89,7 +89,7 @@ public class ReportController {
         ));
     }
 
-    @PreAuthorize("hasAuthority('RESOLVER')")
+    @PreAuthorize("hasRole('RESOLVER')")
     @PatchMapping("/{id}/status")
     public ResponseEntity<ApiResponse<ReportResponse>> updateReportStatus(
             @AuthenticationPrincipal CustomUserDetails userDetails,

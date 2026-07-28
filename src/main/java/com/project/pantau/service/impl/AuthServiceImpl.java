@@ -28,16 +28,16 @@ import java.util.Map;
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final JwtProperties jwtProperties;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final AuthMapper authMapper;
-    private final JwtProperties jwtProperties;
 
     @Override
     @Transactional
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.email())) {
-            throw new EmailAlreadyExistsException("An account with the email address already exists.");
+            throw new EmailAlreadyExistsException("An account with the email address already exists");
         }
 
         var user = User.builder()

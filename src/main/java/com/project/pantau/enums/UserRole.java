@@ -8,6 +8,6 @@ public enum UserRole {
     RESOLVER;
 
     public GrantedAuthority toAuthority() {
-        return new SimpleGrantedAuthority(this.name());
+        return new SimpleGrantedAuthority("ROLE_" + this.name());
     }
 }

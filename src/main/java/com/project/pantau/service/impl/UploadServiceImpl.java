@@ -41,7 +41,6 @@ public class UploadServiceImpl implements UploadService {
                     .url((String) result.get("secure_url"))
                     .createdAt(LocalDateTime.now())
                     .build();
-
         } catch (IOException e) {
             throw new BadRequestException("Failed to upload image.");
         }

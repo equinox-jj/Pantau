@@ -5,19 +5,19 @@ import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 
 public record CreateReportRequest(
-        @NotNull
+        @NotNull(message = "Category id cannot be null")
         Long categoryId,
 
-        @Size(max = 2000)
+        @Size(max = 2000, message = "Maximum report description is 2000 characters")
         String description,
 
-        @NotNull
+        @NotNull(message = "Photo cannot  be null")
         MultipartFile photo,
 
-        @NotNull
+        @NotNull(message = "Latitude cannot be null")
         Double latitude,
 
-        @NotNull
+        @NotNull(message = "Longitude cannot be null")
         Double longitude
 ) {
 }

@@ -2,10 +2,7 @@ package com.project.pantau.entity;
 
 import com.project.pantau.enums.UserRole;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -32,6 +29,8 @@ public class User {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @Column(name = "password", nullable = false)
     private String password;
 

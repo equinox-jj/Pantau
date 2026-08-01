@@ -10,14 +10,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UploadServiceImpl implements UploadService {
+    private static final Set<String> ALLOWED_CONTENT_TYPES = Set.of(
+            "image/jpeg", "image/png", "image/webp", "image/gif"
+    );
+
     private final Cloudinary cloudinary;
 
     @Override
@@ -79,8 +84,20 @@ public class UploadServiceImpl implements UploadService {
             throw new ValidationException("Maximum image size is 5MB.");
         }
 
-        if (!Objects.requireNonNull(file.getContentType()).startsWith("image/")) {
-            throw new ValidationException("Only image files are allowed.");
+        if (!ALLOWED_CONTENT_TYPES.contains(file.getContentType())) {
+            throw new ValidationException("Only JPEG, PNG, WEBP, or GIF images are allowed.");
+        }
+
+        if (!isDecodableImage(file)) {
+            throw new ValidationException("The uploaded file is not a valid image.");
+        }
+    }
+
+    private boolean isDecodableImage(MultipartFile file) {
+        try (var in = file.getInputStream()) {
+            return ImageIO.read(in) != null;
+        } catch (IOException e) {
+            return false;
         }
     }
 }

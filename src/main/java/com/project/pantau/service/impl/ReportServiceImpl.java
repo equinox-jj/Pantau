@@ -32,6 +32,9 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
+    private static final int MAX_RADIUS_METERS = 50_000;
+    private static final int MAX_NEARBY_LIMIT = 100;
+
     private final ReportRepository reportRepository;
     private final ReportStatusRepository reportStatusRepository;
     private final CategoryRepository categoryRepository;
@@ -74,6 +77,15 @@ public class ReportServiceImpl implements ReportService {
 
         if (radiusMeter <= 0) {
             throw new ValidationException("Radius must be greater than 0");
+        }
+        if (radiusMeter > MAX_RADIUS_METERS) {
+            throw new ValidationException("Radius must not exceed " + MAX_RADIUS_METERS + " meters");
+        }
+        if (limit <= 0) {
+            throw new ValidationException("Limit must be greater than 0");
+        }
+        if (limit > MAX_NEARBY_LIMIT) {
+            throw new ValidationException("Limit must not exceed " + MAX_NEARBY_LIMIT);
         }
 
         return reportRepository.findNearbyReport(latitude, longitude, radiusMeter, limit)

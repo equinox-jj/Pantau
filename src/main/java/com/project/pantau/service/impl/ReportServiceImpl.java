@@ -3,6 +3,9 @@ package com.project.pantau.service.impl;
 import com.project.pantau.common.exception.IllegalTransitionException;
 import com.project.pantau.common.exception.ResourceNotFoundException;
 import com.project.pantau.common.exception.ValidationException;
+import com.project.pantau.common.pagination.OffsetPageable;
+import com.project.pantau.common.response.PageMeta;
+import com.project.pantau.common.response.PagedResponse;
 import com.project.pantau.common.utils.GeoUtils;
 import com.project.pantau.common.utils.ReportStatusTransitions;
 import com.project.pantau.dto.report.CreateReportRequest;
@@ -21,7 +24,6 @@ import com.project.pantau.repository.ReportStatusRepository;
 import com.project.pantau.service.ReportService;
 import com.project.pantau.service.UploadService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,7 @@ import java.util.UUID;
 public class ReportServiceImpl implements ReportService {
     private static final int MAX_RADIUS_METERS = 50_000;
     private static final int MAX_NEARBY_LIMIT = 100;
+    private static final int MAX_PAGE_SIZE = 100;
 
     private final ReportRepository reportRepository;
     private final ReportStatusRepository reportStatusRepository;
@@ -101,21 +104,42 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public List<ReportResponse> getMyReports(
+    @Transactional(readOnly = true)
+    public PagedResponse<ReportResponse> getMyReports(
             User reporter,
             int limit,
             int offset
     ) {
-        var page = PageRequest.of(
-                offset / Math.max(limit, 1),
+        if (limit <= 0) {
+            throw new ValidationException("Limit must be greater than 0");
+        }
+        if (limit > MAX_PAGE_SIZE) {
+            throw new ValidationException("Limit must not exceed " + MAX_PAGE_SIZE);
+        }
+        if (offset < 0) {
+            throw new ValidationException("Offset must not be negative");
+        }
+
+        var pageable = OffsetPageable.of(
+                offset,
                 limit,
                 Sort.by(Sort.Direction.DESC, "createdAt")
         );
-
-        return reportRepository.findByReporterId(reporter.getId(), page)
+        var page = reportRepository.findByReporterId(reporter.getId(), pageable);
+        var items = page.getContent()
                 .stream()
                 .map(reportMapper::toResponse)
                 .toList();
+
+        return new PagedResponse<>(
+                items,
+                new PageMeta(
+                        limit,
+                        offset,
+                        page.getTotalElements(),
+                        page.hasNext()
+                )
+        );
     }
 
     @Override

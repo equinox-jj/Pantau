@@ -1,5 +1,6 @@
 package com.project.pantau.service;
 
+import com.project.pantau.common.response.PagedResponse;
 import com.project.pantau.dto.report.CreateReportRequest;
 import com.project.pantau.dto.report.NearbyReportResponse;
 import com.project.pantau.dto.report.ReportResponse;
@@ -24,7 +25,7 @@ public interface ReportService {
 
     ReportResponse getReportDetail(UUID id);
 
-    List<ReportResponse> getMyReports(
+    PagedResponse<ReportResponse> getMyReports(
             User reporter,
             int limit,
             int offset

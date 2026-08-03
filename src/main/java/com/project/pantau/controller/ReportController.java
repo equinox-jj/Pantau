@@ -1,6 +1,7 @@
 package com.project.pantau.controller;
 
 import com.project.pantau.common.response.ApiResponse;
+import com.project.pantau.common.response.PagedResponse;
 import com.project.pantau.common.security.CustomUserDetails;
 import com.project.pantau.dto.report.CreateReportRequest;
 import com.project.pantau.dto.report.NearbyReportResponse;
@@ -54,7 +55,7 @@ public class ReportController {
     public ResponseEntity<ApiResponse<List<NearbyReportResponse>>> getNearbyReports(
             @RequestParam(name = "lat") double latitude,
             @RequestParam(name = "lng") double longitude,
-            @RequestParam(name = "radius_mete", defaultValue = "1000") int radiusMeter,
+            @RequestParam(name = "radius_meter", defaultValue = "1000") int radiusMeter,
             @RequestParam(name = "limit", defaultValue = "50") int limit
     ) {
         var response = reportService.getNearbyReports(
@@ -72,7 +73,7 @@ public class ReportController {
 
     @PreAuthorize("hasRole('CITIZEN')")
     @GetMapping("/mine")
-    public ResponseEntity<ApiResponse<List<ReportResponse>>> getMyReports(
+    public ResponseEntity<ApiResponse<PagedResponse<ReportResponse>>> getMyReports(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam(defaultValue = "20") int limit,
             @RequestParam(defaultValue = "0") int offset

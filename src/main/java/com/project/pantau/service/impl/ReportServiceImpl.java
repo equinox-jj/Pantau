@@ -12,12 +12,14 @@ import com.project.pantau.dto.report.CreateReportRequest;
 import com.project.pantau.dto.report.NearbyReportResponse;
 import com.project.pantau.dto.report.ReportResponse;
 import com.project.pantau.dto.report.UpdateStatusRequest;
+import com.project.pantau.dto.report_status.ReportStatusResponse;
 import com.project.pantau.entity.Category;
 import com.project.pantau.entity.Report;
 import com.project.pantau.entity.ReportStatusHistory;
 import com.project.pantau.entity.User;
 import com.project.pantau.enums.ReportStatus;
 import com.project.pantau.mapper.ReportMapper;
+import com.project.pantau.mapper.ReportStatusMapper;
 import com.project.pantau.repository.CategoryRepository;
 import com.project.pantau.repository.ReportRepository;
 import com.project.pantau.repository.ReportStatusRepository;
@@ -43,6 +45,7 @@ public class ReportServiceImpl implements ReportService {
     private final CategoryRepository categoryRepository;
     private final UploadService uploadService;
     private final ReportMapper reportMapper;
+    private final ReportStatusMapper reportStatusMapper;
 
     @Override
     public ReportResponse createReport(
@@ -101,6 +104,16 @@ public class ReportServiceImpl implements ReportService {
     @Transactional(readOnly = true)
     public ReportResponse getReportDetail(UUID id) {
         return reportMapper.toResponse(findReportById(id));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ReportStatusResponse> getReportHistory(UUID id) {
+        if (!reportRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Report not found with id: " + id);
+        }
+
+        return reportStatusMapper.toResponse(reportStatusRepository.findByReportIdOrderByCreatedAtAsc(id));
     }
 
     @Override

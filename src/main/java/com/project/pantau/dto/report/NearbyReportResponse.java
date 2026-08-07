@@ -11,6 +11,7 @@ import java.util.UUID;
 public record NearbyReportResponse(
         UUID id,
         CategoryResponse category,
+        String photoUrl,
         ReportStatus status,
         double latitude,
         double longitude,

@@ -5,6 +5,7 @@ import com.project.pantau.dto.report.CreateReportRequest;
 import com.project.pantau.dto.report.NearbyReportResponse;
 import com.project.pantau.dto.report.ReportResponse;
 import com.project.pantau.dto.report.UpdateStatusRequest;
+import com.project.pantau.dto.report_status.ReportStatusResponse;
 import com.project.pantau.entity.User;
 
 import java.util.List;
@@ -24,6 +25,8 @@ public interface ReportService {
     );
 
     ReportResponse getReportDetail(UUID id);
+
+    List<ReportStatusResponse> getReportHistory(UUID id);
 
     PagedResponse<ReportResponse> getMyReports(
             User reporter,

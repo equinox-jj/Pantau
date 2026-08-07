@@ -7,6 +7,7 @@ import com.project.pantau.dto.report.CreateReportRequest;
 import com.project.pantau.dto.report.NearbyReportResponse;
 import com.project.pantau.dto.report.ReportResponse;
 import com.project.pantau.dto.report.UpdateStatusRequest;
+import com.project.pantau.dto.report_status.ReportStatusResponse;
 import com.project.pantau.service.ReportService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -51,12 +52,22 @@ public class ReportController {
         ));
     }
 
+    @GetMapping("/{id}/history")
+    public ResponseEntity<ApiResponse<List<ReportStatusResponse>>> getReportHistory(@PathVariable UUID id) {
+        var response = reportService.getReportHistory(id);
+        return ResponseEntity.ok(new ApiResponse<>(
+                true,
+                "Successfully retrieved report history",
+                response
+        ));
+    }
+
     @GetMapping("/nearby")
     public ResponseEntity<ApiResponse<List<NearbyReportResponse>>> getNearbyReports(
             @RequestParam(name = "lat") double latitude,
             @RequestParam(name = "lng") double longitude,
             @RequestParam(name = "radius_meter", defaultValue = "1000") int radiusMeter,
-            @RequestParam(name = "limit", defaultValue = "50") int limit
+            @RequestParam(name = "limit", defaultValue = "20") int limit
     ) {
         var response = reportService.getNearbyReports(
                 latitude,

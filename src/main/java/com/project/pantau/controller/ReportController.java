@@ -3,10 +3,7 @@ package com.project.pantau.controller;
 import com.project.pantau.common.response.ApiResponse;
 import com.project.pantau.common.response.PagedResponse;
 import com.project.pantau.common.security.CustomUserDetails;
-import com.project.pantau.dto.report.CreateReportRequest;
-import com.project.pantau.dto.report.NearbyReportResponse;
-import com.project.pantau.dto.report.ReportResponse;
-import com.project.pantau.dto.report.UpdateStatusRequest;
+import com.project.pantau.dto.report.*;
 import com.project.pantau.dto.report_status.ReportStatusResponse;
 import com.project.pantau.service.ReportService;
 import jakarta.validation.Valid;
@@ -98,6 +95,35 @@ public class ReportController {
                 true,
                 "Successfully retrieved my reports",
                 response
+        ));
+    }
+
+    @PreAuthorize("hasRole('CITIZEN')")
+    @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<ReportResponse>> updateReport(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable UUID id,
+            @Valid @ModelAttribute UpdateReportRequest request
+    ) {
+        var response = reportService.updateReport(id, userDetails.user(), request);
+        return ResponseEntity.ok(new ApiResponse<>(
+                true,
+                "Successfully updated report",
+                response
+        ));
+    }
+
+    @PreAuthorize("hasRole('CITIZEN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteReport(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable UUID id
+    ) {
+        reportService.deleteReport(id, userDetails.user());
+        return ResponseEntity.ok(new ApiResponse<>(
+                true,
+                "Successfully deleted report",
+                null
         ));
     }
 

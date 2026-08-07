@@ -1,10 +1,7 @@
 package com.project.pantau.service;
 
 import com.project.pantau.common.response.PagedResponse;
-import com.project.pantau.dto.report.CreateReportRequest;
-import com.project.pantau.dto.report.NearbyReportResponse;
-import com.project.pantau.dto.report.ReportResponse;
-import com.project.pantau.dto.report.UpdateStatusRequest;
+import com.project.pantau.dto.report.*;
 import com.project.pantau.dto.report_status.ReportStatusResponse;
 import com.project.pantau.entity.User;
 
@@ -39,4 +36,12 @@ public interface ReportService {
             User resolver,
             UpdateStatusRequest request
     );
+
+    ReportResponse updateReport(
+            UUID id,
+            User requester,
+            UpdateReportRequest request
+    );
+
+    void deleteReport(UUID id, User requester);
 }

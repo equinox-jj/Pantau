@@ -8,11 +8,9 @@ import com.project.pantau.common.response.PageMeta;
 import com.project.pantau.common.response.PagedResponse;
 import com.project.pantau.common.utils.GeoUtils;
 import com.project.pantau.common.utils.ReportStatusTransitions;
-import com.project.pantau.dto.report.CreateReportRequest;
-import com.project.pantau.dto.report.NearbyReportResponse;
-import com.project.pantau.dto.report.ReportResponse;
-import com.project.pantau.dto.report.UpdateStatusRequest;
+import com.project.pantau.dto.report.*;
 import com.project.pantau.dto.report_status.ReportStatusResponse;
+import com.project.pantau.dto.upload.UploadResponse;
 import com.project.pantau.entity.Category;
 import com.project.pantau.entity.Report;
 import com.project.pantau.entity.ReportStatusHistory;
@@ -26,7 +24,10 @@ import com.project.pantau.repository.ReportStatusRepository;
 import com.project.pantau.service.ReportService;
 import com.project.pantau.service.UploadService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +37,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
+    private static final Logger logger = LoggerFactory.getLogger(ReportServiceImpl.class);
     private static final int MAX_RADIUS_METERS = 50_000;
     private static final int MAX_NEARBY_LIMIT = 100;
     private static final int MAX_PAGE_SIZE = 100;
@@ -63,7 +65,7 @@ public class ReportServiceImpl implements ReportService {
                     reporter,
                     request,
                     category,
-                    upload.url()
+                    upload
             );
         } catch (RuntimeException e) {
             uploadService.delete(upload.id());
@@ -187,18 +189,79 @@ public class ReportServiceImpl implements ReportService {
         return reportMapper.toResponse(savedReport);
     }
 
+    @Override
+    public ReportResponse updateReport(
+            UUID id,
+            User requester,
+            UpdateReportRequest request
+    ) {
+        var report = findReportById(id);
+        assertOwner(report, requester);
+        assertEditable(report);
+
+        validateCoordinates(request.latitude(), request.longitude());
+
+        var category = categoryRepository.findById(request.categoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + request.categoryId()));
+
+        if (request.photo() != null && !request.photo().isEmpty()) {
+            var upload = uploadService.upload(request.photo());
+            try {
+                var oldPhotoPublicId = report.getPhotoPublicId();
+                report.setPhotoUrl(upload.url());
+                report.setPhotoPublicId(upload.id());
+                report.setCategory(category);
+                report.setDescription(request.description());
+                report.setLocation(GeoUtils.point(request.latitude(), request.longitude()));
+                var saved = reportRepository.save(report);
+                if (oldPhotoPublicId != null) {
+                    uploadService.delete(oldPhotoPublicId);
+                }
+                return reportMapper.toResponse(saved);
+            } catch (RuntimeException e) {
+                uploadService.delete(upload.id());
+                throw e;
+            }
+        }
+
+        report.setCategory(category);
+        report.setDescription(request.description());
+        report.setLocation(GeoUtils.point(request.latitude(), request.longitude()));
+        var saved = reportRepository.save(report);
+        return reportMapper.toResponse(saved);
+    }
+
+    @Override
+    public void deleteReport(UUID id, User requester) {
+        var report = findReportById(id);
+        assertOwner(report, requester);
+        assertEditable(report);
+
+        reportRepository.delete(report);
+
+        if (report.getPhotoPublicId() != null) {
+            try {
+                uploadService.delete(report.getPhotoPublicId());
+            } catch (RuntimeException e) {
+                logger.warn("Failed to delete Cloudinary asset {} for deleted report {}",
+                        report.getPhotoPublicId(), report.getId(), e);
+            }
+        }
+    }
+
     @Transactional
     private ReportResponse saveReportAndHistory(
             User reporter,
             CreateReportRequest request,
             Category category,
-            String photoUrl
+            UploadResponse upload
     ) {
         Report report = Report.builder()
                 .reporter(reporter)
                 .category(category)
                 .description(request.description())
-                .photoUrl(photoUrl)
+                .photoUrl(upload.url())
+                .photoPublicId(upload.id())
                 .location(GeoUtils.point(request.latitude(), request.longitude()))
                 .status(ReportStatus.REPORTED)
                 .build();
@@ -217,6 +280,19 @@ public class ReportServiceImpl implements ReportService {
     private Report findReportById(UUID id) {
         return reportRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Report not found with id: " + id));
+    }
+
+    private void assertOwner(Report report, User requester) {
+        if (!report.getReporter().getId().equals(requester.getId())) {
+            throw new AccessDeniedException("You do not have permission to modify this report");
+        }
+    }
+
+    private void assertEditable(Report report) {
+        if (report.getStatus() != ReportStatus.REPORTED) {
+            throw new IllegalTransitionException(
+                    "Report can no longer be edited or deleted once a resolver has acted on it");
+        }
     }
 
     private void validateCoordinates(double latitude, double longitude) {

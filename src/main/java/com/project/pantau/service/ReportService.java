@@ -4,6 +4,7 @@ import com.project.pantau.common.response.PagedResponse;
 import com.project.pantau.dto.report.*;
 import com.project.pantau.dto.report_status.ReportStatusResponse;
 import com.project.pantau.entity.User;
+import com.project.pantau.enums.QueueTab;
 
 import java.util.List;
 import java.util.UUID;
@@ -44,4 +45,13 @@ public interface ReportService {
     );
 
     void deleteReport(UUID id, User requester);
+
+    QueueResponse getQueue(
+            QueueTab tab,
+            double latitude,
+            double longitude,
+            int radiusMeter,
+            int limit,
+            int offset
+    );
 }

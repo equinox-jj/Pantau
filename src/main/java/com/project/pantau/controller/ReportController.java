@@ -5,6 +5,7 @@ import com.project.pantau.common.response.PagedResponse;
 import com.project.pantau.common.security.CustomUserDetails;
 import com.project.pantau.dto.report.*;
 import com.project.pantau.dto.report_status.ReportStatusResponse;
+import com.project.pantau.enums.QueueTab;
 import com.project.pantau.service.ReportService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -124,6 +125,31 @@ public class ReportController {
                 true,
                 "Successfully deleted report",
                 null
+        ));
+    }
+
+    @PreAuthorize("hasRole('RESOLVER')")
+    @GetMapping("/queue")
+    public ResponseEntity<ApiResponse<QueueResponse>> getQueue(
+            @RequestParam(name = "tab") QueueTab tab,
+            @RequestParam(name = "lat") double latitude,
+            @RequestParam(name = "lng") double longitude,
+            @RequestParam(name = "radius_meter", defaultValue = "5000") int radiusMeter,
+            @RequestParam(defaultValue = "20") int limit,
+            @RequestParam(defaultValue = "0") int offset
+    ) {
+        var response = reportService.getQueue(
+                tab,
+                latitude,
+                longitude,
+                radiusMeter,
+                limit,
+                offset
+        );
+        return ResponseEntity.ok(new ApiResponse<>(
+                true,
+                "Successfully retrieved queue",
+                response
         ));
     }
 

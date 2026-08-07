@@ -1,6 +1,7 @@
 package com.project.pantau.repository;
 
 import com.project.pantau.entity.Report;
+import com.project.pantau.enums.ReportStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -36,4 +37,64 @@ public interface ReportRepository extends JpaRepository<Report, UUID> {
 
     @EntityGraph(attributePaths = "category")
     Page<Report> findByReporterId(UUID reporterId, Pageable pageable);
+
+    long countByReporterId(UUID reporterId);
+
+    long countByReporterIdAndStatus(UUID reporterId, ReportStatus status);
+
+    @Query(
+            value = """
+                    SELECT * FROM reports r
+                    WHERE r.status::text IN (:statuses)
+                    AND ST_DWithin(
+                        r.location,
+                        ST_MakePoint(:lng, :lat)::geography,
+                        :radiusMeters
+                    )
+                    ORDER BY r.created_at ASC
+                    """,
+            countQuery = """
+                    SELECT count(*) FROM reports r
+                    WHERE r.status::text IN (:statuses)
+                    AND ST_DWithin(
+                        r.location,
+                        ST_MakePoint(:lng, :lat)::geography,
+                        :radiusMeters
+                    )
+                    """,
+            nativeQuery = true
+    )
+    Page<Report> findQueueReports(
+            @Param("statuses") List<String> statuses,
+            @Param("lat") double latitude,
+            @Param("lng") double longitude,
+            @Param("radiusMeters") int radiusMeters,
+            Pageable pageable
+    );
+
+    @Query(
+            value = """
+                    SELECT r.status::text AS status, count(*) AS count
+                    FROM reports r
+                    WHERE r.status::text IN ('REPORTED', 'ACKNOWLEDGED', 'IN_PROGRESS', 'RESOLVED')
+                    AND ST_DWithin(
+                        r.location,
+                        ST_MakePoint(:lng, :lat)::geography,
+                        :radiusMeters
+                    )
+                    GROUP BY r.status
+                    """,
+            nativeQuery = true
+    )
+    List<StatusCountProjection> countQueueReportsByStatus(
+            @Param("lat") double latitude,
+            @Param("lng") double longitude,
+            @Param("radiusMeters") int radiusMeters
+    );
+
+    interface StatusCountProjection {
+        String getStatus();
+
+        long getCount();
+    }
 }

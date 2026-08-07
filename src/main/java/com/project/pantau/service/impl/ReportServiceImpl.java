@@ -15,6 +15,7 @@ import com.project.pantau.entity.Category;
 import com.project.pantau.entity.Report;
 import com.project.pantau.entity.ReportStatusHistory;
 import com.project.pantau.entity.User;
+import com.project.pantau.enums.QueueTab;
 import com.project.pantau.enums.ReportStatus;
 import com.project.pantau.mapper.ReportMapper;
 import com.project.pantau.mapper.ReportStatusMapper;
@@ -293,6 +294,85 @@ public class ReportServiceImpl implements ReportService {
             throw new IllegalTransitionException(
                     "Report can no longer be edited or deleted once a resolver has acted on it");
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public QueueResponse getQueue(
+            QueueTab tab,
+            double latitude,
+            double longitude,
+            int radiusMeter,
+            int limit,
+            int offset
+    ) {
+        validateCoordinates(latitude, longitude);
+
+        if (radiusMeter <= 0) {
+            throw new ValidationException("Radius must be greater than 0");
+        }
+        if (radiusMeter > MAX_RADIUS_METERS) {
+            throw new ValidationException("Radius must not exceed " + MAX_RADIUS_METERS + " meters");
+        }
+        if (limit <= 0) {
+            throw new ValidationException("Limit must be greater than 0");
+        }
+        if (limit > MAX_PAGE_SIZE) {
+            throw new ValidationException("Limit must not exceed " + MAX_PAGE_SIZE);
+        }
+        if (offset < 0) {
+            throw new ValidationException("Offset must not be negative");
+        }
+
+        var statuses = tab.statuses().stream().map(Enum::name).toList();
+        var pageable = OffsetPageable.of(offset, limit, Sort.unsorted());
+        var page = reportRepository.findQueueReports(statuses, latitude, longitude, radiusMeter, pageable);
+
+        var items = page.getContent()
+                .stream()
+                .map(report -> {
+                    var response = reportMapper.toQueueResponse(report);
+                    var distance = GeoUtils.distanceMeters(
+                            latitude, longitude, report.getLatitude(), report.getLongitude());
+                    return new QueueReportResponse(
+                            response.id(),
+                            response.category(),
+                            response.description(),
+                            response.photoUrl(),
+                            response.status(),
+                            response.latitude(),
+                            response.longitude(),
+                            distance,
+                            response.createdAt()
+                    );
+                })
+                .toList();
+
+        var counts = buildQueueCounts(reportRepository.countQueueReportsByStatus(latitude, longitude, radiusMeter));
+
+        return new QueueResponse(
+                items,
+                new PageMeta(limit, offset, page.getTotalElements(), page.hasNext()),
+                counts
+        );
+    }
+
+    private QueueCounts buildQueueCounts(List<ReportRepository.StatusCountProjection> rows) {
+        long open = 0;
+        long inProgress = 0;
+        long resolved = 0;
+
+        for (var row : rows) {
+            switch (ReportStatus.valueOf(row.getStatus())) {
+                case REPORTED, ACKNOWLEDGED -> open += row.getCount();
+                case IN_PROGRESS -> inProgress += row.getCount();
+                case RESOLVED -> resolved += row.getCount();
+                default -> {
+                }
+            }
+        }
+
+        return new QueueCounts(open, inProgress, resolved);
     }
 
     private void validateCoordinates(double latitude, double longitude) {

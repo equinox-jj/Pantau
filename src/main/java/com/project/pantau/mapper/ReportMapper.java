@@ -1,6 +1,7 @@
 package com.project.pantau.mapper;
 
 import com.project.pantau.dto.report.NearbyReportResponse;
+import com.project.pantau.dto.report.QueueReportResponse;
 import com.project.pantau.dto.report.ReportResponse;
 import com.project.pantau.entity.Report;
 import org.mapstruct.Mapper;
@@ -20,6 +21,11 @@ public interface ReportMapper {
     @Mapping(target = "latitude", source = "latitude")
     @Mapping(target = "longitude", source = "longitude")
     NearbyReportResponse toNearbyResponse(Report entity);
+
+    @Mapping(target = "latitude", source = "latitude")
+    @Mapping(target = "longitude", source = "longitude")
+    @Mapping(target = "distanceMeter", ignore = true)
+    QueueReportResponse toQueueResponse(Report entity);
 
     List<NearbyReportResponse> toNearbyResponse(List<Report> entities);
 

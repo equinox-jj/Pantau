@@ -2,6 +2,8 @@ module pantau
 
 go 1.27.1
 
+require github.com/twpayne/go-geom v1.6.1
+
 require (
 	github.com/andybalholm/brotli v1.2.2 // indirect
 	github.com/cloudinary/cloudinary-go/v2 v2.16.0 // indirect
@@ -11,6 +13,7 @@ require (
 	github.com/gofiber/fiber/v3 v3.5.0 // indirect
 	github.com/gofiber/schema v1.8.3 // indirect
 	github.com/gofiber/utils/v2 v2.4.1 // indirect
+	github.com/golang-jwt/jwt/v5 v5.3.1 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/schema v1.4.1 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
@@ -32,7 +35,6 @@ require (
 	github.com/spf13/viper v1.21.0 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/tinylib/msgp v1.6.4 // indirect
-	github.com/twpayne/go-geom v1.6.1
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.73.0 // indirect
 	go.uber.org/dig v1.19.0 // indirect

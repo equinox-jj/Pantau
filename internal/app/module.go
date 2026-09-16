@@ -2,6 +2,7 @@ package app
 
 import (
 	"pantau/internal/config"
+	"pantau/internal/controller"
 	"pantau/internal/repository"
 	"pantau/internal/service"
 	"pantau/pkg"
@@ -15,4 +16,11 @@ var Module = fx.Module(
 	config.Module,
 	repository.Module,
 	service.Module,
+	fx.Provide(
+		NewFiber,
+	),
+	controller.Module,
+	fx.Invoke(
+		StartServer,
+	),
 )

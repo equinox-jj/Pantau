@@ -1,0 +1,38 @@
+server:
+  port: 8080
+
+app:
+  name: pantau
+  env: production
+
+database:
+  host: localhost
+  port: 5432
+  name: pantau
+  user: postgres
+  password: ""
+  max_open_conns: 25
+  max_idle_conns: 10
+
+migration:
+  enabled: true
+
+gorm:
+  show_sql: true
+
+upload:
+  enabled: true
+  max_file_size: 5MB
+  max_request_size: 20MB
+
+logging:
+  level: INFO
+
+jwt:
+  secret_key: ""
+  expiration: 168h
+
+cloudinary:
+  cloud_name: ""
+  api_key: ""
+  api_secret: ""

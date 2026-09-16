@@ -13,8 +13,8 @@ import (
 )
 
 type AuthService interface {
-	Register(ctx context.Context, req *auth.RegisterRequest) (*auth.AuthResponse, error)
-	Login(ctx context.Context, req *auth.LoginRequest) (*auth.AuthResponse, error)
+	Register(ctx context.Context, req auth.RegisterRequest) (*auth.AuthResponse, error)
+	Login(ctx context.Context, req auth.LoginRequest) (*auth.AuthResponse, error)
 }
 
 type authServiceImpl struct {
@@ -35,7 +35,7 @@ func NewAuthService(
 	}
 }
 
-func (service *authServiceImpl) Login(ctx context.Context, req *auth.LoginRequest) (*auth.AuthResponse, error) {
+func (service *authServiceImpl) Login(ctx context.Context, req auth.LoginRequest) (*auth.AuthResponse, error) {
 	user, err := service.userRepo.FindByEmail(ctx, req.Email)
 	if err != nil {
 		return nil, err
@@ -54,7 +54,7 @@ func (service *authServiceImpl) Login(ctx context.Context, req *auth.LoginReques
 	return service.buildAuthResponse(user)
 }
 
-func (service *authServiceImpl) Register(ctx context.Context, req *auth.RegisterRequest) (*auth.AuthResponse, error) {
+func (service *authServiceImpl) Register(ctx context.Context, req auth.RegisterRequest) (*auth.AuthResponse, error) {
 	exists, err := service.userRepo.ExistsByEmail(ctx, req.Email)
 	if err != nil {
 		return nil, err

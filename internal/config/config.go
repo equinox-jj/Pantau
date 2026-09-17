@@ -2,7 +2,6 @@ package config
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"strings"
 	"time"
@@ -79,10 +78,9 @@ func NewConfig(v *viper.Viper) (*Config, error) {
 	v.AddConfigPath("./config")
 
 	if err := v.ReadInConfig(); err != nil {
-		var notFound viper.ConfigFileNotFoundError
 
-		if !errors.As(err, &notFound) {
-			return nil, fmt.Errorf("read config: %w", err)
+		if _, ok := errors.AsType[viper.ConfigFileNotFoundError](err); !ok {
+			return nil, err
 		}
 	}
 
@@ -103,7 +101,7 @@ func NewConfig(v *viper.Viper) (*Config, error) {
 	var cfg Config
 
 	if err := v.Unmarshal(&cfg); err != nil {
-		return nil, fmt.Errorf("unmarshal config: %w", err)
+		return nil, err
 	}
 
 	return &cfg, nil
@@ -161,12 +159,7 @@ var envBindings = map[string]string{
 func bindEnv(v *viper.Viper) error {
 	for key, env := range envBindings {
 		if err := v.BindEnv(key, env); err != nil {
-			return fmt.Errorf(
-				"bind %s to %s: %w",
-				env,
-				key,
-				err,
-			)
+			return err
 		}
 	}
 
@@ -183,7 +176,7 @@ func mergeDotenv(v *viper.Viper) error {
 		if errors.Is(err, os.ErrNotExist) {
 			return nil
 		}
-		return fmt.Errorf("read .env: %w", err)
+		return err
 	}
 
 	overrides := viper.New()
@@ -201,7 +194,7 @@ func mergeDotenv(v *viper.Viper) error {
 		}
 	}
 	if err := v.MergeConfigMap(overrides.AllSettings()); err != nil {
-		return fmt.Errorf("merge .env: %w", err)
+		return err
 	}
 	return nil
 }

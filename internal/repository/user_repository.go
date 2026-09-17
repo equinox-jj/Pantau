@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
-	"fmt"
+	"log/slog"
 	"pantau/internal/entity"
 
 	apperror "pantau/pkg/errors"
@@ -44,10 +44,12 @@ func (r *userRepositoryImpl) FindByEmail(ctx context.Context, email string) (*en
 		First(&user).
 		Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
+			slog.Error("[UserRepository] User not found by email", "email", email, "error", err)
 			return nil, apperror.ErrEmailNotFound
 		}
 
-		return nil, fmt.Errorf("error find user by email: %w", err)
+		slog.Error("[UserRepository] Failed to find user by email", "email", email, "error", err)
+		return nil, err
 	}
 
 	return &user, nil
@@ -62,7 +64,8 @@ func (r *userRepositoryImpl) ExistsByEmail(ctx context.Context, email string) (b
 		Where("email = ?", email).
 		Count(&count).
 		Error; err != nil {
-		return false, fmt.Errorf("error exists by email: %w", err)
+		slog.Error("[UserRepository] Failed to check if user exists by email", "email", email, "error", err)
+		return false, err
 	}
 
 	return count > 0, nil

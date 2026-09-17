@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"fmt"
+	"log/slog"
 	"pantau/internal/dto/auth"
 	"pantau/internal/entity"
 	"pantau/internal/repository"
@@ -38,16 +38,19 @@ func NewAuthService(
 func (service *authServiceImpl) Login(ctx context.Context, req auth.LoginRequest) (*auth.AuthResponse, error) {
 	user, err := service.userRepo.FindByEmail(ctx, req.Email)
 	if err != nil {
+		slog.Error("[AuthService] Failed to find user by email", "email", req.Email, "error", err)
 		return nil, err
 	}
 	if user == nil {
-		return nil, apperror.ErrInvalidEmailOrPassword
+		slog.Error("[AuthService] User not found by email", "email", req.Email)
+		return nil, apperror.ErrEmailNotFound
 	}
 
 	if err := service.passHasher.Compare(
 		user.Password,
 		req.Password,
 	); err != nil {
+		slog.Error("[AuthService] Failed to compare password", "email", req.Email, "error", err)
 		return nil, apperror.ErrInvalidEmailOrPassword
 	}
 
@@ -57,14 +60,17 @@ func (service *authServiceImpl) Login(ctx context.Context, req auth.LoginRequest
 func (service *authServiceImpl) Register(ctx context.Context, req auth.RegisterRequest) (*auth.AuthResponse, error) {
 	exists, err := service.userRepo.ExistsByEmail(ctx, req.Email)
 	if err != nil {
+		slog.Error("[AuthService] Failed to check if user exists by email", "email", req.Email, "error", err)
 		return nil, err
 	}
 	if exists {
+		slog.Error("[AuthService] User already exists", "email", req.Email)
 		return nil, apperror.ErrEmailAlreadyExists
 	}
 
 	hashedPassword, err := service.passHasher.Hash(req.Password)
 	if err != nil {
+		slog.Error("[AuthService] Failed to hash password", "email", req.Email, "error", err)
 		return nil, err
 	}
 
@@ -76,6 +82,7 @@ func (service *authServiceImpl) Register(ctx context.Context, req auth.RegisterR
 		Role:        entity.RoleCitizen,
 	}
 	if err := service.userRepo.Create(ctx, user); err != nil {
+		slog.Error("[AuthService] Failed to create user", "email", req.Email, "error", err)
 		return nil, err
 	}
 
@@ -85,7 +92,8 @@ func (service *authServiceImpl) Register(ctx context.Context, req auth.RegisterR
 func (service *authServiceImpl) buildAuthResponse(user *entity.User) (*auth.AuthResponse, error) {
 	token, err := service.jwtService.GenerateToken(user)
 	if err != nil {
-		return nil, fmt.Errorf("generate access token: %w", err)
+		slog.Error("[AuthService] Failed to generate token", "email", user.Email, "error", err)
+		return nil, err
 	}
 
 	return &auth.AuthResponse{

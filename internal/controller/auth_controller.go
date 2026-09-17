@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"log/slog"
 	"pantau/internal/dto/auth"
 	"pantau/internal/service"
 	"pantau/pkg/response"
@@ -27,6 +28,7 @@ func (controller *authControllerImpl) Login(ctx fiber.Ctx) error {
 	var req auth.LoginRequest
 
 	if err := ctx.Bind().Body(&req); err != nil {
+		slog.Error("[AuthController] Failed to bind request", "email", req.Email, "error", err)
 		return err
 	}
 
@@ -35,6 +37,7 @@ func (controller *authControllerImpl) Login(ctx fiber.Ctx) error {
 		req,
 	)
 	if err != nil {
+		slog.Error("[AuthController] Failed to login", "email", req.Email, "error", err)
 		return err
 	}
 
@@ -47,6 +50,7 @@ func (controller *authControllerImpl) Register(ctx fiber.Ctx) error {
 	var req auth.RegisterRequest
 
 	if err := ctx.Bind().Body(&req); err != nil {
+		slog.Error("[AuthController] Failed to bind request", "email", req.Email, "error", err)
 		return err
 	}
 
@@ -55,6 +59,7 @@ func (controller *authControllerImpl) Register(ctx fiber.Ctx) error {
 		req,
 	)
 	if err != nil {
+		slog.Error("[AuthController] Failed to register", "email", req.Email, "error", err)
 		return err
 	}
 

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"pantau/internal/entity"
 
-	apperr "pantau/pkg/errors"
+	apperror "pantau/pkg/errors"
 
 	"gorm.io/gorm"
 )
@@ -44,7 +44,7 @@ func (r *userRepositoryImpl) FindByEmail(ctx context.Context, email string) (*en
 		First(&user).
 		Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, apperr.ErrEmailNotFound
+			return nil, apperror.ErrEmailNotFound
 		}
 
 		return nil, fmt.Errorf("error find user by email: %w", err)

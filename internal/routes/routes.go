@@ -1,10 +1,14 @@
-package controller
+package routes
 
-import "github.com/gofiber/fiber/v3"
+import (
+	"pantau/internal/controller"
+
+	"github.com/gofiber/fiber/v3"
+)
 
 func RegisterRoutes(
 	app *fiber.App,
-	auth AuthController,
+	auth controller.AuthController,
 ) {
 	api := app.Group("/api/v1")
 

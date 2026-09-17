@@ -6,7 +6,7 @@ import (
 	"pantau/internal/dto/auth"
 	"pantau/internal/entity"
 	"pantau/internal/repository"
-	apperr "pantau/pkg/errors"
+	apperror "pantau/pkg/errors"
 	"pantau/pkg/security"
 
 	"github.com/google/uuid"
@@ -41,14 +41,14 @@ func (service *authServiceImpl) Login(ctx context.Context, req auth.LoginRequest
 		return nil, err
 	}
 	if user == nil {
-		return nil, apperr.ErrInvalidEmailOrPassword
+		return nil, apperror.ErrInvalidEmailOrPassword
 	}
 
 	if err := service.passHasher.Compare(
 		user.Password,
 		req.Password,
 	); err != nil {
-		return nil, apperr.ErrInvalidEmailOrPassword
+		return nil, apperror.ErrInvalidEmailOrPassword
 	}
 
 	return service.buildAuthResponse(user)
@@ -60,7 +60,7 @@ func (service *authServiceImpl) Register(ctx context.Context, req auth.RegisterR
 		return nil, err
 	}
 	if exists {
-		return nil, apperr.ErrEmailAlreadyExists
+		return nil, apperror.ErrEmailAlreadyExists
 	}
 
 	hashedPassword, err := service.passHasher.Hash(req.Password)

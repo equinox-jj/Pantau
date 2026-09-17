@@ -4,7 +4,7 @@ import (
 	"pantau/internal/entity"
 	"time"
 
-	apperr "pantau/pkg/errors"
+	apperror "pantau/pkg/errors"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
@@ -61,7 +61,7 @@ func (j *jwtServiceImpl) ParseToken(tokenString string) (*claims, error) {
 		&claims{},
 		func(token *jwt.Token) (any, error) {
 			if token.Method != jwt.SigningMethodHS256 {
-				return nil, apperr.ErrUnexpectedSigningMethod
+				return nil, apperror.ErrUnexpectedSigningMethod
 			}
 
 			return j.secret, nil
@@ -73,7 +73,7 @@ func (j *jwtServiceImpl) ParseToken(tokenString string) (*claims, error) {
 
 	claims, ok := token.Claims.(*claims)
 	if !ok || !token.Valid {
-		return nil, apperr.ErrInvalidToken
+		return nil, apperror.ErrInvalidToken
 	}
 
 	return claims, nil

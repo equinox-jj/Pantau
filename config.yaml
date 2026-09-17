@@ -3,14 +3,9 @@ server:
 
 app:
   name: pantau
-  env: production
+  env: development
 
 database:
-  host: localhost
-  port: 5432
-  name: pantau
-  user: postgres
-  password: ""
   max_open_conns: 25
   max_idle_conns: 10
 
@@ -29,10 +24,4 @@ logging:
   level: INFO
 
 jwt:
-  secret_key: ""
   expiration: 168h
-
-cloudinary:
-  cloud_name: ""
-  api_key: ""
-  api_secret: ""

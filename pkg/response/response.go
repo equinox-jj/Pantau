@@ -2,13 +2,13 @@ package response
 
 type ApiResponse[T any] struct {
 	Success  bool            `json:"success"`
-	Response ResponseData[T] `json:"response"`
-	Errors   []ErrorDetail   `json:"errors"`
+	Response ResponseData[T] `json:"response,omitempty"`
+	Errors   []ErrorDetail   `json:"errors,omitempty"`
 }
 
 type ResponseData[T any] struct {
-	Data       T          `json:"data"`
-	Pagination Pagination `json:"pagination"`
+	Data       T          `json:"data,omitempty"`
+	Pagination Pagination `json:"pagination,omitempty"`
 }
 
 type Pagination struct {
@@ -19,8 +19,9 @@ type Pagination struct {
 }
 
 type ErrorDetail struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
+	Code    int    `json:"code,omitempty"`
+	Field   string `json:"field,omitempty"`
+	Message string `json:"message,omitempty"`
 }
 
 func Success[T any](data T) ApiResponse[T] {
@@ -50,5 +51,16 @@ func Error(
 				Message: message,
 			},
 		},
+	}
+}
+
+func Errors(errors []ErrorDetail) ApiResponse[[]any] {
+	return ApiResponse[[]any]{
+		Success: false,
+		Response: ResponseData[[]any]{
+			Data:       []any{},
+			Pagination: Pagination{},
+		},
+		Errors: errors,
 	}
 }

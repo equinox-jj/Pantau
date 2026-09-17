@@ -3,9 +3,11 @@ package config
 import (
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
 
@@ -72,6 +74,14 @@ type CloudinaryConfig struct {
 func NewConfig(v *viper.Viper) (*Config, error) {
 	setDefaults(v)
 
+	// Load .env for local development.
+	// Existing real environment variables are NOT overwritten.
+	if err := godotenv.Load(); err != nil {
+		if !errors.Is(err, os.ErrNotExist) {
+			return nil, fmt.Errorf("load .env: %w", err)
+		}
+	}
+
 	v.SetConfigName("config")
 	v.SetConfigType("yaml")
 	v.AddConfigPath(".")
@@ -88,6 +98,7 @@ func NewConfig(v *viper.Viper) (*Config, error) {
 	v.SetEnvKeyReplacer(
 		strings.NewReplacer(".", "_"),
 	)
+
 	v.AutomaticEnv()
 
 	if err := bindEnv(v); err != nil {

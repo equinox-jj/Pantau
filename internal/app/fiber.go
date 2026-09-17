@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"log"
 	"pantau/internal/config"
-	mdware "pantau/internal/middleware"
+	apperror "pantau/pkg/errors"
+	"pantau/pkg/validator"
 
 	"github.com/gofiber/fiber/v3"
 	"go.uber.org/fx"
@@ -13,8 +14,9 @@ import (
 
 func NewFiber() *fiber.App {
 	return fiber.New(fiber.Config{
-		AppName:      "Pantau API",
-		ErrorHandler: mdware.ErrorHandler,
+		AppName:         "Pantau API",
+		ErrorHandler:    apperror.ErrorHandler,
+		StructValidator: validator.NewStructValidator(),
 	})
 }
 

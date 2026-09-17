@@ -2,13 +2,13 @@ package response
 
 type ApiResponse[T any] struct {
 	Success  bool            `json:"success"`
-	Response ResponseData[T] `json:"response,omitempty"`
+	Response ResponseData[T] `json:"response,omitzero"`
 	Errors   []ErrorDetail   `json:"errors,omitempty"`
 }
 
 type ResponseData[T any] struct {
 	Data       T          `json:"data,omitempty"`
-	Pagination Pagination `json:"pagination,omitempty"`
+	Pagination Pagination `json:"pagination,omitzero"`
 }
 
 type Pagination struct {

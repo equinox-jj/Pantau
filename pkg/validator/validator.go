@@ -14,11 +14,10 @@ type StructValidator struct {
 func NewStructValidator() *StructValidator {
 	v := playground.New()
 	v.RegisterTagNameFunc(func(field reflect.StructField) string {
-		name := strings.SplitN(
+		name, _, _ := strings.Cut(
 			field.Tag.Get("json"),
 			",",
-			2,
-		)[0]
+		)
 
 		if name == "-" {
 			return ""

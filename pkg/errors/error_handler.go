@@ -17,9 +17,7 @@ func ErrorHandler(
 	// -------------------------
 	// Validation errors
 	// -------------------------
-	var validationErrors validator.ValidationErrors
-
-	if errors.As(err, &validationErrors) {
+	if validationErrors, ok := errors.AsType[validator.ValidationErrors](err); ok {
 		// Create new slice of ErrorDetail Response
 		errs := make(
 			[]response.ErrorDetail,
@@ -46,9 +44,7 @@ func ErrorHandler(
 	// -------------------------
 	// Invalid/malformed request
 	// -------------------------
-	var bindErr *fiber.BindError
-
-	if errors.As(err, &bindErr) {
+	if _, ok := errors.AsType[*fiber.BindError](err); ok {
 		return ctx.
 			Status(fiber.StatusBadRequest).
 			JSON(

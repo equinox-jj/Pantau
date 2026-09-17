@@ -7,7 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
 
@@ -74,14 +73,6 @@ type CloudinaryConfig struct {
 func NewConfig(v *viper.Viper) (*Config, error) {
 	setDefaults(v)
 
-	// Load .env for local development.
-	// Existing real environment variables are NOT overwritten.
-	if err := godotenv.Load(); err != nil {
-		if !errors.Is(err, os.ErrNotExist) {
-			return nil, fmt.Errorf("load .env: %w", err)
-		}
-	}
-
 	v.SetConfigName("config")
 	v.SetConfigType("yaml")
 	v.AddConfigPath(".")
@@ -102,6 +93,10 @@ func NewConfig(v *viper.Viper) (*Config, error) {
 	v.AutomaticEnv()
 
 	if err := bindEnv(v); err != nil {
+		return nil, err
+	}
+
+	if err := mergeDotenv(v); err != nil {
 		return nil, err
 	}
 
@@ -141,30 +136,30 @@ func setDefaults(v *viper.Viper) {
 	v.SetDefault("jwt.expiration", "15m")
 }
 
+var envBindings = map[string]string{
+	"server.port": "APP_PORT",
+	"app.env":     "APP_ENV",
+
+	"database.host":           "DB_HOST",
+	"database.port":           "DB_PORT",
+	"database.name":           "DB_NAME",
+	"database.user":           "DB_USER",
+	"database.password":       "DB_PASSWORD",
+	"database.max_open_conns": "DB_MAX_OPEN_CONNS",
+	"database.max_idle_conns": "DB_MAX_IDLE_CONNS",
+
+	"logging.level": "LOG_LEVEL",
+
+	"jwt.secret_key": "JWT_SECRET_KEY",
+	"jwt.expiration": "JWT_EXPIRATION",
+
+	"cloudinary.cloud_name": "CLOUDINARY_NAME",
+	"cloudinary.api_key":    "CLOUDINARY_KEY",
+	"cloudinary.api_secret": "CLOUDINARY_SECRET",
+}
+
 func bindEnv(v *viper.Viper) error {
-	bindings := map[string]string{
-		"server.port": "APP_PORT",
-		"app.env":     "APP_ENV",
-
-		"database.host":           "DB_HOST",
-		"database.port":           "DB_PORT",
-		"database.name":           "DB_NAME",
-		"database.user":           "DB_USER",
-		"database.password":       "DB_PASSWORD",
-		"database.max_open_conns": "DB_MAX_OPEN_CONNS",
-		"database.max_idle_conns": "DB_MAX_IDLE_CONNS",
-
-		"logging.level": "LOG_LEVEL",
-
-		"jwt.secret_key": "JWT_SECRET_KEY",
-		"jwt.expiration": "JWT_EXPIRATION",
-
-		"cloudinary.cloud_name": "CLOUDINARY_NAME",
-		"cloudinary.api_key":    "CLOUDINARY_KEY",
-		"cloudinary.api_secret": "CLOUDINARY_SECRET",
-	}
-
-	for key, env := range bindings {
+	for key, env := range envBindings {
 		if err := v.BindEnv(key, env); err != nil {
 			return fmt.Errorf(
 				"bind %s to %s: %w",
@@ -175,5 +170,38 @@ func bindEnv(v *viper.Viper) error {
 		}
 	}
 
+	return nil
+}
+
+// mergeDotenv maps flat .env names to nested config keys. Merging at the
+// config-file layer keeps real environment variables above .env values.
+func mergeDotenv(v *viper.Viper) error {
+	dotenv := viper.New()
+	dotenv.SetConfigFile(".env")
+	dotenv.SetConfigType("env")
+	if err := dotenv.ReadInConfig(); err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return nil
+		}
+		return fmt.Errorf("read .env: %w", err)
+	}
+
+	overrides := viper.New()
+	for _, key := range v.AllKeys() {
+		name := strings.ToUpper(strings.ReplaceAll(key, ".", "_"))
+		value := dotenv.GetString(name)
+		if value == "" {
+			if alias, ok := envBindings[key]; ok {
+				value = dotenv.GetString(alias)
+			}
+		}
+		// Match Viper's default treatment of empty environment values as unset.
+		if value != "" {
+			overrides.Set(key, value)
+		}
+	}
+	if err := v.MergeConfigMap(overrides.AllSettings()); err != nil {
+		return fmt.Errorf("merge .env: %w", err)
+	}
 	return nil
 }

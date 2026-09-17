@@ -74,6 +74,8 @@ func (j *jwtServiceImpl) ParseToken(tokenString string) (*claims, error) {
 
 			return j.secret, nil
 		},
+		jwt.WithValidMethods([]string{jwt.SigningMethodHS256.Alg()}),
+		jwt.WithExpirationRequired(),
 	)
 	if err != nil {
 		slog.Error("[JWT] Failed to parse token", "error", err)
@@ -81,7 +83,7 @@ func (j *jwtServiceImpl) ParseToken(tokenString string) (*claims, error) {
 	}
 
 	claims, ok := token.Claims.(*claims)
-	if !ok || !token.Valid {
+	if !ok || !token.Valid || claims.UserID == uuid.Nil || claims.Subject != claims.UserID.String() {
 		slog.Error("[JWT] Invalid token")
 		return nil, apperror.ErrInvalidToken
 	}

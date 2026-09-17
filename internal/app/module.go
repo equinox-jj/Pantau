@@ -4,6 +4,7 @@ import (
 	"pantau/internal/config"
 	"pantau/internal/controller"
 	"pantau/internal/database"
+	"pantau/internal/middleware"
 	"pantau/internal/repository"
 	"pantau/internal/routes"
 	"pantau/internal/service"
@@ -21,6 +22,7 @@ var Module = fx.Module(
 	service.Module,
 	controller.Module,
 	routes.Module,
+	middleware.Module,
 	fx.Provide(
 		NewFiber,
 	),

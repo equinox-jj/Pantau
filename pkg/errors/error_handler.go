@@ -61,22 +61,28 @@ func ErrorHandler(
 	message := "Internal server error"
 
 	switch {
+	case errors.Is(err, ErrUnauthorized):
+		status = fiber.StatusUnauthorized
+		message = "Error: Unauthorized"
+		ctx.Set(fiber.HeaderWWWAuthenticate, "Bearer")
+	case errors.Is(err, ErrForbidden):
+		status = fiber.StatusForbidden
+		message = "Forbidden"
+	case errors.Is(err, ErrUserNotFound):
+		status = fiber.StatusNotFound
+		message = "User not found"
 	case errors.Is(err, ErrEmailNotFound):
 		status = fiber.StatusNotFound
 		message = "Email not found"
-
 	case errors.Is(err, ErrEmailAlreadyExists):
 		status = fiber.StatusConflict
 		message = "An account with the email address already exists"
-
 	case errors.Is(err, ErrInvalidEmailOrPassword):
 		status = fiber.StatusUnauthorized
 		message = "Invalid email or password"
-
 	case errors.Is(err, ErrInvalidToken):
 		status = fiber.StatusUnauthorized
 		message = "Invalid token"
-
 	case errors.Is(err, ErrUnexpectedSigningMethod):
 		status = fiber.StatusUnauthorized
 		message = "Invalid token"

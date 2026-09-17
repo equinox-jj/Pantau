@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/hex"
 	"fmt"
+	"log/slog"
 	"strings"
 
 	"github.com/twpayne/go-geom"
@@ -52,22 +53,19 @@ func (geo *GeoPoint) Scan(value any) error {
 	switch v := value.(type) {
 	case []byte:
 		data = v
-
 	case string:
 		s := strings.TrimPrefix(v, "\\x")
-
 		decoded, err := hex.DecodeString(s)
 		if err != nil {
+			slog.Error("[GEOPOINT] Failed to decode geography string", "error", err)
 			return err
 		}
 
 		data = decoded
-
 	default:
-		return fmt.Errorf(
-			"unsupported geography value: %T",
-			value,
-		)
+		err := fmt.Errorf("unsupported geography value: %T", value)
+		slog.Error("[GEOPOINT] Unsupported geography value", "error", err)
+		return err
 	}
 
 	if isHex(data) {
@@ -76,17 +74,22 @@ func (geo *GeoPoint) Scan(value any) error {
 		n, err := hex.Decode(decoded, data)
 		if err == nil {
 			data = decoded[:n]
+		} else {
+			slog.Error("[GEOPOINT] Failed to decode geography bytes", "error", err)
 		}
 	}
 
 	g, err := ewkb.Unmarshal(data)
 	if err != nil {
+		slog.Error("[GEOPOINT] Failed to unmarshal geography", "error", err)
 		return err
 	}
 
 	point, ok := g.(*geom.Point)
 	if !ok {
-		return fmt.Errorf("expected Point, got %T", g)
+		err := fmt.Errorf("expected Point, got %T", g)
+		slog.Error("[GEOPOINT] Unexpected geometry type", "error", err)
+		return err
 	}
 
 	geo.Lng = point.X()

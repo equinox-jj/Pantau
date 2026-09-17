@@ -42,7 +42,7 @@ func (service *authServiceImpl) Login(ctx context.Context, req auth.LoginRequest
 		return nil, err
 	}
 	if user == nil {
-		slog.Error("[AuthService] User not found by email", "email", req.Email)
+		slog.Error("[AuthService] User not found by email", "email", req.Email, "error", err)
 		return nil, apperror.ErrEmailNotFound
 	}
 
@@ -64,7 +64,7 @@ func (service *authServiceImpl) Register(ctx context.Context, req auth.RegisterR
 		return nil, err
 	}
 	if exists {
-		slog.Error("[AuthService] User already exists", "email", req.Email)
+		slog.Error("[AuthService] User already exists", "email", req.Email, "error", err)
 		return nil, apperror.ErrEmailAlreadyExists
 	}
 

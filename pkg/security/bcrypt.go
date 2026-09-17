@@ -1,6 +1,10 @@
 package security
 
-import "golang.org/x/crypto/bcrypt"
+import (
+	"log/slog"
+
+	"golang.org/x/crypto/bcrypt"
+)
 
 type PasswordHasher interface {
 	Hash(password string) (string, error)
@@ -16,10 +20,14 @@ func NewPasswordHasher(cost int) PasswordHasher {
 }
 
 func (ph *passwordHasherImpl) Compare(hash string, password string) error {
-	return bcrypt.CompareHashAndPassword(
+	if err := bcrypt.CompareHashAndPassword(
 		[]byte(hash),
 		[]byte(password),
-	)
+	); err != nil {
+		slog.Error("[Bcrypt] Failed to compare password", "error", err)
+		return err
+	}
+	return nil
 }
 
 func (ph *passwordHasherImpl) Hash(password string) (string, error) {
@@ -28,6 +36,7 @@ func (ph *passwordHasherImpl) Hash(password string) (string, error) {
 		ph.cost,
 	)
 	if err != nil {
+		slog.Error("[Bcrypt] Failed to hash password", "error", err)
 		return "", err
 	}
 

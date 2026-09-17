@@ -1,6 +1,7 @@
 package security
 
 import (
+	"log/slog"
 	"pantau/internal/entity"
 	"time"
 
@@ -52,7 +53,13 @@ func (j *jwtServiceImpl) GenerateToken(user *entity.User) (string, error) {
 		claims,
 	)
 
-	return token.SignedString(j.secret)
+	signedToken, err := token.SignedString(j.secret)
+	if err != nil {
+		slog.Error("[JWT] Failed to sign token", "email", user.Email, "error", err)
+		return "", err
+	}
+
+	return signedToken, nil
 }
 
 func (j *jwtServiceImpl) ParseToken(tokenString string) (*claims, error) {
@@ -61,6 +68,7 @@ func (j *jwtServiceImpl) ParseToken(tokenString string) (*claims, error) {
 		&claims{},
 		func(token *jwt.Token) (any, error) {
 			if token.Method != jwt.SigningMethodHS256 {
+				slog.Error("[JWT] Unexpected token signing method")
 				return nil, apperror.ErrUnexpectedSigningMethod
 			}
 
@@ -68,11 +76,13 @@ func (j *jwtServiceImpl) ParseToken(tokenString string) (*claims, error) {
 		},
 	)
 	if err != nil {
+		slog.Error("[JWT] Failed to parse token", "error", err)
 		return nil, err
 	}
 
 	claims, ok := token.Claims.(*claims)
 	if !ok || !token.Valid {
+		slog.Error("[JWT] Invalid token")
 		return nil, apperror.ErrInvalidToken
 	}
 

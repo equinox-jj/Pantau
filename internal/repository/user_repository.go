@@ -29,10 +29,14 @@ func (r *userRepositoryImpl) Create(
 	ctx context.Context,
 	user *entity.User,
 ) error {
-	return r.db.
+	if err := r.db.
 		WithContext(ctx).
 		Create(user).
-		Error
+		Error; err != nil {
+		slog.Error("[UserRepository] Failed to create user", "email", user.Email, "error", err)
+		return err
+	}
+	return nil
 }
 
 func (r *userRepositoryImpl) FindByEmail(ctx context.Context, email string) (*entity.User, error) {

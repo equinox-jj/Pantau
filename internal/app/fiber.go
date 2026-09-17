@@ -3,7 +3,8 @@ package app
 import (
 	"context"
 	"fmt"
-	"log"
+	"log/slog"
+	"os"
 	"pantau/internal/config"
 	apperror "pantau/pkg/errors"
 	"pantau/pkg/validator"
@@ -31,7 +32,8 @@ func StartServer(
 
 			go func() {
 				if err := app.Listen(addr); err != nil {
-					log.Fatal("Failed to start server: ", err)
+					slog.Error("[FIBER] Failed to start server", "address", addr, "error", err)
+					os.Exit(1)
 				}
 			}()
 
@@ -39,7 +41,11 @@ func StartServer(
 		},
 
 		OnStop: func(ctx context.Context) error {
-			return app.ShutdownWithContext(ctx)
+			if err := app.ShutdownWithContext(ctx); err != nil {
+				slog.Error("[FIBER] Failed to shut down server", "error", err)
+				return err
+			}
+			return nil
 		},
 	})
 }

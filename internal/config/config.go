@@ -2,6 +2,7 @@ package config
 
 import (
 	"errors"
+	"log/slog"
 	"os"
 	"strings"
 	"time"
@@ -80,6 +81,7 @@ func NewConfig(v *viper.Viper) (*Config, error) {
 	if err := v.ReadInConfig(); err != nil {
 
 		if _, ok := errors.AsType[viper.ConfigFileNotFoundError](err); !ok {
+			slog.Error("[Config] Failed to read configuration", "error", err)
 			return nil, err
 		}
 	}
@@ -91,16 +93,19 @@ func NewConfig(v *viper.Viper) (*Config, error) {
 	v.AutomaticEnv()
 
 	if err := bindEnv(v); err != nil {
+		slog.Error("[Config] Failed to bind environment variables", "error", err)
 		return nil, err
 	}
 
 	if err := mergeDotenv(v); err != nil {
+		slog.Error("[Config] Failed to merge dotenv configuration", "error", err)
 		return nil, err
 	}
 
 	var cfg Config
 
 	if err := v.Unmarshal(&cfg); err != nil {
+		slog.Error("[Config] Failed to decode configuration", "error", err)
 		return nil, err
 	}
 
@@ -159,6 +164,7 @@ var envBindings = map[string]string{
 func bindEnv(v *viper.Viper) error {
 	for key, env := range envBindings {
 		if err := v.BindEnv(key, env); err != nil {
+			slog.Error("[Config] Failed to bind environment variable", "key", key, "env", env, "error", err)
 			return err
 		}
 	}
@@ -176,6 +182,7 @@ func mergeDotenv(v *viper.Viper) error {
 		if errors.Is(err, os.ErrNotExist) {
 			return nil
 		}
+		slog.Error("[Config] Failed to read dotenv file", "error", err)
 		return err
 	}
 
@@ -188,12 +195,12 @@ func mergeDotenv(v *viper.Viper) error {
 				value = dotenv.GetString(alias)
 			}
 		}
-		// Match Viper's default treatment of empty environment values as unset.
 		if value != "" {
 			overrides.Set(key, value)
 		}
 	}
 	if err := v.MergeConfigMap(overrides.AllSettings()); err != nil {
+		slog.Error("[Config] Failed to merge configuration map", "error", err)
 		return err
 	}
 	return nil

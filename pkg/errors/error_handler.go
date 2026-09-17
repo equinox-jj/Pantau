@@ -2,7 +2,6 @@ package errors
 
 import (
 	"errors"
-	"log"
 
 	"pantau/pkg/response"
 
@@ -81,9 +80,6 @@ func ErrorHandler(
 	case errors.Is(err, ErrUnexpectedSigningMethod):
 		status = fiber.StatusUnauthorized
 		message = "Invalid token"
-
-	default:
-		log.Printf("unexpected error: %v", err)
 	}
 
 	return ctx.

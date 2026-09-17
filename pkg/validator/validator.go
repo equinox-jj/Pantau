@@ -1,6 +1,7 @@
 package validator
 
 import (
+	"log/slog"
 	"reflect"
 	"strings"
 
@@ -32,5 +33,9 @@ func NewStructValidator() *StructValidator {
 }
 
 func (v *StructValidator) Validate(out any) error {
-	return v.validate.Struct(out)
+	if err := v.validate.Struct(out); err != nil {
+		slog.Error("[Validator] Failed to validate struct", "error", err)
+		return err
+	}
+	return nil
 }

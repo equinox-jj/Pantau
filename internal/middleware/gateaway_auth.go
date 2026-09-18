@@ -1,3 +1,4 @@
+// Package middleware provides request authentication and role-based access control.
 package middleware
 
 import (
@@ -13,19 +14,23 @@ import (
 	"github.com/google/uuid"
 )
 
+// principalKey is a private context key that avoids collisions with other local keys.
 type principalKey struct{}
 
+// principal holds the authenticated user's current identity and role from the repository.
 type principal struct {
 	ID    uuid.UUID
 	Email string
 	Role  entity.UserRole
 }
 
+// GateawayAuth authenticates requests using a JWT and the corresponding user record.
 type GateawayAuth struct {
 	jwtService security.JwtService
 	users      repository.UserRepository
 }
 
+// NewGateawayAuth creates authentication middleware using the given services.
 func NewGateawayAuth(
 	jwtService security.JwtService,
 	users repository.UserRepository,
@@ -36,6 +41,11 @@ func NewGateawayAuth(
 	}
 }
 
+// Authenticate skips /api/v1/auth and its subpaths. For all other paths, it
+// validates the Authorization bearer token, loads the user, and stores a
+// principal in request locals before calling the next handler.
+// It returns ErrUnauthorized for missing or invalid credentials or a missing
+// user, and propagates repository errors to the application's error handler.
 func (s *GateawayAuth) Authenticate(ctx fiber.Ctx) error {
 	path := ctx.Path()
 	if path == "/api/v1/auth" || strings.HasPrefix(path, "/api/v1/auth/") {
@@ -53,6 +63,7 @@ func (s *GateawayAuth) Authenticate(ctx fiber.Ctx) error {
 		slog.Error("[GAT] Invalid token", "error", err)
 		return apperror.ErrUnauthorized
 	}
+	// Use the stored user record so identity and role reflect current values.
 	user, err := s.users.FindByID(ctx.Context(), claims.UserID)
 	if err != nil {
 		slog.Error("[GAT] Failed to get user", "error", err)
@@ -74,6 +85,10 @@ func (s *GateawayAuth) Authenticate(ctx fiber.Ctx) error {
 	return ctx.Next()
 }
 
+// RequireRoles allows an authenticated user with any of the supplied roles to
+// continue. Register it after Authenticate so a principal is available.
+// It returns ErrUnauthorized when no principal is present and ErrForbidden
+// when the user's role is not allowed. An empty role list allows no users.
 func RequireRoles(roles ...entity.UserRole) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
 		user, ok := CurrentUser(ctx)
@@ -89,6 +104,9 @@ func RequireRoles(roles ...entity.UserRole) fiber.Handler {
 	}
 }
 
+// CurrentUser retrieves the principal stored by Authenticate for this request.
+// It returns a zero-value principal and false if the local value is absent or
+// has an unexpected type.
 func CurrentUser(ctx fiber.Ctx) (principal, bool) {
 	user, ok := ctx.Locals(principalKey{}).(principal)
 	return user, ok

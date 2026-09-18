@@ -71,6 +71,15 @@ func ErrorHandler(
 	case errors.Is(err, ErrUserNotFound):
 		status = fiber.StatusNotFound
 		message = "User not found"
+	case errors.Is(err, ErrReportNotFound):
+		status = fiber.StatusNotFound
+		message = "Report not found"
+	case errors.Is(err, ErrInvalidLimit):
+		status = fiber.StatusBadRequest
+		message = ErrInvalidLimit.Error()
+	case errors.Is(err, ErrInvalidPagination):
+		status = fiber.StatusBadRequest
+		message = ErrInvalidPagination.Error()
 	case errors.Is(err, ErrEmailNotFound):
 		status = fiber.StatusNotFound
 		message = "Email not found"

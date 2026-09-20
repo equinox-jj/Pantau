@@ -3,6 +3,7 @@ module pantau
 go 1.27.1
 
 require (
+	github.com/cloudinary/cloudinary-go/v2 v2.16.0
 	github.com/go-playground/validator/v10 v10.30.4
 	github.com/gofiber/fiber/v3 v3.5.0
 	github.com/golang-jwt/jwt/v5 v5.3.1
@@ -16,6 +17,7 @@ require (
 )
 
 require (
+	github.com/creasty/defaults v1.7.0 // indirect
 	github.com/fsnotify/fsnotify v1.10.1 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.15 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
@@ -23,6 +25,7 @@ require (
 	github.com/go-viper/mapstructure/v2 v2.5.0 // indirect
 	github.com/gofiber/schema v1.8.7 // indirect
 	github.com/gofiber/utils/v2 v2.5.2 // indirect
+	github.com/gorilla/schema v1.4.1 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
 	github.com/jackc/pgx/v5 v5.11.0 // indirect

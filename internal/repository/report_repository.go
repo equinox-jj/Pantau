@@ -7,7 +7,6 @@ import (
 	apperror "pantau/pkg/errors"
 	"pantau/pkg/utils"
 
-	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -19,10 +18,10 @@ type StatusCountProjection struct {
 
 type ReportRepository interface {
 	FindNearbyReport(ctx context.Context, latitude, longitude float64, radiusMeters, limit int) ([]entity.Report, error)
-	FindByReporterID(ctx fiber.Ctx, reporterID uuid.UUID) ([]entity.Report, int64, error)
+	FindByReporterID(ctx context.Context, reporterID uuid.UUID, page, pageSize int) ([]entity.Report, int64, error)
 	CountByReporterID(ctx context.Context, reporterID uuid.UUID) (int64, error)
 	CountByReporterIDAndStatus(ctx context.Context, reporterID uuid.UUID, status entity.ReportStatus) (int64, error)
-	FindQueueReports(ctx fiber.Ctx, statuses []string, latitude, longitude float64, radiusMeters int) ([]entity.Report, int64, error)
+	FindQueueReports(ctx context.Context, statuses []string, latitude, longitude float64, radiusMeters, page, pageSize int) ([]entity.Report, int64, error)
 	CountQueueReportsByStatus(ctx context.Context, latitude, longitude float64, radiusMeters int) ([]StatusCountProjection, error)
 }
 
@@ -59,10 +58,11 @@ func (r *reportRepositoryImpl) FindNearbyReport(
 }
 
 func (r *reportRepositoryImpl) FindByReporterID(
-	ctx fiber.Ctx,
+	ctx context.Context,
 	reporterID uuid.UUID,
+	page, pageSize int,
 ) ([]entity.Report, int64, error) {
-	query := r.db.WithContext(ctx.Context()).
+	query := r.db.WithContext(ctx).
 		Model(&entity.Report{}).
 		Where("reporter_id = ?", reporterID)
 
@@ -72,26 +72,30 @@ func (r *reportRepositoryImpl) FindByReporterID(
 	}
 
 	reports := make([]entity.Report, 0)
-	err := query.
+	if err := query.
 		Preload("Category").
 		Order("created_at DESC").
 		Order("id ASC").
-		Scopes(utils.Paginate(ctx)).
+		Scopes(utils.Paginate(page, pageSize)).
 		Find(&reports).
-		Error
+		Error; err != nil {
+		return nil, 0, reportRepositoryError(err)
+	}
 
-	return reports, total, reportRepositoryError(err)
+	return reports, total, nil
 }
 
 func (r *reportRepositoryImpl) CountByReporterID(ctx context.Context, reporterID uuid.UUID) (int64, error) {
 	var count int64
-	err := r.db.WithContext(ctx).
+	if err := r.db.WithContext(ctx).
 		Model(&entity.Report{}).
 		Where("reporter_id = ?", reporterID).
 		Count(&count).
-		Error
+		Error; err != nil {
+		return 0, reportRepositoryError(err)
+	}
 
-	return count, reportRepositoryError(err)
+	return count, nil
 }
 
 func (r *reportRepositoryImpl) CountByReporterIDAndStatus(
@@ -100,27 +104,29 @@ func (r *reportRepositoryImpl) CountByReporterIDAndStatus(
 	status entity.ReportStatus,
 ) (int64, error) {
 	var count int64
-	err := r.db.WithContext(ctx).
+	if err := r.db.WithContext(ctx).
 		Model(&entity.Report{}).
 		Where("reporter_id = ? AND status = ?", reporterID, status).
 		Count(&count).
-		Error
+		Error; err != nil {
+		return 0, reportRepositoryError(err)
+	}
 
-	return count, reportRepositoryError(err)
+	return count, nil
 }
 
 func (r *reportRepositoryImpl) FindQueueReports(
-	ctx fiber.Ctx,
+	ctx context.Context,
 	statuses []string,
 	latitude, longitude float64,
-	radiusMeters int,
+	radiusMeters, page, pageSize int,
 ) ([]entity.Report, int64, error) {
 	reports := make([]entity.Report, 0)
 	if len(statuses) == 0 {
 		return reports, 0, nil
 	}
 
-	query := r.db.WithContext(ctx.Context()).
+	query := r.db.WithContext(ctx).
 		Model(&entity.Report{}).
 		Where("status::text IN ?", statuses).
 		Where("ST_DWithin(location, ST_MakePoint(?, ?)::geography, ?)", longitude, latitude, radiusMeters)
@@ -130,14 +136,16 @@ func (r *reportRepositoryImpl) FindQueueReports(
 		return nil, 0, reportRepositoryError(err)
 	}
 
-	err := query.
+	if err := query.
 		Order("created_at ASC").
 		Order("id ASC").
-		Scopes(utils.Paginate(ctx)).
+		Scopes(utils.Paginate(page, pageSize)).
 		Find(&reports).
-		Error
+		Error; err != nil {
+		return nil, 0, reportRepositoryError(err)
+	}
 
-	return reports, total, reportRepositoryError(err)
+	return reports, total, nil
 }
 
 func (r *reportRepositoryImpl) CountQueueReportsByStatus(
@@ -152,16 +160,18 @@ func (r *reportRepositoryImpl) CountQueueReportsByStatus(
 		entity.ReportStatusResolved,
 	}
 	counts := make([]StatusCountProjection, 0)
-	err := r.db.WithContext(ctx).
+	if err := r.db.WithContext(ctx).
 		Model(&entity.Report{}).
 		Select("status::text AS status, count(*) AS count").
 		Where("status::text IN ?", statuses).
 		Where("ST_DWithin(location, ST_MakePoint(?, ?)::geography, ?)", longitude, latitude, radiusMeters).
 		Group("status").
 		Scan(&counts).
-		Error
+		Error; err != nil {
+		return nil, reportRepositoryError(err)
+	}
 
-	return counts, reportRepositoryError(err)
+	return counts, nil
 }
 
 func reportRepositoryError(err error) error {

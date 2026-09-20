@@ -1,18 +1,12 @@
 package utils
 
-import (
-	"github.com/gofiber/fiber/v3"
-	"gorm.io/gorm"
-)
+import "gorm.io/gorm"
 
-func Paginate(ctx fiber.Ctx) func(db *gorm.DB) *gorm.DB {
+func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		page := fiber.Query(ctx, "page", 1)
 		if page <= 0 {
 			page = 1
 		}
-
-		pageSize := fiber.Query(ctx, "page_size", 10)
 
 		switch {
 		case pageSize > 100:

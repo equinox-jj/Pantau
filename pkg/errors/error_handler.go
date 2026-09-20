@@ -71,6 +71,9 @@ func ErrorHandler(
 	case errors.Is(err, ErrUserNotFound):
 		status = fiber.StatusNotFound
 		message = "User not found"
+	case errors.Is(err, ErrCategoryNotFound):
+		status = fiber.StatusNotFound
+		message = "Category not found"
 	case errors.Is(err, ErrReportNotFound):
 		status = fiber.StatusNotFound
 		message = "Report not found"

@@ -8,5 +8,7 @@ var Module = fx.Module(
 		NewUserRepository,
 		NewReportRepository,
 		NewReportPhotoRepository,
+		NewReportStatusRepository,
+		NewCategoryRepository,
 	),
 )

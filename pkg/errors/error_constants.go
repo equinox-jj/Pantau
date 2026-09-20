@@ -6,6 +6,7 @@ var (
 	ErrUnauthorized            error = errors.New("unauthorized")
 	ErrForbidden               error = errors.New("forbidden")
 	ErrUserNotFound            error = errors.New("user not found")
+	ErrCategoryNotFound        error = errors.New("category not found")
 	ErrReportNotFound          error = errors.New("report not found")
 	ErrInvalidLimit            error = errors.New("limit must be non-negative")
 	ErrInvalidPagination       error = errors.New("limit must be positive and offset must be non-negative")

@@ -30,7 +30,7 @@ func (repo *reportPhotoRepositoryImpl) FindByReportID(ctx context.Context, repor
 		Order("position ASC").
 		Find(&photos).
 		Error; err != nil {
-		slog.Error("[ReportPhotoRepository] Failed to find report photos by report ID", "reportId", reportId, "error", err)
+		slog.Error("[ReportPhotoRepository.FindByReportID] Failed to find report photos by report ID", "reportId", reportId, "error", err)
 		return nil, err
 	}
 
@@ -46,7 +46,7 @@ func (repo *reportPhotoRepositoryImpl) FindByReportIDs(ctx context.Context, repo
 		Order("position ASC").
 		Find(&photos).
 		Error; err != nil {
-		slog.Error("[ReportPhotoRepository] Failed to find report photos by report IDs", "reportIds", reportIds, "error", err)
+		slog.Error("[ReportPhotoRepository.FindByReportIDs] Failed to find report photos by report IDs", "reportIds", reportIds, "error", err)
 		return nil, err
 	}
 

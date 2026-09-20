@@ -95,6 +95,27 @@ func ErrorHandler(
 	case errors.Is(err, ErrUnexpectedSigningMethod):
 		status = fiber.StatusUnauthorized
 		message = "Invalid token"
+	case errors.Is(err, ErrImageRequired):
+		status = fiber.StatusBadRequest
+		message = ErrImageRequired.Error()
+	case errors.Is(err, ErrImageTooLarge):
+		status = fiber.StatusRequestEntityTooLarge
+		message = ErrImageTooLarge.Error()
+	case errors.Is(err, ErrInvalidType):
+		status = fiber.StatusUnsupportedMediaType
+		message = ErrInvalidType.Error()
+	case errors.Is(err, ErrInvalidImage):
+		status = fiber.StatusBadRequest
+		message = ErrInvalidImage.Error()
+	case errors.Is(err, ErrUploadFailed):
+		status = fiber.StatusInternalServerError
+		message = ErrUploadFailed.Error()
+	case errors.Is(err, ErrIDRequired):
+		status = fiber.StatusBadRequest
+		message = ErrIDRequired.Error()
+	case errors.Is(err, ErrDeleteFailed):
+		status = fiber.StatusInternalServerError
+		message = ErrDeleteFailed.Error()
 	}
 
 	return ctx.

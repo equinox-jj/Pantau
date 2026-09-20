@@ -29,8 +29,7 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 
 func (repo *userRepositoryImpl) FindByID(ctx context.Context, id uuid.UUID) (*entity.User, error) {
 	var user entity.User
-	if err := repo.db.
-		WithContext(ctx).
+	if err := repo.db.WithContext(ctx).
 		Where("id = ?", id).
 		First(&user).
 		Error; err != nil {
@@ -47,8 +46,7 @@ func (repo *userRepositoryImpl) Create(
 	ctx context.Context,
 	user *entity.User,
 ) error {
-	if err := repo.db.
-		WithContext(ctx).
+	if err := repo.db.WithContext(ctx).
 		Create(user).
 		Error; err != nil {
 		slog.Error("[UserRepository] Failed to create user", "email", user.Email, "error", err)
@@ -60,8 +58,7 @@ func (repo *userRepositoryImpl) Create(
 func (repo *userRepositoryImpl) FindByEmail(ctx context.Context, email string) (*entity.User, error) {
 	var user entity.User
 
-	if err := repo.db.
-		WithContext(ctx).
+	if err := repo.db.WithContext(ctx).
 		Where("email = ?", email).
 		First(&user).
 		Error; err != nil {
@@ -80,8 +77,7 @@ func (repo *userRepositoryImpl) FindByEmail(ctx context.Context, email string) (
 func (repo *userRepositoryImpl) ExistsByEmail(ctx context.Context, email string) (bool, error) {
 	var count int64
 
-	if err := repo.db.
-		WithContext(ctx).
+	if err := repo.db.WithContext(ctx).
 		Model(&entity.User{}).
 		Where("email = ?", email).
 		Count(&count).

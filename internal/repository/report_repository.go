@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"log/slog"
 	"pantau/internal/entity"
 	apperror "pantau/pkg/errors"
 	"pantau/pkg/utils"
@@ -11,7 +12,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type StatusCountProjection struct {
+type statusCountProjection struct {
 	Status entity.ReportStatus `gorm:"column:status" json:"status"`
 	Count  int64               `gorm:"column:count" json:"count"`
 }
@@ -22,7 +23,7 @@ type ReportRepository interface {
 	CountByReporterID(ctx context.Context, reporterID uuid.UUID) (int64, error)
 	CountByReporterIDAndStatus(ctx context.Context, reporterID uuid.UUID, status entity.ReportStatus) (int64, error)
 	FindQueueReports(ctx context.Context, statuses []string, latitude, longitude float64, radiusMeters, page, pageSize int) ([]entity.Report, int64, error)
-	CountQueueReportsByStatus(ctx context.Context, latitude, longitude float64, radiusMeters int) ([]StatusCountProjection, error)
+	CountQueueReportsByStatus(ctx context.Context, latitude, longitude float64, radiusMeters int) ([]statusCountProjection, error)
 }
 
 type reportRepositoryImpl struct {
@@ -51,6 +52,7 @@ func (repo *reportRepositoryImpl) FindNearbyReport(
 		LIMIT ?`, longitude, latitude, radiusMeters, longitude, latitude, limit).
 		Scan(&reports).
 		Error; err != nil {
+		slog.Error("[ReportRepository] Failed to find nearby reports", "latitude", latitude, "longitude", longitude, "radius_meters", radiusMeters, "limit", limit, "error", err)
 		return nil, repo.reportRepositoryError(err)
 	}
 
@@ -68,6 +70,7 @@ func (repo *reportRepositoryImpl) FindByReporterID(
 
 	var total int64
 	if err := query.Count(&total).Error; err != nil {
+		slog.Error("[ReportRepository] Failed to count reports by reporter id", "reporter_id", reporterID, "error", err)
 		return nil, 0, repo.reportRepositoryError(err)
 	}
 
@@ -79,6 +82,7 @@ func (repo *reportRepositoryImpl) FindByReporterID(
 		Scopes(utils.Paginate(page, pageSize)).
 		Find(&reports).
 		Error; err != nil {
+		slog.Error("[ReportRepository] Failed to find reports by reporter id", "reporter_id", reporterID, "page", page, "page_size", pageSize, "error", err)
 		return nil, 0, repo.reportRepositoryError(err)
 	}
 
@@ -92,6 +96,7 @@ func (repo *reportRepositoryImpl) CountByReporterID(ctx context.Context, reporte
 		Where("reporter_id = ?", reporterID).
 		Count(&count).
 		Error; err != nil {
+		slog.Error("[ReportRepository] Failed to count reports by reporter id", "reporter_id", reporterID, "error", err)
 		return 0, repo.reportRepositoryError(err)
 	}
 
@@ -109,6 +114,7 @@ func (repo *reportRepositoryImpl) CountByReporterIDAndStatus(
 		Where("reporter_id = ? AND status = ?", reporterID, status).
 		Count(&count).
 		Error; err != nil {
+		slog.Error("[ReportRepository] Failed to count reports by reporter id and status", "reporter_id", reporterID, "status", status, "error", err)
 		return 0, repo.reportRepositoryError(err)
 	}
 
@@ -133,6 +139,7 @@ func (repo *reportRepositoryImpl) FindQueueReports(
 
 	var total int64
 	if err := query.Count(&total).Error; err != nil {
+		slog.Error("[ReportRepository] Failed to count queue reports", "statuses", statuses, "latitude", latitude, "longitude", longitude, "radius_meters", radiusMeters, "error", err)
 		return nil, 0, repo.reportRepositoryError(err)
 	}
 
@@ -142,6 +149,7 @@ func (repo *reportRepositoryImpl) FindQueueReports(
 		Scopes(utils.Paginate(page, pageSize)).
 		Find(&reports).
 		Error; err != nil {
+		slog.Error("[ReportRepository] Failed to find queue reports", "statuses", statuses, "latitude", latitude, "longitude", longitude, "radius_meters", radiusMeters, "page", page, "page_size", pageSize, "error", err)
 		return nil, 0, repo.reportRepositoryError(err)
 	}
 
@@ -152,14 +160,14 @@ func (repo *reportRepositoryImpl) CountQueueReportsByStatus(
 	ctx context.Context,
 	latitude, longitude float64,
 	radiusMeters int,
-) ([]StatusCountProjection, error) {
+) ([]statusCountProjection, error) {
 	statuses := []entity.ReportStatus{
 		entity.ReportStatusReported,
 		entity.ReportStatusAcknowledged,
 		entity.ReportStatusInProgress,
 		entity.ReportStatusResolved,
 	}
-	counts := make([]StatusCountProjection, 0)
+	counts := make([]statusCountProjection, 0)
 	if err := repo.db.WithContext(ctx).
 		Model(&entity.Report{}).
 		Select("status::text AS status, count(*) AS count").
@@ -168,6 +176,7 @@ func (repo *reportRepositoryImpl) CountQueueReportsByStatus(
 		Group("status").
 		Scan(&counts).
 		Error; err != nil {
+		slog.Error("[ReportRepository] Failed to count queue reports by status", "latitude", latitude, "longitude", longitude, "radius_meters", radiusMeters, "error", err)
 		return nil, repo.reportRepositoryError(err)
 	}
 

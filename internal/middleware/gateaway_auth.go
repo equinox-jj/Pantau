@@ -89,9 +89,9 @@ func (s *GateawayAuth) Authenticate(ctx fiber.Ctx) error {
 // continue. Register it after Authenticate so a principal is available.
 // It returns ErrUnauthorized when no principal is present and ErrForbidden
 // when the user's role is not allowed. An empty role list allows no users.
-func RequireRoles(roles ...entity.UserRole) fiber.Handler {
+func (s *GateawayAuth) RequireRoles(roles ...entity.UserRole) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
-		user, ok := CurrentUser(ctx)
+		user, ok := s.currentUser(ctx)
 		if !ok {
 			slog.Error("[GAT] User not found", "user", user)
 			return apperror.ErrUnauthorized
@@ -107,7 +107,7 @@ func RequireRoles(roles ...entity.UserRole) fiber.Handler {
 // CurrentUser retrieves the principal stored by Authenticate for this request.
 // It returns a zero-value principal and false if the local value is absent or
 // has an unexpected type.
-func CurrentUser(ctx fiber.Ctx) (principal, bool) {
+func (s *GateawayAuth) currentUser(ctx fiber.Ctx) (principal, bool) {
 	user, ok := ctx.Locals(principalKey{}).(principal)
 	return user, ok
 }

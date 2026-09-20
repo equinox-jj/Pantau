@@ -27,9 +27,9 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 	return &userRepositoryImpl{db: db}
 }
 
-func (r *userRepositoryImpl) FindByID(ctx context.Context, id uuid.UUID) (*entity.User, error) {
+func (repo *userRepositoryImpl) FindByID(ctx context.Context, id uuid.UUID) (*entity.User, error) {
 	var user entity.User
-	if err := r.db.
+	if err := repo.db.
 		WithContext(ctx).
 		Where("id = ?", id).
 		First(&user).
@@ -43,11 +43,11 @@ func (r *userRepositoryImpl) FindByID(ctx context.Context, id uuid.UUID) (*entit
 	return &user, nil
 }
 
-func (r *userRepositoryImpl) Create(
+func (repo *userRepositoryImpl) Create(
 	ctx context.Context,
 	user *entity.User,
 ) error {
-	if err := r.db.
+	if err := repo.db.
 		WithContext(ctx).
 		Create(user).
 		Error; err != nil {
@@ -57,10 +57,10 @@ func (r *userRepositoryImpl) Create(
 	return nil
 }
 
-func (r *userRepositoryImpl) FindByEmail(ctx context.Context, email string) (*entity.User, error) {
+func (repo *userRepositoryImpl) FindByEmail(ctx context.Context, email string) (*entity.User, error) {
 	var user entity.User
 
-	if err := r.db.
+	if err := repo.db.
 		WithContext(ctx).
 		Where("email = ?", email).
 		First(&user).
@@ -77,10 +77,10 @@ func (r *userRepositoryImpl) FindByEmail(ctx context.Context, email string) (*en
 	return &user, nil
 }
 
-func (r *userRepositoryImpl) ExistsByEmail(ctx context.Context, email string) (bool, error) {
+func (repo *userRepositoryImpl) ExistsByEmail(ctx context.Context, email string) (bool, error) {
 	var count int64
 
-	if err := r.db.
+	if err := repo.db.
 		WithContext(ctx).
 		Model(&entity.User{}).
 		Where("email = ?", email).

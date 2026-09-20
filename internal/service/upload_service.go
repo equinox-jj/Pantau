@@ -29,8 +29,8 @@ func NewUploadService(cld *cloudinary.Cloudinary) UploadService {
 	}
 }
 
-func (service *uploadServiceImpl) Upload(ctx context.Context, file *multipart.FileHeader) (*upload.UploadResponse, error) {
-	if err := validate(file); err != nil {
+func (sv *uploadServiceImpl) Upload(ctx context.Context, file *multipart.FileHeader) (*upload.UploadResponse, error) {
+	if err := sv.validate(file); err != nil {
 		return nil, err
 	}
 
@@ -40,7 +40,7 @@ func (service *uploadServiceImpl) Upload(ctx context.Context, file *multipart.Fi
 	}
 	defer src.Close()
 
-	result, err := service.cld.Upload.Upload(
+	result, err := sv.cld.Upload.Upload(
 		ctx,
 		src,
 		uploader.UploadParams{
@@ -61,12 +61,12 @@ func (service *uploadServiceImpl) Upload(ctx context.Context, file *multipart.Fi
 	}, nil
 }
 
-func (service *uploadServiceImpl) Delete(ctx context.Context, id string) error {
+func (sv *uploadServiceImpl) Delete(ctx context.Context, id string) error {
 	if id == "" {
 		return apperror.ErrIDRequired
 	}
 
-	result, err := service.cld.Upload.Destroy(
+	result, err := sv.cld.Upload.Destroy(
 		ctx,
 		uploader.DestroyParams{
 			PublicID:     id,
@@ -91,7 +91,7 @@ func (service *uploadServiceImpl) Delete(ctx context.Context, id string) error {
 	return nil
 }
 
-func validate(file *multipart.FileHeader) error {
+func (sv *uploadServiceImpl) validate(file *multipart.FileHeader) error {
 	var allowedContentTypes = map[string]bool{ // Define allowed content types for image uploads
 		"image/jpeg": true,
 		"image/jpg":  true,
@@ -111,14 +111,14 @@ func validate(file *multipart.FileHeader) error {
 	if _, ok := allowedContentTypes[contentType]; !ok {
 		return apperror.ErrInvalidType
 	}
-	if !isDecodableImage(file) {
+	if !sv.isDecodableImage(file) {
 		return apperror.ErrInvalidImage
 	}
 
 	return nil
 }
 
-func isDecodableImage(file *multipart.FileHeader) bool {
+func (sv *uploadServiceImpl) isDecodableImage(file *multipart.FileHeader) bool {
 	src, err := file.Open()
 	if err != nil {
 		return false

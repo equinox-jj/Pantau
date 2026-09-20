@@ -8,11 +8,11 @@ import (
 	playground "github.com/go-playground/validator/v10"
 )
 
-type StructValidator struct {
+type structValidator struct {
 	validate *playground.Validate
 }
 
-func NewStructValidator() *StructValidator {
+func NewStructValidator() *structValidator {
 	v := playground.New()
 	v.RegisterTagNameFunc(func(field reflect.StructField) string {
 		name, _, _ := strings.Cut(
@@ -27,12 +27,12 @@ func NewStructValidator() *StructValidator {
 		return name
 	})
 
-	return &StructValidator{
+	return &structValidator{
 		validate: v,
 	}
 }
 
-func (v *StructValidator) Validate(out any) error {
+func (v *structValidator) Validate(out any) error {
 	if err := v.validate.Struct(out); err != nil {
 		slog.Error("[Validator] Failed to validate struct", "error", err)
 		return err

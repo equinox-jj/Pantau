@@ -11,27 +11,27 @@ import (
 )
 
 type Config struct {
-	Server     ServerConfig     `mapstructure:"server"`
-	App        AppConfig        `mapstructure:"app"`
-	Database   DatabaseConfig   `mapstructure:"database"`
-	Migration  MigrationConfig  `mapstructure:"migration"`
-	GORM       GORMConfig       `mapstructure:"gorm"`
-	Upload     UploadConfig     `mapstructure:"upload"`
-	Logging    LoggingConfig    `mapstructure:"logging"`
-	JWT        JWTConfig        `mapstructure:"jwt"`
-	Cloudinary CloudinaryConfig `mapstructure:"cloudinary"`
+	Server     serverConfig     `mapstructure:"server"`
+	App        appConfig        `mapstructure:"app"`
+	Database   databaseConfig   `mapstructure:"database"`
+	Migration  migrationConfig  `mapstructure:"migration"`
+	GORM       gormConfig       `mapstructure:"gorm"`
+	Upload     uploadConfig     `mapstructure:"upload"`
+	Logging    loggingConfig    `mapstructure:"logging"`
+	JWT        jwtConfig        `mapstructure:"jwt"`
+	Cloudinary cloudinaryConfig `mapstructure:"cloudinary"`
 }
 
-type ServerConfig struct {
+type serverConfig struct {
 	Port int `mapstructure:"port"`
 }
 
-type AppConfig struct {
+type appConfig struct {
 	Name string `mapstructure:"name"`
 	Env  string `mapstructure:"env"`
 }
 
-type DatabaseConfig struct {
+type databaseConfig struct {
 	Host         string `mapstructure:"host"`
 	Port         int    `mapstructure:"port"`
 	Name         string `mapstructure:"name"`
@@ -41,30 +41,30 @@ type DatabaseConfig struct {
 	MaxIdleConns int    `mapstructure:"max_idle_conns"`
 }
 
-type MigrationConfig struct {
+type migrationConfig struct {
 	Enabled bool `mapstructure:"enabled"`
 }
 
-type GORMConfig struct {
+type gormConfig struct {
 	ShowSQL bool `mapstructure:"show_sql"`
 }
 
-type UploadConfig struct {
+type uploadConfig struct {
 	Enabled        bool   `mapstructure:"enabled"`
 	MaxFileSize    string `mapstructure:"max_file_size"`
 	MaxRequestSize string `mapstructure:"max_request_size"`
 }
 
-type LoggingConfig struct {
+type loggingConfig struct {
 	Level string `mapstructure:"level"`
 }
 
-type JWTConfig struct {
+type jwtConfig struct {
 	SecretKey  string        `mapstructure:"secret_key"`
 	Expiration time.Duration `mapstructure:"expiration"`
 }
 
-type CloudinaryConfig struct {
+type cloudinaryConfig struct {
 	CloudName string `mapstructure:"cloud_name"`
 	APIKey    string `mapstructure:"api_key"`
 	APISecret string `mapstructure:"api_secret"`

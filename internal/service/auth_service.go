@@ -35,8 +35,8 @@ func NewAuthService(
 	}
 }
 
-func (service *authServiceImpl) Login(ctx context.Context, req auth.LoginRequest) (*auth.AuthResponse, error) {
-	user, err := service.userRepo.FindByEmail(ctx, req.Email)
+func (sv *authServiceImpl) Login(ctx context.Context, req auth.LoginRequest) (*auth.AuthResponse, error) {
+	user, err := sv.userRepo.FindByEmail(ctx, req.Email)
 	if err != nil {
 		slog.Error("[AuthService] Failed to find user by email", "email", req.Email, "error", err)
 		return nil, err
@@ -46,7 +46,7 @@ func (service *authServiceImpl) Login(ctx context.Context, req auth.LoginRequest
 		return nil, apperror.ErrEmailNotFound
 	}
 
-	if err := service.passHasher.Compare(
+	if err := sv.passHasher.Compare(
 		user.Password,
 		req.Password,
 	); err != nil {
@@ -54,11 +54,11 @@ func (service *authServiceImpl) Login(ctx context.Context, req auth.LoginRequest
 		return nil, apperror.ErrInvalidEmailOrPassword
 	}
 
-	return service.buildAuthResponse(user)
+	return sv.buildAuthResponse(user)
 }
 
-func (service *authServiceImpl) Register(ctx context.Context, req auth.RegisterRequest) (*auth.AuthResponse, error) {
-	exists, err := service.userRepo.ExistsByEmail(ctx, req.Email)
+func (sv *authServiceImpl) Register(ctx context.Context, req auth.RegisterRequest) (*auth.AuthResponse, error) {
+	exists, err := sv.userRepo.ExistsByEmail(ctx, req.Email)
 	if err != nil {
 		slog.Error("[AuthService] Failed to check if user exists by email", "email", req.Email, "error", err)
 		return nil, err
@@ -68,7 +68,7 @@ func (service *authServiceImpl) Register(ctx context.Context, req auth.RegisterR
 		return nil, apperror.ErrEmailAlreadyExists
 	}
 
-	hashedPassword, err := service.passHasher.Hash(req.Password)
+	hashedPassword, err := sv.passHasher.Hash(req.Password)
 	if err != nil {
 		slog.Error("[AuthService] Failed to hash password", "email", req.Email, "error", err)
 		return nil, err
@@ -81,16 +81,16 @@ func (service *authServiceImpl) Register(ctx context.Context, req auth.RegisterR
 		DisplayName: req.DisplayName,
 		Role:        entity.RoleCitizen,
 	}
-	if err := service.userRepo.Create(ctx, user); err != nil {
+	if err := sv.userRepo.Create(ctx, user); err != nil {
 		slog.Error("[AuthService] Failed to create user", "email", req.Email, "error", err)
 		return nil, err
 	}
 
-	return service.buildAuthResponse(user)
+	return sv.buildAuthResponse(user)
 }
 
-func (service *authServiceImpl) buildAuthResponse(user *entity.User) (*auth.AuthResponse, error) {
-	token, err := service.jwtService.GenerateToken(user)
+func (sv *authServiceImpl) buildAuthResponse(user *entity.User) (*auth.AuthResponse, error) {
+	token, err := sv.jwtService.GenerateToken(user)
 	if err != nil {
 		slog.Error("[AuthService] Failed to generate token", "email", user.Email, "error", err)
 		return nil, err
@@ -98,7 +98,7 @@ func (service *authServiceImpl) buildAuthResponse(user *entity.User) (*auth.Auth
 
 	return &auth.AuthResponse{
 		AccessToken: token,
-		ExpiresIn:   service.jwtService.ExpirationSeconds(),
+		ExpiresIn:   sv.jwtService.ExpirationSeconds(),
 		User: auth.AuthUserInfo{
 			ID:          user.ID,
 			Email:       user.Email,

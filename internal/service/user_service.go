@@ -17,6 +17,6 @@ func NewUserService(userRepo repository.UserRepository) UserService {
 	return &userServiceImpl{userRepo: userRepo}
 }
 
-func (service *userServiceImpl) GetProfile(ctx context.Context, userId int) error {
+func (sv *userServiceImpl) GetProfile(ctx context.Context, userId int) error {
 	panic("unimplemented")
 }

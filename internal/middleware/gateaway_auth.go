@@ -107,7 +107,7 @@ func (s *GateawayAuth) RequireRoles(roles ...entity.UserRole) fiber.Handler {
 // CurrentUser retrieves the principal stored by Authenticate for this request.
 // It returns a zero-value principal and false if the local value is absent or
 // has an unexpected type.
-func (s *GateawayAuth) currentUser(ctx fiber.Ctx) (principal, bool) {
+func (GateawayAuth) currentUser(ctx fiber.Ctx) (principal, bool) {
 	user, ok := ctx.Locals(principalKey{}).(principal)
 	return user, ok
 }

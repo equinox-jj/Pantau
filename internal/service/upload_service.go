@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"image"
+	"log/slog"
 	"mime/multipart"
 	"pantau/internal/dto/upload"
 
@@ -31,14 +32,20 @@ func NewUploadService(cld *cloudinary.Cloudinary) UploadService {
 
 func (sv *uploadServiceImpl) Upload(ctx context.Context, file *multipart.FileHeader) (*upload.UploadResponse, error) {
 	if err := sv.validate(file); err != nil {
+		slog.Error("[UploadService] Failed to validate image", "error", err)
 		return nil, err
 	}
 
 	src, err := file.Open()
 	if err != nil {
+		slog.Error("[UploadService] Failed to open file for upload", "filename", file.Filename, "error", err)
 		return nil, apperror.ErrUploadFailed
 	}
-	defer src.Close()
+	defer func() {
+		if err := src.Close(); err != nil {
+			slog.Error("[UploadService] Failed to close uploaded file", "filename", file.Filename, "error", err)
+		}
+	}()
 
 	result, err := sv.cld.Upload.Upload(
 		ctx,
@@ -51,6 +58,7 @@ func (sv *uploadServiceImpl) Upload(ctx context.Context, file *multipart.FileHea
 		},
 	)
 	if err != nil {
+		slog.Error("[UploadService] Failed to upload image", "filename", file.Filename, "error", err)
 		return nil, fmt.Errorf("%w: %v", apperror.ErrUploadFailed, err)
 	}
 
@@ -63,6 +71,7 @@ func (sv *uploadServiceImpl) Upload(ctx context.Context, file *multipart.FileHea
 
 func (sv *uploadServiceImpl) Delete(ctx context.Context, id string) error {
 	if id == "" {
+		slog.Error("[UploadService] Image ID is required", "error", apperror.ErrIDRequired)
 		return apperror.ErrIDRequired
 	}
 
@@ -74,6 +83,7 @@ func (sv *uploadServiceImpl) Delete(ctx context.Context, id string) error {
 		},
 	)
 	if err != nil {
+		slog.Error("[UploadService] Failed to delete image", "id", id, "error", err)
 		return fmt.Errorf("%w: %v", apperror.ErrDeleteFailed, err)
 	}
 
@@ -81,6 +91,7 @@ func (sv *uploadServiceImpl) Delete(ctx context.Context, id string) error {
 		result.Result != "not found" &&
 		result.Result != "not_found" {
 
+		slog.Error("[UploadService] Unexpected image deletion status", "id", id, "status", result.Result, "error", apperror.ErrDeleteFailed)
 		return fmt.Errorf(
 			"%w: cloudinary status: %s",
 			apperror.ErrDeleteFailed,
@@ -101,31 +112,44 @@ func (sv *uploadServiceImpl) validate(file *multipart.FileHeader) error {
 	const maxFileSize = 5 * 1024 * 1024 // Set max image to 5MB
 
 	if file == nil || file.Size == 0 {
+		slog.Error("[UploadService] Image is required", "error", apperror.ErrImageRequired)
 		return apperror.ErrImageRequired
 	}
 	if file.Size > maxFileSize {
+		slog.Error("[UploadService] Image exceeds maximum file size", "filename", file.Filename, "size", file.Size, "error", apperror.ErrImageTooLarge)
 		return apperror.ErrImageTooLarge
 	}
 
 	contentType := file.Header.Get("Content-Type")
 	if _, ok := allowedContentTypes[contentType]; !ok {
+		slog.Error("[UploadService] Invalid image content type", "filename", file.Filename, "content_type", contentType, "error", apperror.ErrInvalidType)
 		return apperror.ErrInvalidType
 	}
 	if !sv.isDecodableImage(file) {
+		slog.Error("[UploadService] Invalid image", "filename", file.Filename, "error", apperror.ErrInvalidImage)
 		return apperror.ErrInvalidImage
 	}
 
 	return nil
 }
 
-func (sv *uploadServiceImpl) isDecodableImage(file *multipart.FileHeader) bool {
+func (uploadServiceImpl) isDecodableImage(file *multipart.FileHeader) bool {
 	src, err := file.Open()
 	if err != nil {
+		slog.Error("[UploadService] Failed to open image for decoding", "filename", file.Filename, "error", err)
 		return false
 	}
-	defer src.Close()
+	defer func() {
+		if err := src.Close(); err != nil {
+			slog.Error("[UploadService] Failed to close decoded image", "filename", file.Filename, "error", err)
+		}
+	}()
 
 	_, _, err = image.Decode(src)
+	if err != nil {
+		slog.Error("[UploadService] Failed to decode image", "filename", file.Filename, "error", err)
+		return false
+	}
 
-	return err == nil
+	return true
 }

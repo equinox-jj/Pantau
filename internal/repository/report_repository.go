@@ -174,7 +174,7 @@ func (repo *reportRepositoryImpl) CountQueueReportsByStatus(
 	return counts, nil
 }
 
-func (repo *reportRepositoryImpl) reportRepositoryError(err error) error {
+func (reportRepositoryImpl) reportRepositoryError(err error) error {
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return apperror.ErrReportNotFound
 	}

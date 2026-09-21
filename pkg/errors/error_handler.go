@@ -61,6 +61,12 @@ func ErrorHandler(
 	message := "Internal server error"
 
 	switch {
+	case errors.Is(err, ErrValidation):
+		status = fiber.StatusBadRequest
+		message = err.Error()
+	case errors.Is(err, ErrIllegalTransition):
+		status = fiber.StatusConflict
+		message = err.Error()
 	case errors.Is(err, ErrUnauthorized):
 		status = fiber.StatusUnauthorized
 		message = "Error: Unauthorized"

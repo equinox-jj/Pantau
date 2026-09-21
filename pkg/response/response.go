@@ -12,10 +12,12 @@ type ResponseData[T any] struct {
 }
 
 type Pagination struct {
-	Page       int `json:"page,omitempty"`
-	Limit      int `json:"limit,omitempty"`
-	Total      int `json:"total,omitempty"`
-	TotalPages int `json:"total_pages,omitempty"`
+	Page       int  `json:"page,omitempty"`
+	Limit      int  `json:"limit,omitempty"`
+	Offset     int  `json:"offset"`
+	Total      int  `json:"total,omitempty"`
+	TotalPages int  `json:"total_pages,omitempty"`
+	HasNext    bool `json:"has_next"`
 }
 
 type ErrorDetail struct {

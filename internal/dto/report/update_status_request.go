@@ -1,8 +1,8 @@
 package report
 
-import "pantau/internal/entity"
+import "pantau/internal/enums"
 
 type UpdateStatusRequest struct {
-	ToStatus *entity.ReportStatus `json:"to_status" validate:"required,oneof=reported acknowledged in_progress resolved closed rejected"`
-	Note     *string              `json:"note" validate:"omitempty,max=1000"`
+	ToStatus *enums.ReportStatus `json:"to_status" validate:"required,oneof=reported acknowledged in_progress resolved closed rejected"`
+	Note     *string             `json:"note" validate:"omitempty,max=1000"`
 }

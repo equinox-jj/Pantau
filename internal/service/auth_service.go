@@ -6,6 +6,7 @@ import (
 	"pantau/internal/dto/auth"
 	"pantau/internal/dto/mapper"
 	"pantau/internal/entity"
+	"pantau/internal/enums"
 	"pantau/internal/repository"
 	apperror "pantau/pkg/errors"
 	"pantau/pkg/security"
@@ -80,7 +81,7 @@ func (sv *authServiceImpl) Register(ctx context.Context, req auth.RegisterReques
 		Email:       req.Email,
 		Password:    hashedPassword,
 		DisplayName: req.DisplayName,
-		Role:        entity.RoleCitizen,
+		Role:        enums.RoleCitizen,
 	}
 	if err := sv.userRepo.Create(ctx, user); err != nil {
 		slog.Error("[AuthService] Failed to create user", "email", req.Email, "error", err)

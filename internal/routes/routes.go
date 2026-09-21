@@ -2,7 +2,7 @@ package routes
 
 import (
 	"pantau/internal/controller"
-	"pantau/internal/entity"
+	"pantau/internal/enums"
 	"pantau/internal/middleware"
 
 	"github.com/gofiber/fiber/v3"
@@ -30,13 +30,13 @@ func RegisterRoutes(
 	categoryGroup.Get("/:id", nil)
 
 	reportGroup := api.Group("/reports")
-	reportGroup.Post("/", security.RequireRoles(entity.RoleCitizen), nil)
+	reportGroup.Post("/", security.RequireRoles(enums.RoleCitizen), nil)
 	reportGroup.Get("/:id", nil)
-	reportGroup.Patch("/:id", security.RequireRoles(entity.RoleCitizen), nil)
-	reportGroup.Delete("/:id", security.RequireRoles(entity.RoleCitizen), nil)
+	reportGroup.Patch("/:id", security.RequireRoles(enums.RoleCitizen), nil)
+	reportGroup.Delete("/:id", security.RequireRoles(enums.RoleCitizen), nil)
 	reportGroup.Get("/:id/history", nil)
-	reportGroup.Patch("/:id/status", security.RequireRoles(entity.RoleResolver), nil)
+	reportGroup.Patch("/:id/status", security.RequireRoles(enums.RoleResolver), nil)
 	reportGroup.Get("/nearby", nil)
-	reportGroup.Get("/mine", security.RequireRoles(entity.RoleCitizen), nil)
-	reportGroup.Get("/queue", security.RequireRoles(entity.RoleResolver), nil)
+	reportGroup.Get("/mine", security.RequireRoles(enums.RoleCitizen), nil)
+	reportGroup.Get("/queue", security.RequireRoles(enums.RoleResolver), nil)
 }

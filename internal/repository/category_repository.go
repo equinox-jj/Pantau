@@ -12,6 +12,7 @@ import (
 )
 
 type CategoryRepository interface {
+	FindByID(ctx context.Context, id int64) (*entity.Category, error)
 	FindActive(ctx context.Context) ([]entity.Category, error)
 	FindBySlug(ctx context.Context, slug string) (*entity.Category, error)
 }
@@ -56,5 +57,17 @@ func (repo *categoryRepositoryImpl) FindBySlug(ctx context.Context, slug string)
 		return nil, err
 	}
 
+	return &category, nil
+}
+
+func (repo *categoryRepositoryImpl) FindByID(ctx context.Context, id int64) (*entity.Category, error) {
+	var category entity.Category
+	if err := repo.db.WithContext(ctx).First(&category, "id = ?", id).Error; err != nil {
+		slog.Error("[CategoryRepository.FindByID] Failed to find category", "category_id", id, "error", err)
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, apperror.ErrCategoryNotFound
+		}
+		return nil, err
+	}
 	return &category, nil
 }

@@ -3,6 +3,8 @@ package errors
 import "errors"
 
 var (
+	ErrValidation                    = errors.New("validation failed")
+	ErrIllegalTransition             = errors.New("illegal report status transition")
 	ErrUnauthorized            error = errors.New("unauthorized")
 	ErrForbidden               error = errors.New("forbidden")
 	ErrUserNotFound            error = errors.New("user not found")

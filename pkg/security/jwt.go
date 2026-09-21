@@ -3,6 +3,7 @@ package security
 import (
 	"log/slog"
 	"pantau/internal/entity"
+	"pantau/internal/enums"
 	"time"
 
 	apperror "pantau/pkg/errors"
@@ -12,9 +13,9 @@ import (
 )
 
 type claims struct {
-	UserID uuid.UUID       `json:"uid"`
-	Email  string          `json:"email"`
-	Role   entity.UserRole `json:"role"`
+	UserID uuid.UUID      `json:"uid"`
+	Email  string         `json:"email"`
+	Role   enums.UserRole `json:"role"`
 	jwt.RegisteredClaims
 }
 

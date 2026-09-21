@@ -7,9 +7,11 @@ import (
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type ReportStatusRepository interface {
+	Save(ctx context.Context, history *entity.ReportStatusHistory) error
 	FindByReportID(ctx context.Context, reportID uuid.UUID) ([]entity.ReportStatusHistory, error)
 }
 
@@ -37,4 +39,12 @@ func (repo *reportStatusRepositoryImpl) FindByReportID(ctx context.Context, repo
 	}
 
 	return history, nil
+}
+
+func (repo *reportStatusRepositoryImpl) Save(ctx context.Context, history *entity.ReportStatusHistory) error {
+	if err := repo.db.WithContext(ctx).Omit(clause.Associations).Create(history).Error; err != nil {
+		slog.Error("[ReportStatusRepository.Save] Failed to save report status history", "report_id", history.ReportID, "to_status", history.ToStatus, "error", err)
+		return err
+	}
+	return nil
 }

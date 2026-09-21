@@ -3,7 +3,7 @@ package middleware
 
 import (
 	"log/slog"
-	"pantau/internal/entity"
+	"pantau/internal/enums"
 	"pantau/internal/repository"
 	apperror "pantau/pkg/errors"
 	"pantau/pkg/security"
@@ -21,7 +21,7 @@ type principalKey struct{}
 type principal struct {
 	ID    uuid.UUID
 	Email string
-	Role  entity.UserRole
+	Role  enums.UserRole
 }
 
 // GateawayAuth authenticates requests using a JWT and the corresponding user record.
@@ -89,7 +89,7 @@ func (s *GateawayAuth) Authenticate(ctx fiber.Ctx) error {
 // continue. Register it after Authenticate so a principal is available.
 // It returns ErrUnauthorized when no principal is present and ErrForbidden
 // when the user's role is not allowed. An empty role list allows no users.
-func (s *GateawayAuth) RequireRoles(roles ...entity.UserRole) fiber.Handler {
+func (s *GateawayAuth) RequireRoles(roles ...enums.UserRole) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
 		user, ok := s.currentUser(ctx)
 		if !ok {

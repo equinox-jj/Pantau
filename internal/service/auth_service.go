@@ -4,6 +4,7 @@ import (
 	"context"
 	"log/slog"
 	"pantau/internal/dto/auth"
+	"pantau/internal/dto/mapper"
 	"pantau/internal/entity"
 	"pantau/internal/repository"
 	apperror "pantau/pkg/errors"
@@ -96,16 +97,5 @@ func (sv *authServiceImpl) buildAuthResponse(user *entity.User) (*auth.AuthRespo
 		return nil, err
 	}
 
-	return &auth.AuthResponse{
-		Token:     token,
-		ExpiresIn: sv.jwtService.ExpirationSeconds(),
-		UserResponse: auth.UserResponse{
-			ID:          user.ID,
-			Email:       user.Email,
-			DisplayName: user.DisplayName,
-			Role:        user.Role,
-			CreatedAt:   user.CreatedAt,
-			UpdatedAt:   user.UpdatedAt,
-		},
-	}, nil
+	return mapper.AuthToResponse(token, sv.jwtService.ExpirationSeconds(), user), nil
 }

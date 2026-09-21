@@ -1,9 +1,25 @@
 package mapper
 
 import (
+	"pantau/internal/dto/auth"
 	"pantau/internal/dto/user"
 	"pantau/internal/entity"
 )
+
+func UserToAuthResponse(usr *entity.User) *auth.UserResponse {
+	if usr == nil {
+		return nil
+	}
+
+	return &auth.UserResponse{
+		ID:          usr.ID,
+		Email:       usr.Email,
+		DisplayName: usr.DisplayName,
+		Role:        usr.Role,
+		CreatedAt:   usr.CreatedAt,
+		UpdatedAt:   usr.UpdatedAt,
+	}
+}
 
 func UserToResponse(
 	usr *entity.User,

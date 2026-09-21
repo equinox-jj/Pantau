@@ -4,9 +4,13 @@ import (
 	"context"
 	"fmt"
 	"image"
+	_ "image/jpeg"
+	_ "image/png"
 	"log/slog"
 	"mime/multipart"
 	"pantau/internal/dto/upload"
+
+	_ "golang.org/x/image/webp"
 
 	apperror "pantau/pkg/errors"
 

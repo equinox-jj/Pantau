@@ -5,6 +5,7 @@ import (
 	"pantau/pkg/security"
 	"time"
 
+	"github.com/cloudinary/cloudinary-go/v2"
 	"go.uber.org/fx"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -12,6 +13,7 @@ import (
 var Module = fx.Module(
 	"pkg",
 	fx.Provide(
+		provideCloudinary,
 		fx.Annotate(
 			security.NewPasswordHasher,
 			fx.ParamTags(
@@ -41,6 +43,14 @@ var Module = fx.Module(
 		),
 	),
 )
+
+func provideCloudinary(cfg *config.Config) (*cloudinary.Cloudinary, error) {
+	return cloudinary.NewFromParams(
+		cfg.Cloudinary.CloudName,
+		cfg.Cloudinary.APIKey,
+		cfg.Cloudinary.APISecret,
+	)
+}
 
 func provideJwtSecret(cfg *config.Config) string {
 	return cfg.JWT.SecretKey

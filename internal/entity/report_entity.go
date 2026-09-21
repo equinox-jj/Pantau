@@ -12,7 +12,7 @@ type Report struct {
 	ID          uuid.UUID          `gorm:"column:id;type:uuid;primary_key;default:gen_random_uuid()"`
 	ReporterID  uuid.UUID          `gorm:"column:reporter_id;type:uuid;not null"`
 	Reporter    User               `gorm:"foreignKey:ReporterID"`
-	CategoryID  int64              `gorm:"column:category_id;not null"`
+	CategoryID  int64              `gorm:"column:category_id;type:bigint;not null"`
 	Category    Category           `gorm:"foreignKey:CategoryID"`
 	Description *string            `gorm:"column:description"`
 	Location    geo.GeoPoint       `gorm:"column:location;type:geography(Point,4326);not null"`

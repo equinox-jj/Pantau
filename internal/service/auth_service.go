@@ -97,13 +97,15 @@ func (sv *authServiceImpl) buildAuthResponse(user *entity.User) (*auth.AuthRespo
 	}
 
 	return &auth.AuthResponse{
-		AccessToken: token,
-		ExpiresIn:   sv.jwtService.ExpirationSeconds(),
-		User: auth.AuthUserInfo{
+		Token:     token,
+		ExpiresIn: sv.jwtService.ExpirationSeconds(),
+		UserResponse: auth.UserResponse{
 			ID:          user.ID,
 			Email:       user.Email,
 			DisplayName: user.DisplayName,
-			Role:        string(user.Role),
+			Role:        user.Role,
+			CreatedAt:   user.CreatedAt,
+			UpdatedAt:   user.UpdatedAt,
 		},
 	}, nil
 }

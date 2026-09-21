@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	playground "github.com/go-playground/validator/v10"
+	"github.com/go-playground/validator/v10/non-standard/validators"
 )
 
 type structValidator struct {
@@ -14,6 +15,10 @@ type structValidator struct {
 
 func NewStructValidator() *structValidator {
 	v := playground.New()
+	if err := v.RegisterValidation("notblank", validators.NotBlank); err != nil {
+		panic(err)
+	}
+
 	v.RegisterTagNameFunc(func(field reflect.StructField) string {
 		name, _, _ := strings.Cut(
 			field.Tag.Get("json"),

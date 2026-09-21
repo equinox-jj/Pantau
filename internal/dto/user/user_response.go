@@ -1,15 +1,5 @@
 package user
 
-import (
-	"time"
-
-	"github.com/google/uuid"
-)
-
-type UserResponse struct {
-	ID            uuid.UUID `json:"id"`
-	DisplayName   string    `json:"display_name"`
-	JoinedAt      time.Time `json:"joined_at"`
-	ReportsCount  int64     `json:"reports_count"`
-	ResolvedCount int64     `json:"resolved_count"`
-}
+// UserResponse is retained for existing profile consumers.
+// Deprecated: use ProfileResponse.
+type UserResponse = ProfileResponse

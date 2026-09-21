@@ -13,9 +13,11 @@ type ReportService interface {
 }
 
 type reportServiceImpl struct {
-	reportRepo      repository.ReportRepository
-	reportPhotoRepo repository.ReportPhotoRepository
-	UploadService   UploadService
+	reportRepo       repository.ReportRepository
+	reportStatusRepo repository.ReportStatusRepository
+	reportPhotoRepo  repository.ReportPhotoRepository
+	categoryRepo     repository.CategoryRepository
+	UploadService    UploadService
 }
 
 func NewReportService(reportRepo repository.ReportRepository) ReportService {

@@ -3,26 +3,14 @@ package middleware
 
 import (
 	"log/slog"
-	"pantau/internal/enums"
 	"pantau/internal/repository"
 	apperror "pantau/pkg/errors"
 	"pantau/pkg/security"
-	"slices"
+	"pantau/pkg/utils"
 	"strings"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/google/uuid"
 )
-
-// principalKey is a private context key that avoids collisions with other local keys.
-type principalKey struct{}
-
-// principal holds the authenticated user's current identity and role from the repository.
-type principal struct {
-	ID    uuid.UUID
-	Email string
-	Role  enums.UserRole
-}
 
 // GateawayAuth authenticates requests using a JWT and the corresponding user record.
 type GateawayAuth struct {
@@ -74,40 +62,6 @@ func (s *GateawayAuth) Authenticate(ctx fiber.Ctx) error {
 		return apperror.ErrUnauthorized
 	}
 
-	ctx.Locals(
-		principalKey{},
-		principal{
-			ID:    user.ID,
-			Email: user.Email,
-			Role:  user.Role,
-		},
-	)
+	utils.SetCurrentUser(ctx, user.ID, user.Email, user.Role)
 	return ctx.Next()
-}
-
-// RequireRoles allows an authenticated user with any of the supplied roles to
-// continue. Register it after Authenticate so a principal is available.
-// It returns ErrUnauthorized when no principal is present and ErrForbidden
-// when the user's role is not allowed. An empty role list allows no users.
-func (s *GateawayAuth) RequireRoles(roles ...enums.UserRole) fiber.Handler {
-	return func(ctx fiber.Ctx) error {
-		user, ok := s.currentUser(ctx)
-		if !ok {
-			slog.Error("[GAT] User not found", "user", user)
-			return apperror.ErrUnauthorized
-		}
-		if slices.Contains(roles, user.Role) {
-			return ctx.Next()
-		}
-		slog.Error("[GAT] User does not have access", "user", user)
-		return apperror.ErrForbidden
-	}
-}
-
-// CurrentUser retrieves the principal stored by Authenticate for this request.
-// It returns a zero-value principal and false if the local value is absent or
-// has an unexpected type.
-func (GateawayAuth) currentUser(ctx fiber.Ctx) (principal, bool) {
-	user, ok := ctx.Locals(principalKey{}).(principal)
-	return user, ok
 }

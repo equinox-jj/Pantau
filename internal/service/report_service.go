@@ -19,7 +19,7 @@ import (
 	"pantau/internal/repository"
 	apperror "pantau/pkg/errors"
 	"pantau/pkg/response"
-	"pantau/pkg/utils"
+	"pantau/pkg/utils/geo"
 
 	"github.com/google/uuid"
 )
@@ -96,7 +96,7 @@ func (sv *reportServiceImpl) CreateReport(ctx context.Context, reporter *entity.
 		CategoryID:  category.ID,
 		Category:    *category,
 		Description: request.Description,
-		Location:    utils.GeoPoint{Lat: *request.Latitude, Lng: *request.Longitude},
+		Location:    geo.GeoPoint{Lat: *request.Latitude, Lng: *request.Longitude},
 		Status:      enums.ReportStatusReported,
 	}
 
@@ -305,7 +305,7 @@ func (sv *reportServiceImpl) UpdateReport(ctx context.Context, id uuid.UUID, req
 		}
 		rpt.CategoryID, rpt.Category = category.ID, *category
 		rpt.Description = request.Description
-		rpt.Location = utils.GeoPoint{Lat: *request.Latitude, Lng: *request.Longitude}
+		rpt.Location = geo.GeoPoint{Lat: *request.Latitude, Lng: *request.Longitude}
 		if err := reports.Save(ctx, rpt); err != nil {
 			return err
 		}

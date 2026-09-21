@@ -6,5 +6,6 @@ var Module = fx.Module(
 	"controller",
 	fx.Provide(
 		NewAuthController,
+		NewReportController,
 	),
 )

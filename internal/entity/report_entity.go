@@ -2,7 +2,7 @@ package entity
 
 import (
 	"pantau/internal/enums"
-	"pantau/pkg/utils"
+	"pantau/pkg/utils/geo"
 	"time"
 
 	"github.com/google/uuid"
@@ -15,7 +15,7 @@ type Report struct {
 	CategoryID  int64              `gorm:"column:category_id;not null"`
 	Category    Category           `gorm:"foreignKey:CategoryID"`
 	Description *string            `gorm:"column:description"`
-	Location    utils.GeoPoint     `gorm:"column:location;type:geography(Point,4326);not null"`
+	Location    geo.GeoPoint       `gorm:"column:location;type:geography(Point,4326);not null"`
 	Status      enums.ReportStatus `gorm:"type:report_status;not null"`
 	CreatedAt   time.Time          `gorm:"column:created_at;not null"`
 	UpdatedAt   time.Time          `gorm:"column:updated_at;not null"`

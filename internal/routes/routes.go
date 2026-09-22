@@ -15,6 +15,7 @@ func RegisterRoutes(
 	security *middleware.GateawayAuth,
 	auth controller.AuthController,
 	reports controller.ReportController,
+	users controller.UserController,
 ) {
 	app.Use(security.Authenticate)
 
@@ -29,7 +30,7 @@ func RegisterRoutes(
 	}
 
 	userGroup := api.Group("/users")
-	userGroup.Get("/me", notImplemented)
+	userGroup.Get("/me", users.GetProfile)
 
 	categoryGroup := api.Group("/categories")
 	categoryGroup.Get("/", notImplemented)

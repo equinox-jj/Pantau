@@ -6,6 +6,7 @@ import (
 	"pantau/internal/enums"
 	apperror "pantau/pkg/errors"
 	"slices"
+	"time"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"
@@ -16,14 +17,19 @@ type principalKey struct{}
 
 // principal holds the authenticated user's current identity and role from the repository.
 type principal struct {
-	ID    uuid.UUID
-	Email string
-	Role  enums.UserRole
+	ID          uuid.UUID
+	Email       string
+	Role        enums.UserRole
+	DisplayName string
+	CreatedAt   time.Time
 }
 
 // SetCurrentUser stores the authenticated identity without credentials.
-func SetCurrentUser(ctx fiber.Ctx, id uuid.UUID, email string, role enums.UserRole) {
-	ctx.Locals(principalKey{}, principal{ID: id, Email: email, Role: role})
+func SetCurrentUser(ctx fiber.Ctx, user *entity.User) {
+	ctx.Locals(principalKey{}, principal{
+		ID: user.ID, Email: user.Email, Role: user.Role,
+		DisplayName: user.DisplayName, CreatedAt: user.CreatedAt,
+	})
 }
 
 // RequireRoles allows an authenticated user with any of the supplied roles to
@@ -53,5 +59,8 @@ func CurrentUser(ctx fiber.Ctx) (*entity.User, bool) {
 	if !ok {
 		return nil, false
 	}
-	return &entity.User{ID: user.ID, Email: user.Email, Role: user.Role}, true
+	return &entity.User{
+		ID: user.ID, Email: user.Email, Role: user.Role,
+		DisplayName: user.DisplayName, CreatedAt: user.CreatedAt,
+	}, true
 }

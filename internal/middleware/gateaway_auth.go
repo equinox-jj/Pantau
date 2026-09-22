@@ -62,6 +62,6 @@ func (s *GateawayAuth) Authenticate(ctx fiber.Ctx) error {
 		return apperror.ErrUnauthorized
 	}
 
-	utils.SetCurrentUser(ctx, user.ID, user.Email, user.Role)
+	utils.SetCurrentUser(ctx, user)
 	return ctx.Next()
 }

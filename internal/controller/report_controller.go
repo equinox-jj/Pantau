@@ -25,7 +25,9 @@ type ReportController interface {
 	UpdateReportStatus(fiber.Ctx) error
 }
 
-type reportControllerImpl struct{ reportService service.ReportService }
+type reportControllerImpl struct{ 
+	reportService service.ReportService
+}
 
 func NewReportController(reportService service.ReportService) ReportController {
 	return &reportControllerImpl{reportService: reportService}

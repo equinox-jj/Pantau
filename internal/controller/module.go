@@ -8,5 +8,6 @@ var Module = fx.Module(
 		NewAuthController,
 		NewUserController,
 		NewReportController,
+		NewCategoryController,
 	),
 )

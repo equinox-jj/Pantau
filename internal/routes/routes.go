@@ -4,7 +4,6 @@ import (
 	"pantau/internal/controller"
 	"pantau/internal/enums"
 	"pantau/internal/middleware"
-	"pantau/pkg/response"
 	"pantau/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
@@ -16,6 +15,7 @@ func RegisterRoutes(
 	auth controller.AuthController,
 	reports controller.ReportController,
 	users controller.UserController,
+	categories controller.CategoryController,
 ) {
 	app.Use(security.Authenticate)
 
@@ -25,17 +25,13 @@ func RegisterRoutes(
 	authGroup.Post("/register", auth.Register)
 	authGroup.Post("/login", auth.Login)
 
-	notImplemented := func(ctx fiber.Ctx) error {
-		return ctx.Status(fiber.StatusNotImplemented).JSON(response.Error(fiber.StatusNotImplemented, "Not implemented"))
-	}
-
 	userGroup := api.Group("/users")
 	userGroup.Get("/me", users.GetProfile)
 
 	categoryGroup := api.Group("/categories")
-	categoryGroup.Get("/", notImplemented)
-	categoryGroup.Get("/slug/:slug", notImplemented)
-	categoryGroup.Get("/:id", notImplemented)
+	categoryGroup.Get("/", categories.GetActiveCategories)
+	categoryGroup.Get("/slug/:slug", categories.GetCategoryBySlug)
+	categoryGroup.Get("/:id", categories.GetCategoryByID)
 
 	reportGroup := api.Group("/reports")
 	reportGroup.Post("/", utils.RequireRoles(enums.RoleCitizen), reports.CreateReport)

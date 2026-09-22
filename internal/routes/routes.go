@@ -4,9 +4,12 @@ import (
 	"pantau/internal/controller"
 	"pantau/internal/enums"
 	"pantau/internal/middleware"
+	"pantau/pkg/response"
 	"pantau/pkg/utils"
+	"time"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/limiter"
 )
 
 func RegisterRoutes(
@@ -22,8 +25,8 @@ func RegisterRoutes(
 	api := app.Group("/api/v1")
 
 	authGroup := api.Group("/auth")
-	authGroup.Post("/register", auth.Register)
-	authGroup.Post("/login", auth.Login)
+	authGroup.Post("/register", newAuthLimiter(5), auth.Register)
+	authGroup.Post("/login", newAuthLimiter(10), auth.Login)
 
 	userGroup := api.Group("/users")
 	userGroup.Get("/me", users.GetProfile)
@@ -44,4 +47,14 @@ func RegisterRoutes(
 	reportGroup.Delete("/:id", utils.RequireRoles(enums.RoleCitizen), reports.DeleteReport)
 	reportGroup.Get("/:id/history", reports.GetReportHistory)
 	reportGroup.Patch("/:id/status", utils.RequireRoles(enums.RoleResolver), reports.UpdateReportStatus)
+}
+
+func newAuthLimiter(max int) fiber.Handler {
+	return limiter.New(limiter.Config{
+		Max:        max,
+		Expiration: time.Minute,
+		LimitReached: func(ctx fiber.Ctx) error {
+			return ctx.Status(fiber.StatusTooManyRequests).JSON(response.Error(fiber.StatusTooManyRequests, "Too many requests"))
+		},
+	})
 }

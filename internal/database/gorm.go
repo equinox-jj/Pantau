@@ -36,6 +36,8 @@ func NewDatabase(
 		slog.Error("[GormDB] Failed to get database connection", "error", err)
 		return nil, err
 	}
+	sqlDB.SetMaxOpenConns(cfg.Database.MaxOpenConns)
+	sqlDB.SetMaxIdleConns(cfg.Database.MaxIdleConns)
 
 	if err := sqlDB.Ping(); err != nil {
 		slog.Error("[GormDB] Failed to ping database", "error", err)

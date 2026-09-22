@@ -8,6 +8,7 @@ import (
 	_ "image/png"
 	"log/slog"
 	"mime/multipart"
+	"pantau/internal/config"
 	"pantau/internal/dto/upload"
 
 	_ "golang.org/x/image/webp"
@@ -25,12 +26,14 @@ type UploadService interface {
 }
 
 type uploadServiceImpl struct {
-	cld *cloudinary.Cloudinary
+	cld          *cloudinary.Cloudinary
+	maxFileBytes int64
 }
 
-func NewUploadService(cld *cloudinary.Cloudinary) UploadService {
+func NewUploadService(cld *cloudinary.Cloudinary, cfg *config.Config) UploadService {
 	return &uploadServiceImpl{
-		cld: cld,
+		cld:          cld,
+		maxFileBytes: cfg.Upload.MaxFileBytes,
 	}
 }
 
@@ -113,13 +116,12 @@ func (sv *uploadServiceImpl) validate(file *multipart.FileHeader) error {
 		"image/png":  true,
 		"image/webp": true,
 	}
-	const maxFileSize = 5 * 1024 * 1024 // Set max image to 5MB
 
 	if file == nil || file.Size == 0 {
 		slog.Error("[UploadService] Image is required", "error", apperror.ErrImageRequired)
 		return apperror.ErrImageRequired
 	}
-	if file.Size > maxFileSize {
+	if file.Size > sv.maxFileBytes {
 		slog.Error("[UploadService] Image exceeds maximum file size", "filename", file.Filename, "size", file.Size, "error", apperror.ErrImageTooLarge)
 		return apperror.ErrImageTooLarge
 	}
@@ -149,6 +151,13 @@ func (uploadServiceImpl) isDecodableImage(file *multipart.FileHeader) bool {
 		}
 	}()
 
+	imageConfig, _, err := image.DecodeConfig(src)
+	if err != nil || imageConfig.Width <= 0 || imageConfig.Height <= 0 || int64(imageConfig.Width)*int64(imageConfig.Height) > 20_000_000 {
+		return false
+	}
+	if _, err := src.Seek(0, 0); err != nil {
+		return false
+	}
 	_, _, err = image.Decode(src)
 	if err != nil {
 		slog.Error("[UploadService] Failed to decode image", "filename", file.Filename, "error", err)

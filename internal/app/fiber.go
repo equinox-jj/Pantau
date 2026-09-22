@@ -13,11 +13,12 @@ import (
 	"go.uber.org/fx"
 )
 
-func NewFiber() *fiber.App {
+func NewFiber(cfg *config.Config) *fiber.App {
 	return fiber.New(fiber.Config{
 		AppName:         "Pantau API",
 		ErrorHandler:    apperror.ErrorHandler,
 		StructValidator: validator.NewStructValidator(),
+		BodyLimit:       cfg.Upload.MaxRequestBytes,
 	})
 }
 

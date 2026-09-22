@@ -2,10 +2,13 @@ package config
 
 import (
 	"errors"
+	"fmt"
 	"log/slog"
 	"os"
+	"strconv"
 	"strings"
 	"time"
+	"unicode"
 
 	"github.com/spf13/viper"
 )
@@ -50,9 +53,11 @@ type gormConfig struct {
 }
 
 type uploadConfig struct {
-	Enabled        bool   `mapstructure:"enabled"`
-	MaxFileSize    string `mapstructure:"max_file_size"`
-	MaxRequestSize string `mapstructure:"max_request_size"`
+	Enabled         bool   `mapstructure:"enabled"`
+	MaxFileSize     string `mapstructure:"max_file_size"`
+	MaxRequestSize  string `mapstructure:"max_request_size"`
+	MaxFileBytes    int64  `mapstructure:"-"`
+	MaxRequestBytes int    `mapstructure:"-"`
 }
 
 type loggingConfig struct {
@@ -108,8 +113,49 @@ func NewConfig(v *viper.Viper) (*Config, error) {
 		slog.Error("[Config] Failed to decode configuration", "error", err)
 		return nil, err
 	}
+	if len(cfg.JWT.SecretKey) < 32 || strings.IndexFunc(cfg.JWT.SecretKey, unicode.IsSpace) >= 0 {
+		return nil, errors.New("jwt.secret_key must contain at least 32 bytes and no whitespace")
+	}
+	if cfg.JWT.Expiration <= 0 {
+		return nil, errors.New("jwt.expiration must be positive")
+	}
+	if cfg.Database.MaxOpenConns <= 0 || cfg.Database.MaxIdleConns < 0 || cfg.Database.MaxIdleConns > cfg.Database.MaxOpenConns {
+		return nil, errors.New("database connection limits must be positive and max_idle_conns must not exceed max_open_conns")
+	}
+	maxFileBytes, err := parseByteSize(cfg.Upload.MaxFileSize)
+	if err != nil {
+		return nil, fmt.Errorf("upload.max_file_size: %w", err)
+	}
+	maxRequestBytes, err := parseByteSize(cfg.Upload.MaxRequestSize)
+	if err != nil {
+		return nil, fmt.Errorf("upload.max_request_size: %w", err)
+	}
+	if maxRequestBytes <= maxFileBytes || maxRequestBytes > int64(^uint(0)>>1) {
+		return nil, errors.New("upload.max_request_size must exceed max_file_size and fit in an int")
+	}
+	cfg.Upload.MaxFileBytes = maxFileBytes
+	cfg.Upload.MaxRequestBytes = int(maxRequestBytes)
 
 	return &cfg, nil
+}
+
+func parseByteSize(value string) (int64, error) {
+	value = strings.ToUpper(strings.TrimSpace(value))
+	for _, unit := range []struct {
+		suffix string
+		factor int64
+	}{
+		{"GB", 1 << 30}, {"MB", 1 << 20}, {"KB", 1 << 10}, {"B", 1},
+	} {
+		if number, ok := strings.CutSuffix(value, unit.suffix); ok {
+			n, err := strconv.ParseInt(strings.TrimSpace(number), 10, 64)
+			if err != nil || n <= 0 || n > int64(^uint(0)>>1)/unit.factor {
+				return 0, errors.New("must be a positive byte size such as 5MB")
+			}
+			return n * unit.factor, nil
+		}
+	}
+	return 0, errors.New("must use B, KB, MB, or GB units")
 }
 
 func setDefaults(v *viper.Viper) {
@@ -132,7 +178,7 @@ func setDefaults(v *viper.Viper) {
 
 	v.SetDefault("upload.enabled", true)
 	v.SetDefault("upload.max_file_size", "5MB")
-	v.SetDefault("upload.max_request_size", "20MB")
+	v.SetDefault("upload.max_request_size", "21MB")
 
 	v.SetDefault("logging.level", "INFO")
 

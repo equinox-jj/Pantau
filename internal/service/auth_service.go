@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"pantau/internal/dto/auth"
 	"pantau/internal/dto/mapper"
@@ -25,6 +26,10 @@ type authServiceImpl struct {
 	passHasher security.PasswordHasher
 }
 
+// This cost-10 hash gives unknown accounts the same password-check work as
+// accounts using the application's default bcrypt cost.
+const dummyPasswordHash = "$2a$10$XajjQvNhvvRt5GSeFk1xFeyqRrsxkhBkUiQeg0dt.wU1qD4aFDcga"
+
 func NewAuthService(
 	userRepo repository.UserRepository,
 	jwtService security.JwtService,
@@ -41,11 +46,14 @@ func (sv *authServiceImpl) Login(ctx context.Context, req auth.LoginRequest) (*a
 	user, err := sv.userRepo.FindByEmail(ctx, req.Email)
 	if err != nil {
 		slog.Error("[AuthService] Failed to find user by email", "email", req.Email, "error", err)
+		if errors.Is(err, apperror.ErrEmailNotFound) {
+			return nil, sv.rejectUnknownLogin(req.Password)
+		}
 		return nil, err
 	}
 	if user == nil {
 		slog.Error("[AuthService] User not found by email", "email", req.Email, "error", err)
-		return nil, apperror.ErrEmailNotFound
+		return nil, sv.rejectUnknownLogin(req.Password)
 	}
 
 	if err := sv.passHasher.Compare(
@@ -99,4 +107,9 @@ func (sv *authServiceImpl) buildAuthResponse(user *entity.User) (*auth.AuthRespo
 	}
 
 	return mapper.AuthToResponse(token, sv.jwtService.ExpirationSeconds(), user), nil
+}
+
+func (sv *authServiceImpl) rejectUnknownLogin(password string) error {
+	_ = sv.passHasher.Compare(dummyPasswordHash, password)
+	return apperror.ErrInvalidEmailOrPassword
 }

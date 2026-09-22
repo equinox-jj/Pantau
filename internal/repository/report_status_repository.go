@@ -34,7 +34,7 @@ func (repo *reportStatusRepositoryImpl) FindByReportID(ctx context.Context, repo
 		Order("created_at ASC").
 		Find(&history).
 		Error; err != nil {
-		slog.ErrorContext(ctx, "[ReportStatusRepository.FindByReportID] Failed to find report status history by report ID", "report_id", reportID, "error", err)
+		slog.Error("[ReportStatusRepository.FindByReportID] Failed to find report status history by report ID", "report_id", reportID, "error", err)
 		return nil, err
 	}
 
@@ -42,7 +42,10 @@ func (repo *reportStatusRepositoryImpl) FindByReportID(ctx context.Context, repo
 }
 
 func (repo *reportStatusRepositoryImpl) Save(ctx context.Context, history *entity.ReportStatusHistory) error {
-	if err := repo.db.WithContext(ctx).Omit(clause.Associations).Create(history).Error; err != nil {
+	if err := repo.db.WithContext(ctx).
+		Omit(clause.Associations).
+		Create(history).
+		Error; err != nil {
 		slog.Error("[ReportStatusRepository.Save] Failed to save report status history", "report_id", history.ReportID, "to_status", history.ToStatus, "error", err)
 		return err
 	}

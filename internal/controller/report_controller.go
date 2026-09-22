@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"mime"
 	"pantau/internal/dto/report"
 	"pantau/internal/enums"
@@ -86,7 +85,7 @@ func (controller *reportControllerImpl) GetNearbyReports(ctx fiber.Ctx) error {
 		return err
 	}
 	if query.Latitude == nil || query.Longitude == nil {
-		return fmt.Errorf("%w: Latitude and longitude are required", apperror.ErrValidation)
+		return apperror.Validation("Latitude and longitude are required")
 	}
 	result, err := controller.reportService.GetNearbyReports(ctx.Context(), *query.Latitude, *query.Longitude, query.RadiusMeter, query.Limit)
 	if err != nil {
@@ -165,7 +164,7 @@ func (controller *reportControllerImpl) GetQueue(ctx fiber.Ctx) error {
 		return err
 	}
 	if query.Latitude == nil || query.Longitude == nil {
-		return fmt.Errorf("%w: Latitude and longitude are required", apperror.ErrValidation)
+		return apperror.Validation("Latitude and longitude are required")
 	}
 	result, err := controller.reportService.GetQueue(ctx.Context(), query.Tab, *query.Latitude, *query.Longitude, query.RadiusMeter, query.Limit, query.Offset)
 	if err != nil {
@@ -200,7 +199,7 @@ func (controller *reportControllerImpl) UpdateReportStatus(ctx fiber.Ctx) error 
 func reportID(ctx fiber.Ctx) (uuid.UUID, error) {
 	id, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
-		return uuid.Nil, fmt.Errorf("%w: Invalid report ID", apperror.ErrValidation)
+		return uuid.Nil, apperror.Validation("Invalid report ID")
 	}
 	return id, nil
 }

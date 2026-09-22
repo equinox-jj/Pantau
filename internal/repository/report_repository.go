@@ -24,7 +24,6 @@ type ReportRepository interface {
 	Create(ctx context.Context, report *entity.Report) error
 	Save(ctx context.Context, report *entity.Report) error
 	Delete(ctx context.Context, id uuid.UUID) error
-	WithTransaction(ctx context.Context, fn func(ReportRepository, ReportPhotoRepository, ReportStatusRepository) error) error
 	FindNearbyReport(ctx context.Context, latitude, longitude float64, radiusMeters, limit int) ([]entity.Report, error)
 	FindByReporterID(ctx context.Context, reporterID uuid.UUID, limit, offset int) ([]entity.Report, int64, error)
 	CountByReporterID(ctx context.Context, reporterID uuid.UUID) (int64, error)
@@ -238,11 +237,4 @@ func (repo *reportRepositoryImpl) Delete(ctx context.Context, id uuid.UUID) erro
 		return err
 	}
 	return nil
-}
-
-// All repositories passed to fn share the same database transaction.
-func (repo *reportRepositoryImpl) WithTransaction(ctx context.Context, fn func(ReportRepository, ReportPhotoRepository, ReportStatusRepository) error) error {
-	return repo.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		return fn(NewReportRepository(tx), NewReportPhotoRepository(tx), NewReportStatusRepository(tx))
-	})
 }

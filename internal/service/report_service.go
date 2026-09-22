@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
-	"math"
 	"mime/multipart"
 	"pantau/internal/enums"
 	"strings"
@@ -17,11 +16,15 @@ import (
 	"pantau/internal/dto/upload"
 	"pantau/internal/entity"
 	"pantau/internal/repository"
+	"pantau/pkg/database"
 	apperror "pantau/pkg/errors"
+	"pantau/pkg/pagination"
 	"pantau/pkg/response"
+	"pantau/pkg/utils"
 	"pantau/pkg/utils/geo"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 const (
@@ -43,6 +46,7 @@ type ReportService interface {
 }
 
 type reportServiceImpl struct {
+	db               *gorm.DB
 	reportRepo       repository.ReportRepository
 	reportStatusRepo repository.ReportStatusRepository
 	reportPhotoRepo  repository.ReportPhotoRepository
@@ -51,6 +55,7 @@ type reportServiceImpl struct {
 }
 
 func NewReportService(
+	db *gorm.DB,
 	reportRepo repository.ReportRepository,
 	reportStatusRepo repository.ReportStatusRepository,
 	reportPhotoRepo repository.ReportPhotoRepository,
@@ -58,6 +63,7 @@ func NewReportService(
 	uploadService UploadService,
 ) ReportService {
 	return &reportServiceImpl{
+		db:               db,
 		reportRepo:       reportRepo,
 		reportStatusRepo: reportStatusRepo,
 		reportPhotoRepo:  reportPhotoRepo,
@@ -66,14 +72,18 @@ func NewReportService(
 	}
 }
 
-func (sv *reportServiceImpl) CreateReport(ctx context.Context, reporter *entity.User, request *report.CreateReportRequest) (*report.ReportResponse, error) {
+func (sv *reportServiceImpl) CreateReport(
+	ctx context.Context,
+	reporter *entity.User,
+	request *report.CreateReportRequest,
+) (*report.ReportResponse, error) {
 	if reporter == nil {
 		err := apperror.ErrUnauthorized
 		slog.Error("[ReportService.CreateReport] Failed to create report", "error", err)
 		return nil, err
 	}
 	if request == nil {
-		err := sv.validationError("Request is required")
+		err := apperror.Validation("Request is required")
 		slog.Error("[ReportService.CreateReport] Failed to create report", "error", err)
 		return nil, err
 	}
@@ -81,16 +91,19 @@ func (sv *reportServiceImpl) CreateReport(ctx context.Context, reporter *entity.
 		slog.Error("[ReportService.CreateReport] Failed to create report", "error", err)
 		return nil, err
 	}
+
 	category, err := sv.categoryRepo.FindByID(ctx, *request.CategoryID)
 	if err != nil {
 		slog.Error("[ReportService.CreateReport] Failed to create report", "error", err)
 		return nil, err
 	}
+
 	uploads, err := sv.uploadAll(ctx, request.Photos)
 	if err != nil {
 		slog.Error("[ReportService.CreateReport] Failed to create report", "error", err)
 		return nil, err
 	}
+
 	rpt := &entity.Report{
 		ReporterID:  reporter.ID,
 		CategoryID:  category.ID,
@@ -102,37 +115,35 @@ func (sv *reportServiceImpl) CreateReport(ctx context.Context, reporter *entity.
 
 	var photos []entity.ReportPhoto
 
-	err = sv.reportRepo.WithTransaction(ctx, func(
-		reports repository.ReportRepository,
-		photoRepo repository.ReportPhotoRepository,
-		statuses repository.ReportStatusRepository,
-	) error {
+	if err = database.WithTransaction(ctx, sv.db, func(tx *gorm.DB) error {
+		reports := repository.NewReportRepository(tx)
+		photoRepo := repository.NewReportPhotoRepository(tx)
+		statuses := repository.NewReportStatusRepository(tx)
 		if err := reports.Create(ctx, rpt); err != nil {
 			return err
 		}
-
-		var err error
 
 		photos, err = sv.savePhotos(ctx, photoRepo, rpt.ID, uploads)
 		if err != nil {
 			return err
 		}
+
 		return statuses.Save(ctx, &entity.ReportStatusHistory{
 			ReportID: rpt.ID,
 			ActorID:  reporter.ID,
 			ToStatus: enums.ReportStatusReported,
 		})
-	})
-	if err != nil {
+	}); err != nil {
 		err := sv.rollbackUploads(ctx, uploads, err)
 		slog.Error("[ReportService.CreateReport] Failed to create report", "error", err)
 		return nil, err
 	}
+
 	return mapper.ReportToResponse(rpt, sv.photoURLs(photos)), nil
 }
 
 func (sv *reportServiceImpl) GetNearbyReports(ctx context.Context, latitude, longitude float64, radiusMeter, limit int) ([]report.NearbyReportResponse, error) {
-	if err := sv.validateCoordinates(latitude, longitude); err != nil {
+	if err := geo.ValidateCoordinates(latitude, longitude); err != nil {
 		slog.Error("[ReportService.GetNearbyReports] Failed to get nearby reports", "limit", limit, "error", err)
 		return nil, err
 	}
@@ -140,7 +151,7 @@ func (sv *reportServiceImpl) GetNearbyReports(ctx context.Context, latitude, lon
 		slog.Error("[ReportService.GetNearbyReports] Failed to get nearby reports", "limit", limit, "error", err)
 		return nil, err
 	}
-	if err := sv.validateLimit(limit, maxNearbyLimit); err != nil {
+	if err := pagination.ValidateLimit(limit, maxNearbyLimit); err != nil {
 		slog.Error("[ReportService.GetNearbyReports] Failed to get nearby reports", "limit", limit, "error", err)
 		return nil, err
 	}
@@ -197,7 +208,7 @@ func (sv *reportServiceImpl) GetMyReports(ctx context.Context, reporter *entity.
 		slog.Error("[ReportService.GetMyReports] Failed to get reporter reports", "limit", limit, "offset", offset, "error", err)
 		return nil, err
 	}
-	if err := sv.validatePagination(limit, offset); err != nil {
+	if err := pagination.Validate(limit, offset, maxPageSize); err != nil {
 		slog.Error("[ReportService.GetMyReports] Failed to get reporter reports", "limit", limit, "offset", offset, "error", err)
 		return nil, err
 	}
@@ -215,7 +226,7 @@ func (sv *reportServiceImpl) GetMyReports(ctx context.Context, reporter *entity.
 	for i := range reports {
 		items = append(items, *mapper.ReportToResponse(&reports[i], photos[reports[i].ID]))
 	}
-	return &response.ResponseData[[]report.ReportResponse]{Data: items, Pagination: sv.reportPagination(limit, offset, total)}, nil
+	return &response.ResponseData[[]report.ReportResponse]{Data: items, Pagination: response.NewPagination(limit, offset, total)}, nil
 }
 
 func (sv *reportServiceImpl) UpdateReportStatus(ctx context.Context, id uuid.UUID, resolver *entity.User, request *report.UpdateStatusRequest) (*report.ReportResponse, error) {
@@ -225,22 +236,25 @@ func (sv *reportServiceImpl) UpdateReportStatus(ctx context.Context, id uuid.UUI
 		return nil, err
 	}
 	if request == nil || request.ToStatus == nil {
-		err := sv.validationError("Target status is required")
+		err := apperror.Validation("Target status is required")
 		slog.Error("[ReportService.UpdateReportStatus] Failed to update report status", "report_id", id, "error", err)
 		return nil, err
 	}
 	var result *report.ReportResponse
-	err := sv.reportRepo.WithTransaction(ctx, func(reports repository.ReportRepository, photos repository.ReportPhotoRepository, statuses repository.ReportStatusRepository) error {
+	err := database.WithTransaction(ctx, sv.db, func(tx *gorm.DB) error {
+		reports := repository.NewReportRepository(tx)
+		photos := repository.NewReportPhotoRepository(tx)
+		statuses := repository.NewReportStatusRepository(tx)
 		rpt, err := reports.FindByIDForUpdate(ctx, id)
 		if err != nil {
 			return err
 		}
 		from, to := rpt.Status, *request.ToStatus
-		if !sv.isReportStatusTransitionAllowed(from, to) {
+		if !utils.IsReportStatusTransitionAllowed(from, to) {
 			return fmt.Errorf("%w: Cannot move a report from %s to %s", apperror.ErrIllegalTransition, from, to)
 		}
 		if to == enums.ReportStatusRejected && (request.Note == nil || strings.TrimSpace(*request.Note) == "") {
-			return sv.validationError("A note is required when rejecting a report")
+			return apperror.Validation("A note is required when rejecting a report")
 		}
 		rpt.Status = to
 		if err := reports.Save(ctx, rpt); err != nil {
@@ -274,7 +288,7 @@ func (sv *reportServiceImpl) UpdateReport(ctx context.Context, id uuid.UUID, req
 		return nil, err
 	}
 	if request == nil {
-		err := sv.validationError("Request is required")
+		err := apperror.Validation("Request is required")
 		slog.Error("[ReportService.UpdateReport] Failed to update report", "report_id", id, "error", err)
 		return nil, err
 	}
@@ -294,7 +308,9 @@ func (sv *reportServiceImpl) UpdateReport(ctx context.Context, id uuid.UUID, req
 	}
 	var result *report.ReportResponse
 	var oldPhotos []entity.ReportPhoto
-	err = sv.reportRepo.WithTransaction(ctx, func(reports repository.ReportRepository, photos repository.ReportPhotoRepository, _ repository.ReportStatusRepository) error {
+	err = database.WithTransaction(ctx, sv.db, func(tx *gorm.DB) error {
+		reports := repository.NewReportRepository(tx)
+		photos := repository.NewReportPhotoRepository(tx)
 		// Recheck under a row lock in case a resolver acted during upload.
 		rpt, err := reports.FindByIDForUpdate(ctx, id)
 		if err != nil {
@@ -337,7 +353,9 @@ func (sv *reportServiceImpl) UpdateReport(ctx context.Context, id uuid.UUID, req
 
 func (sv *reportServiceImpl) DeleteReport(ctx context.Context, id uuid.UUID, requester *entity.User) error {
 	var oldPhotos []entity.ReportPhoto
-	err := sv.reportRepo.WithTransaction(ctx, func(reports repository.ReportRepository, photos repository.ReportPhotoRepository, _ repository.ReportStatusRepository) error {
+	err := database.WithTransaction(ctx, sv.db, func(tx *gorm.DB) error {
+		reports := repository.NewReportRepository(tx)
+		photos := repository.NewReportPhotoRepository(tx)
 		rpt, err := reports.FindByIDForUpdate(ctx, id)
 		if err != nil {
 			return err
@@ -363,7 +381,7 @@ func (sv *reportServiceImpl) DeleteReport(ctx context.Context, id uuid.UUID, req
 }
 
 func (sv *reportServiceImpl) GetQueue(ctx context.Context, tab enums.QueueTab, latitude, longitude float64, radiusMeter, limit, offset int) (*response.ResponseData[report.QueueResponse], error) {
-	if err := sv.validateCoordinates(latitude, longitude); err != nil {
+	if err := geo.ValidateCoordinates(latitude, longitude); err != nil {
 		slog.Error("[ReportService.GetQueue] Failed to get report queue", "limit", limit, "offset", offset, "tab", tab, "error", err)
 		return nil, err
 	}
@@ -371,13 +389,13 @@ func (sv *reportServiceImpl) GetQueue(ctx context.Context, tab enums.QueueTab, l
 		slog.Error("[ReportService.GetQueue] Failed to get report queue", "limit", limit, "offset", offset, "tab", tab, "error", err)
 		return nil, err
 	}
-	if err := sv.validatePagination(limit, offset); err != nil {
+	if err := pagination.Validate(limit, offset, maxPageSize); err != nil {
 		slog.Error("[ReportService.GetQueue] Failed to get report queue", "limit", limit, "offset", offset, "tab", tab, "error", err)
 		return nil, err
 	}
 	statuses := tab.Statuses()
 	if len(statuses) == 0 {
-		err := sv.validationError("Invalid queue tab")
+		err := apperror.Validation("Invalid queue tab")
 		slog.Error("[ReportService.GetQueue] Failed to get report queue", "limit", limit, "offset", offset, "tab", tab, "error", err)
 		return nil, err
 	}
@@ -399,7 +417,7 @@ func (sv *reportServiceImpl) GetQueue(ctx context.Context, tab enums.QueueTab, l
 			thumbnail = &urls[0]
 		}
 		item := mapper.ReportToQueueResponse(rpt, thumbnail)
-		distance := sv.distanceMeters(latitude, longitude, rpt.Latitude(), rpt.Longitude())
+		distance := geo.HaversineMeters(geo.GeoPoint{Lat: latitude, Lng: longitude}, rpt.Location)
 		item.DistanceMeter = &distance
 		items = append(items, *item)
 	}
@@ -421,7 +439,7 @@ func (sv *reportServiceImpl) GetQueue(ctx context.Context, tab enums.QueueTab, l
 	}
 	return &response.ResponseData[report.QueueResponse]{
 		Data:       report.QueueResponse{Items: items, Counts: counts},
-		Pagination: sv.reportPagination(limit, offset, total),
+		Pagination: response.NewPagination(limit, offset, total),
 	}, nil
 }
 
@@ -526,94 +544,22 @@ func (sv *reportServiceImpl) assertEditableBy(rpt *entity.Report, requester *ent
 	return nil
 }
 
-func (sv *reportServiceImpl) validationError(message string) error {
-	return fmt.Errorf("%w: %s", apperror.ErrValidation, message)
-}
-
 func (sv *reportServiceImpl) validateReportFields(categoryID *int64, latitude, longitude *float64) error {
 	if categoryID == nil {
-		return sv.validationError("Category ID is required")
+		return apperror.Validation("Category ID is required")
 	}
 	if latitude == nil || longitude == nil {
-		return sv.validationError("Latitude and longitude are required")
+		return apperror.Validation("Latitude and longitude are required")
 	}
-	return sv.validateCoordinates(*latitude, *longitude)
-}
-
-func (sv *reportServiceImpl) validateCoordinates(latitude, longitude float64) error {
-	if math.IsNaN(latitude) || math.IsInf(latitude, 0) || latitude < -90 || latitude > 90 {
-		return sv.validationError("Latitude must be between -90 and 90")
-	}
-	if math.IsNaN(longitude) || math.IsInf(longitude, 0) || longitude < -180 || longitude > 180 {
-		return sv.validationError("Longitude must be between -180 and 180")
-	}
-	return nil
+	return geo.ValidateCoordinates(*latitude, *longitude)
 }
 
 func (sv *reportServiceImpl) validateRadius(radius int) error {
 	if radius <= 0 {
-		return sv.validationError("Radius must be greater than 0")
+		return apperror.Validation("Radius must be greater than 0")
 	}
 	if radius > maxRadiusMeters {
-		return sv.validationError(fmt.Sprintf("Radius must not exceed %d meters", maxRadiusMeters))
+		return apperror.Validation(fmt.Sprintf("Radius must not exceed %d meters", maxRadiusMeters))
 	}
 	return nil
-}
-
-func (sv *reportServiceImpl) validateLimit(limit, maximum int) error {
-	if limit <= 0 {
-		return sv.validationError("Limit must be greater than 0")
-	}
-	if limit > maximum {
-		return sv.validationError(fmt.Sprintf("Limit must not exceed %d", maximum))
-	}
-	return nil
-}
-
-func (sv *reportServiceImpl) validatePagination(limit, offset int) error {
-	if err := sv.validateLimit(limit, maxPageSize); err != nil {
-		return err
-	}
-	if offset < 0 {
-		return sv.validationError("Offset must not be negative")
-	}
-	return nil
-}
-
-func (sv *reportServiceImpl) reportPagination(limit, offset int, total int64) response.Pagination {
-	totalPages := total / int64(limit)
-	if total%int64(limit) != 0 {
-		totalPages++
-	}
-	return response.Pagination{
-		Page:       offset/limit + 1,
-		Limit:      limit,
-		Offset:     offset,
-		Total:      int(total),
-		TotalPages: int(totalPages),
-		HasNext:    total > int64(offset) && total-int64(offset) > int64(limit),
-	}
-}
-
-func (sv *reportServiceImpl) distanceMeters(latitude, longitude, otherLatitude, otherLongitude float64) float64 {
-	const radians = math.Pi / 180
-	dLat, dLng := (otherLatitude-latitude)*radians, (otherLongitude-longitude)*radians
-	a := math.Pow(math.Sin(dLat/2), 2) + math.Cos(latitude*radians)*math.Cos(otherLatitude*radians)*math.Pow(math.Sin(dLng/2), 2)
-	a = math.Max(0, math.Min(1, a))
-	return 6_371_000 * 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a))
-}
-
-func (sv *reportServiceImpl) isReportStatusTransitionAllowed(from, to enums.ReportStatus) bool {
-	switch from {
-	case enums.ReportStatusReported:
-		return to == enums.ReportStatusAcknowledged || to == enums.ReportStatusRejected
-	case enums.ReportStatusAcknowledged:
-		return to == enums.ReportStatusInProgress || to == enums.ReportStatusRejected
-	case enums.ReportStatusInProgress:
-		return to == enums.ReportStatusResolved || to == enums.ReportStatusRejected
-	case enums.ReportStatusResolved:
-		return to == enums.ReportStatusClosed
-	default:
-		return false
-	}
 }

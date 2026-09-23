@@ -3,13 +3,7 @@ import '../model/model.dart';
 
 extension LoginModelMapper on LoginModel {
   Login toEntity() {
-    return Login(status: status, message: message, data: data?.toEntity());
-  }
-}
-
-extension LoginDataModelMapper on LoginDataModel {
-  LoginData toEntity() {
-    return LoginData(
+    return Login(
       token: token,
       expiresIn: expiresIn,
       user: userResponse?.toEntity(),
@@ -20,9 +14,9 @@ extension LoginDataModelMapper on LoginDataModel {
 extension LoginUserModelMapper on LoginUserModel {
   LoginUser toEntity() {
     return LoginUser(
-      uuid: uuid,
+      uuid: id,
       email: email,
-      username: username,
+      displayName: displayName,
       role: role,
       createdAt: _parseDate(createdAt),
       updatedAt: _parseDate(updatedAt),

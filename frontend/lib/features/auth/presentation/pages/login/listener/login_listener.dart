@@ -23,12 +23,12 @@ class LoginListener extends ConsumerWidget {
         case AsyncLoading():
           LoadingDialog.show(context);
           break;
-        case AsyncData(value: final result?):
+        case AsyncData(value: final _?):
           LoadingDialog.dismiss(context);
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
               backgroundColor: Colors.green,
-              content: Center(child: Text(result.message ?? '')),
+              content: Center(child: Text('Signed in successfully')),
             ),
           );
           unawaited(_goToDashboard(context, ref));

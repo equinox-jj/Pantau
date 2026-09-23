@@ -3,9 +3,9 @@ import '../../../../core/utils/helpers/helpers.dart';
 import '../../domain/entity/entity.dart';
 import '../model/model.dart';
 
-extension NearbyReportsModelMapper on NearbyReportsModel {
+extension NearbyReportsModelMapper on List<NearbyReportsDataModel> {
   List<NearbyReport> toEntities() =>
-      data?.map((e) => e.toEntity()).toList() ?? const [];
+      map((e) => e.toEntity()).toList(growable: false);
 }
 
 extension NearbyReportsDataModelMapper on NearbyReportsDataModel {

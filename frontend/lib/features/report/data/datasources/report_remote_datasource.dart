@@ -4,16 +4,15 @@ import '../model/model.dart';
 
 abstract class ReportRemoteDataSource with BaseRemoteDataSource {
   /// Reports within [radiusInMeters] of the point, nearest first.
-  Future<FeedReportsModel> getFeedReports({
+  Future<List<FeedReportsDataModel>> getFeedReports({
     required double latitude,
     required double longitude,
     required int radiusInMeters,
     int limit,
   });
 
-  /// The caller's own reports, newest first. Paged, so the rows arrive under
-  /// `data.items` rather than as `data` itself.
-  Future<MyReportsModel> getMyReports({int limit, int offset});
+  /// The caller's own reports, newest first.
+  Future<List<FeedReportsDataModel>> getMyReports({int limit, int offset});
 }
 
 class ReportRemoteDataSourceImpl extends ReportRemoteDataSource {
@@ -22,7 +21,7 @@ class ReportRemoteDataSourceImpl extends ReportRemoteDataSource {
   final DioClient _dioClient;
 
   @override
-  Future<FeedReportsModel> getFeedReports({
+  Future<List<FeedReportsDataModel>> getFeedReports({
     required double latitude,
     required double longitude,
     required int radiusInMeters,
@@ -38,17 +37,37 @@ class ReportRemoteDataSourceImpl extends ReportRemoteDataSource {
       },
     );
 
-    return FeedReportsModel.fromJson(response.data);
+    return decodeApiResponse(
+          response.data,
+          (json) => (json as List<dynamic>)
+              .map(
+                (item) =>
+                    FeedReportsDataModel.fromJson(item as Map<String, dynamic>),
+              )
+              .toList(growable: false),
+        ).data ??
+        const [];
   });
 
   @override
-  Future<MyReportsModel> getMyReports({int limit = 50, int offset = 0}) =>
-      safeApiCall(() async {
-        final response = await _dioClient.get(
-          ApiEndpoints.myReports,
-          queryParameters: {'limit': limit, 'offset': offset},
-        );
+  Future<List<FeedReportsDataModel>> getMyReports({
+    int limit = 50,
+    int offset = 0,
+  }) => safeApiCall(() async {
+    final response = await _dioClient.get(
+      ApiEndpoints.myReports,
+      queryParameters: {'limit': limit, 'offset': offset},
+    );
 
-        return MyReportsModel.fromJson(response.data);
-      });
+    return decodeApiResponse(
+          response.data,
+          (json) => (json as List<dynamic>)
+              .map(
+                (item) =>
+                    FeedReportsDataModel.fromJson(item as Map<String, dynamic>),
+              )
+              .toList(growable: false),
+        ).data ??
+        const [];
+  });
 }

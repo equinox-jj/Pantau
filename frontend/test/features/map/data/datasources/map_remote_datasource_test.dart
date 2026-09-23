@@ -14,6 +14,11 @@ RequestOptions _options() => RequestOptions(path: '/x');
 Response<T> _response<T>(T? data) =>
     Response<T>(requestOptions: _options(), statusCode: 200, data: data);
 
+Response<dynamic> _apiResponse(Object? data) => _response({
+  'success': true,
+  'response': {'data': data},
+});
+
 void main() {
   late MockDioClient dioClient;
   late MapRemoteDataSourceImpl dataSource;
@@ -37,11 +42,9 @@ void main() {
             queryParameters: any(named: 'queryParameters'),
           ),
         ).thenAnswer(
-          (_) async => _response({
-            'data': [
-              {'id': 'r1', 'status': 'reported'},
-            ],
-          }),
+          (_) async => _apiResponse([
+            {'id': 'r1', 'status': 'reported'},
+          ]),
         );
 
         final result = await dataSource.getNearbyReports(
@@ -51,8 +54,8 @@ void main() {
           limit: 25,
         );
 
-        expect(result.data, hasLength(1));
-        expect(result.data!.first.id, 'r1');
+        expect(result, hasLength(1));
+        expect(result.first.id, 'r1');
 
         final captured =
             verify(
@@ -75,7 +78,7 @@ void main() {
           ApiEndpoints.nearbyReports,
           queryParameters: any(named: 'queryParameters'),
         ),
-      ).thenAnswer((_) async => _response({'data': <dynamic>[]}));
+      ).thenAnswer((_) async => _apiResponse(<dynamic>[]));
 
       await dataSource.getNearbyReports(
         latitude: 0,
@@ -122,17 +125,15 @@ void main() {
     test('hits GET /categories and parses the body', () async {
       when(() => dioClient.get<dynamic>(ApiEndpoints.reportCategories))
           .thenAnswer(
-            (_) async => _response({
-              'data': [
-                {'id': 1, 'name': 'Pothole'},
-              ],
-            }),
+            (_) async => _apiResponse([
+              {'id': 1, 'name': 'Pothole'},
+            ]),
           );
 
       final result = await dataSource.getReportCategories();
 
-      expect(result.data, hasLength(1));
-      expect(result.data!.first.name, 'Pothole');
+      expect(result, hasLength(1));
+      expect(result.first.name, 'Pothole');
     });
 
     test('an unexpected thrown error becomes UnknownException', () async {
@@ -150,14 +151,12 @@ void main() {
     test('hits GET /reports/{id} and parses the body', () async {
       when(() => dioClient.get<dynamic>(ApiEndpoints.reportDetail('r1')))
           .thenAnswer(
-            (_) async => _response({
-              'data': {'id': 'r1', 'status': 'resolved'},
-            }),
+            (_) async => _apiResponse({'id': 'r1', 'status': 'resolved'}),
           );
 
       final result = await dataSource.getReportDetail('r1');
 
-      expect(result.data?.id, 'r1');
+      expect(result.id, 'r1');
     });
 
     test('rethrows a DioException as its mapped AppException', () async {
@@ -182,7 +181,7 @@ void main() {
   });
 
   group('getReportHistory', () {
-    test('parses a bare-array response body', () async {
+    test('rejects a bare-array response body', () async {
       when(() => dioClient.get<dynamic>(ApiEndpoints.reportHistory('r1')))
           .thenAnswer(
             (_) async => _response([
@@ -190,40 +189,39 @@ void main() {
             ]),
           );
 
-      final result = await dataSource.getReportHistory('r1');
-
-      expect(result.data, hasLength(1));
-      expect(result.data!.first.id, 's1');
+      await expectLater(
+        dataSource.getReportHistory('r1'),
+        throwsA(isA<UnknownException>()),
+      );
     });
 
-    test('parses an enveloped {status,message,data} response body', () async {
+    test('parses the shared response envelope', () async {
       when(() => dioClient.get<dynamic>(ApiEndpoints.reportHistory('r1')))
           .thenAnswer(
-            (_) async => _response({
-              'data': [
-                {'id': 's1', 'to_status': 'reported'},
-              ],
-            }),
+            (_) async => _apiResponse([
+              {'id': 's1', 'to_status': 'reported'},
+            ]),
           );
 
       final result = await dataSource.getReportHistory('r1');
 
-      expect(result.data, hasLength(1));
-      expect(result.data!.first.id, 's1');
+      expect(result, hasLength(1));
+      expect(result.first.id, 's1');
     });
 
-    test('a non-map row in a bare array is dropped', () async {
+    test('rejects a non-map row', () async {
       when(() => dioClient.get<dynamic>(ApiEndpoints.reportHistory('r1')))
           .thenAnswer(
-            (_) async => _response([
+            (_) async => _apiResponse([
               {'id': 's1', 'to_status': 'reported'},
               'not-a-map',
             ]),
           );
 
-      final result = await dataSource.getReportHistory('r1');
-
-      expect(result.data, hasLength(1));
+      await expectLater(
+        dataSource.getReportHistory('r1'),
+        throwsA(isA<UnknownException>()),
+      );
     });
   });
 
@@ -235,9 +233,7 @@ void main() {
           data: any(named: 'data'),
         ),
       ).thenAnswer(
-        (_) async => _response({
-          'data': {'id': 'r1', 'status': 'acknowledged'},
-        }),
+        (_) async => _apiResponse({'id': 'r1', 'status': 'acknowledged'}),
       );
 
       final result = await dataSource.updateReportStatus(
@@ -246,7 +242,7 @@ void main() {
         note: 'Looking into it',
       );
 
-      expect(result.data?.status, 'acknowledged');
+      expect(result.status, 'acknowledged');
 
       final captured =
           verify(
@@ -266,7 +262,7 @@ void main() {
           ApiEndpoints.reportStatus('r1'),
           data: any(named: 'data'),
         ),
-      ).thenAnswer((_) async => _response({'data': null}));
+      ).thenAnswer((_) async => _apiResponse({'id': 'r1'}));
 
       await dataSource.updateReportStatus(id: 'r1', toStatus: 'CLOSED');
 
@@ -287,7 +283,7 @@ void main() {
           ApiEndpoints.reportStatus('r1'),
           data: any(named: 'data'),
         ),
-      ).thenAnswer((_) async => _response({'data': null}));
+      ).thenAnswer((_) async => _apiResponse({'id': 'r1'}));
 
       await dataSource.updateReportStatus(
         id: 'r1',
@@ -335,9 +331,7 @@ void main() {
             options: any(named: 'options'),
           ),
         ).thenAnswer(
-          (_) async => _response({
-            'data': {'id': 'r1', 'status': 'reported'},
-          }),
+          (_) async => _apiResponse({'id': 'r1', 'status': 'reported'}),
         );
 
         final result = await dataSource.createReport(
@@ -348,7 +342,7 @@ void main() {
           longitude: 106.8,
         );
 
-        expect(result.data?.id, 'r1');
+        expect(result.id, 'r1');
 
         final captured =
             verify(

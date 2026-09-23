@@ -30,14 +30,14 @@ void main() {
   );
 
   test('delegates to repository.register with the params fields', () async {
-    final register = Register(status: true);
+    const register = Register(token: 'tok');
     when(
       () => repository.register(
         email: any(named: 'email'),
         password: any(named: 'password'),
         displayName: any(named: 'displayName'),
       ),
-    ).thenAnswer((_) async => Right(register));
+    ).thenAnswer((_) async => const Right(register));
 
     final result = await usecase(
       const RegisterParams(
@@ -47,7 +47,7 @@ void main() {
       ),
     );
 
-    expect(result, Right<Failure, Register>(register));
+    expect(result, const Right<Failure, Register>(register));
     verify(
       () => repository.register(
         email: 'a@b.com',

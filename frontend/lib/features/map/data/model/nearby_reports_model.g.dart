@@ -6,24 +6,6 @@ part of 'nearby_reports_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_NearbyReportsModel _$NearbyReportsModelFromJson(Map<String, dynamic> json) =>
-    _NearbyReportsModel(
-      status: json['status'] as bool?,
-      message: json['message'] as String?,
-      data: (json['data'] as List<dynamic>?)
-          ?.map(
-            (e) => NearbyReportsDataModel.fromJson(e as Map<String, dynamic>),
-          )
-          .toList(),
-    );
-
-Map<String, dynamic> _$NearbyReportsModelToJson(_NearbyReportsModel instance) =>
-    <String, dynamic>{
-      'status': instance.status,
-      'message': instance.message,
-      'data': instance.data,
-    };
-
 _NearbyReportsDataModel _$NearbyReportsDataModelFromJson(
   Map<String, dynamic> json,
 ) => _NearbyReportsDataModel(

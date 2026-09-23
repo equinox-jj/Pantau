@@ -27,9 +27,7 @@ void main() {
           limit: any(named: 'limit'),
         ),
       ).thenAnswer(
-        (_) async => const FeedReportsModel(
-          data: [FeedReportsDataModel(id: 'r1', status: 'reported')],
-        ),
+        (_) async => const [FeedReportsDataModel(id: 'r1', status: 'reported')],
       );
 
       final result = await repository.getFeedReports(
@@ -77,11 +75,7 @@ void main() {
           offset: any(named: 'offset'),
         ),
       ).thenAnswer(
-        (_) async => const MyReportsModel(
-          data: MyReportsDataModel(
-            items: [FeedReportsDataModel(id: 'm1', status: 'closed')],
-          ),
-        ),
+        (_) async => const [FeedReportsDataModel(id: 'm1', status: 'closed')],
       );
 
       final result = await repository.getMyReports();

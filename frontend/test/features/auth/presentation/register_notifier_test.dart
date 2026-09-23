@@ -36,8 +36,8 @@ void main() {
   test(
     'register() success updates state to AsyncData with the returned entity',
     () async {
-      final register = Register(status: true, message: 'created');
-      when(() => usecase(any())).thenAnswer((_) async => Right(register));
+      const register = Register(token: 'tok');
+      when(() => usecase(any())).thenAnswer((_) async => const Right(register));
 
       await container
           .read(registerUserProvider.notifier)
@@ -45,7 +45,7 @@ void main() {
 
       expect(
         container.read(registerUserProvider),
-        AsyncData<Register?>(register),
+        const AsyncData<Register?>(register),
       );
     },
   );
@@ -77,7 +77,7 @@ void main() {
   );
 
   test('register() passes the given fields to the usecase', () async {
-    when(() => usecase(any())).thenAnswer((_) async => Right(Register()));
+    when(() => usecase(any())).thenAnswer((_) async => const Right(Register()));
 
     await container
         .read(registerUserProvider.notifier)

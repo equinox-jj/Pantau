@@ -32,10 +32,12 @@ void main() {
           ),
         ).thenAnswer(
           (_) async => _response({
-            'status': true,
-            'data': [
-              {'id': 'r1', 'status': 'reported'},
-            ],
+            'success': true,
+            'response': {
+              'data': [
+                {'id': 'r1', 'status': 'reported'},
+              ],
+            },
           }),
         );
 
@@ -46,8 +48,8 @@ void main() {
           limit: 10,
         );
 
-        expect(result.data, hasLength(1));
-        expect(result.data!.first.id, 'r1');
+        expect(result, hasLength(1));
+        expect(result.first.id, 'r1');
 
         final captured = verify(
           () => dioClient.get<dynamic>(
@@ -69,7 +71,12 @@ void main() {
           ApiEndpoints.nearbyReports,
           queryParameters: any(named: 'queryParameters'),
         ),
-      ).thenAnswer((_) async => _response({'data': <dynamic>[]}));
+      ).thenAnswer(
+        (_) async => _response({
+          'success': true,
+          'response': {'data': <dynamic>[]},
+        }),
+      );
 
       await dataSource.getFeedReports(
         latitude: 0,
@@ -123,19 +130,19 @@ void main() {
           ),
         ).thenAnswer(
           (_) async => _response({
-            'data': {
-              'items': [
+            'success': true,
+            'response': {
+              'data': [
                 {'id': 'm1', 'status': 'closed'},
               ],
-              'meta': {'limit': 50, 'offset': 0, 'total': 1, 'has_next': false},
             },
           }),
         );
 
         final result = await dataSource.getMyReports(limit: 20, offset: 5);
 
-        expect(result.data?.items, hasLength(1));
-        expect(result.data?.meta?.total, 1);
+        expect(result, hasLength(1));
+        expect(result.first.id, 'm1');
 
         final captured =
             verify(

@@ -1,24 +1,20 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pantau/core/error/exceptions.dart';
 import 'package:pantau/core/utils/enums/enums.dart';
 import 'package:pantau/features/map/data/mapper/mapper.dart';
 import 'package:pantau/features/map/data/model/model.dart';
 
 void main() {
   group('CreateReportModelMapper.toEntity', () {
-    test('maps the nested data into a ReportDetail entity', () {
+    test('maps a report into a ReportDetail entity', () {
       const model = CreateReportModel(
-        status: true,
-        data: CreateReportDataModel(
-          id: 'r1',
-          category: CreateReportCategoryModel(id: 2, name: 'Pothole'),
-          description: 'Big hole',
-          photoUrls: ['https://example.com/p.jpg'],
-          latitude: -6.2,
-          longitude: 106.8,
-          status: 'reported',
-          createdAt: '2024-05-01T10:00:00.000Z',
-        ),
+        id: 'r1',
+        category: CreateReportCategoryModel(id: 2, name: 'Pothole'),
+        description: 'Big hole',
+        photoUrls: ['https://example.com/p.jpg'],
+        latitude: -6.2,
+        longitude: 106.8,
+        status: 'reported',
+        createdAt: '2024-05-01T10:00:00.000Z',
       );
 
       final entity = model.toEntity();
@@ -29,16 +25,16 @@ void main() {
       expect(entity.status, ReportStatus.reported);
     });
 
-    test('throws UnknownException when data is null', () {
+    test('missing fields map to safe defaults', () {
       const model = CreateReportModel();
-
-      expect(() => model.toEntity(), throwsA(isA<UnknownException>()));
+      expect(model.toEntity().id, isNull);
+      expect(model.toEntity().photoUrls, isEmpty);
     });
   });
 
-  group('CreateReportDataModelMapper.toEntity', () {
+  group('CreateReportModelMapper.toEntity fields', () {
     test('maps every field, including nested category and dates', () {
-      const model = CreateReportDataModel(
+      const model = CreateReportModel(
         id: 'r1',
         category: CreateReportCategoryModel(
           id: 3,
@@ -70,7 +66,7 @@ void main() {
     });
 
     test('null category, unparsable status and dates yield safe defaults', () {
-      const model = CreateReportDataModel(id: 'r2', status: 'nonsense');
+      const model = CreateReportModel(id: 'r2', status: 'nonsense');
 
       final entity = model.toEntity();
 

@@ -6,24 +6,6 @@ part of 'status_history_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_StatusHistoryModel _$StatusHistoryModelFromJson(Map<String, dynamic> json) =>
-    _StatusHistoryModel(
-      status: json['status'] as bool?,
-      message: json['message'] as String?,
-      data: (json['data'] as List<dynamic>?)
-          ?.map(
-            (e) => StatusHistoryEntryModel.fromJson(e as Map<String, dynamic>),
-          )
-          .toList(),
-    );
-
-Map<String, dynamic> _$StatusHistoryModelToJson(_StatusHistoryModel instance) =>
-    <String, dynamic>{
-      'status': instance.status,
-      'message': instance.message,
-      'data': instance.data,
-    };
-
 _StatusHistoryEntryModel _$StatusHistoryEntryModelFromJson(
   Map<String, dynamic> json,
 ) => _StatusHistoryEntryModel(

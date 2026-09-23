@@ -7,39 +7,16 @@ part of 'resolver_model.dart';
 // **************************************************************************
 
 _QueueModel _$QueueModelFromJson(Map<String, dynamic> json) => _QueueModel(
-  status: json['status'] as bool?,
-  message: json['message'] as String?,
-  data: json['data'] == null
+  items: (json['items'] as List<dynamic>?)
+      ?.map((e) => QueueReportDataModel.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  counts: json['counts'] == null
       ? null
-      : QueueDataModel.fromJson(json['data'] as Map<String, dynamic>),
+      : QueueCountsModel.fromJson(json['counts'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$QueueModelToJson(_QueueModel instance) =>
-    <String, dynamic>{
-      'status': instance.status,
-      'message': instance.message,
-      'data': instance.data,
-    };
-
-_QueueDataModel _$QueueDataModelFromJson(Map<String, dynamic> json) =>
-    _QueueDataModel(
-      items: (json['items'] as List<dynamic>?)
-          ?.map((e) => QueueReportDataModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      meta: json['meta'] == null
-          ? null
-          : QueueMetaModel.fromJson(json['meta'] as Map<String, dynamic>),
-      counts: json['counts'] == null
-          ? null
-          : QueueCountsModel.fromJson(json['counts'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$QueueDataModelToJson(_QueueDataModel instance) =>
-    <String, dynamic>{
-      'items': instance.items,
-      'meta': instance.meta,
-      'counts': instance.counts,
-    };
+    <String, dynamic>{'items': instance.items, 'counts': instance.counts};
 
 _QueueReportDataModel _$QueueReportDataModelFromJson(
   Map<String, dynamic> json,
@@ -49,9 +26,7 @@ _QueueReportDataModel _$QueueReportDataModelFromJson(
       ? null
       : QueueCategoryModel.fromJson(json['category'] as Map<String, dynamic>),
   description: json['description'] as String?,
-  photoUrls: (json['photo_urls'] as List<dynamic>?)
-      ?.map((e) => e as String)
-      .toList(),
+  photoUrl: json['photo_url'] as String?,
   status: json['status'] as String?,
   latitude: (json['latitude'] as num?)?.toDouble(),
   longitude: (json['longitude'] as num?)?.toDouble(),
@@ -65,7 +40,7 @@ Map<String, dynamic> _$QueueReportDataModelToJson(
   'id': instance.id,
   'category': instance.category,
   'description': instance.description,
-  'photo_urls': instance.photoUrls,
+  'photo_url': instance.photoUrl,
   'status': instance.status,
   'latitude': instance.latitude,
   'longitude': instance.longitude,
@@ -87,22 +62,6 @@ Map<String, dynamic> _$QueueCategoryModelToJson(_QueueCategoryModel instance) =>
       'name': instance.name,
       'slug': instance.slug,
       'is_active': instance.isActive,
-    };
-
-_QueueMetaModel _$QueueMetaModelFromJson(Map<String, dynamic> json) =>
-    _QueueMetaModel(
-      limit: (json['limit'] as num?)?.toInt(),
-      offset: (json['offset'] as num?)?.toInt(),
-      total: (json['total'] as num?)?.toInt(),
-      hasNext: json['has_next'] as bool?,
-    );
-
-Map<String, dynamic> _$QueueMetaModelToJson(_QueueMetaModel instance) =>
-    <String, dynamic>{
-      'limit': instance.limit,
-      'offset': instance.offset,
-      'total': instance.total,
-      'has_next': instance.hasNext,
     };
 
 _QueueCountsModel _$QueueCountsModelFromJson(Map<String, dynamic> json) =>

@@ -44,16 +44,13 @@ void main() {
           displayName: any(named: 'displayName'),
         ),
       ).thenAnswer(
-        (_) async => RegisterModel(
-          status: true,
-          data: const RegisterDataModel(
-            token: 'tok',
-            userResponse: RegisterUserModel(
-              uuid: 'u1',
-              email: 'a@b.com',
-              username: 'alice',
-              role: 'USER',
-            ),
+        (_) async => const RegisterModel(
+          token: 'tok',
+          userResponse: RegisterUserModel(
+            id: 'u1',
+            email: 'a@b.com',
+            displayName: 'alice',
+            role: 'USER',
           ),
         ),
       );
@@ -67,7 +64,7 @@ void main() {
       expect(result.isRight(), isTrue);
       result.fold(
         (l) => fail('expected Right, got Left($l)'),
-        (r) => expect(r.data?.user?.uuid, 'u1'),
+        (r) => expect(r.user?.uuid, 'u1'),
       );
 
       verify(() => tokenStorage.saveTokens(accessToken: 'tok')).called(1);
@@ -76,7 +73,7 @@ void main() {
               as Map<String, dynamic>;
       expect(captured['uuid'], 'u1');
       expect(captured['email'], 'a@b.com');
-      expect(captured['username'], 'alice');
+      expect(captured['display_name'], 'alice');
       expect(captured['role'], 'USER');
     });
 
@@ -88,12 +85,8 @@ void main() {
           displayName: any(named: 'displayName'),
         ),
       ).thenAnswer(
-        (_) async => RegisterModel(
-          status: true,
-          data: const RegisterDataModel(
-            userResponse: RegisterUserModel(uuid: 'u1'),
-          ),
-        ),
+        (_) async =>
+            const RegisterModel(userResponse: RegisterUserModel(id: 'u1')),
       );
 
       await repository.register(
@@ -116,12 +109,7 @@ void main() {
             password: any(named: 'password'),
             displayName: any(named: 'displayName'),
           ),
-        ).thenAnswer(
-          (_) async => RegisterModel(
-            status: true,
-            data: const RegisterDataModel(token: 'tok'),
-          ),
-        );
+        ).thenAnswer((_) async => const RegisterModel(token: 'tok'));
 
         await repository.register(
           email: 'a@b.com',
@@ -168,12 +156,9 @@ void main() {
           password: any(named: 'password'),
         ),
       ).thenAnswer(
-        (_) async => LoginModel(
-          status: true,
-          data: const LoginDataModel(
-            token: 'tok',
-            userResponse: LoginUserModel(uuid: 'u1', email: 'a@b.com'),
-          ),
+        (_) async => const LoginModel(
+          token: 'tok',
+          userResponse: LoginUserModel(id: 'u1', email: 'a@b.com'),
         ),
       );
 
@@ -185,7 +170,7 @@ void main() {
       expect(result.isRight(), isTrue);
       result.fold(
         (l) => fail('expected Right, got Left($l)'),
-        (r) => expect(r.data?.user?.uuid, 'u1'),
+        (r) => expect(r.user?.uuid, 'u1'),
       );
       verify(() => tokenStorage.saveTokens(accessToken: 'tok')).called(1);
       verify(() => userProfileStorage.save(any())).called(1);
@@ -199,12 +184,7 @@ void main() {
             email: any(named: 'email'),
             password: any(named: 'password'),
           ),
-        ).thenAnswer(
-          (_) async => LoginModel(
-            status: true,
-            data: const LoginDataModel(token: 'tok'),
-          ),
-        );
+        ).thenAnswer((_) async => const LoginModel(token: 'tok'));
 
         await repository.login(email: 'a@b.com', password: 'secret');
 
@@ -291,7 +271,7 @@ void main() {
           },
         );
         when(() => dataSource.getMe())
-            .thenAnswer((_) async => UserProfileModel(status: true));
+            .thenAnswer((_) async => const UserProfileModel());
 
         final result = await repository.getCurrentUser();
 
@@ -318,15 +298,12 @@ void main() {
           },
         );
         when(() => dataSource.getMe()).thenAnswer(
-          (_) async => UserProfileModel(
-            status: true,
-            data: const UserProfileDataModel(
-              id: 'u1-server',
-              displayName: 'Alice',
-              joinedAt: '2024-02-01T00:00:00.000Z',
-              reportsCount: 5,
-              resolvedCount: 2,
-            ),
+          (_) async => const UserProfileModel(
+            id: 'u1-server',
+            displayName: 'Alice',
+            joinedAt: '2024-02-01T00:00:00.000Z',
+            reportsCount: 5,
+            resolvedCount: 2,
           ),
         );
 
@@ -352,12 +329,9 @@ void main() {
         when(() => userProfileStorage.read()).thenAnswer(
           (_) async => {'uuid': 'u1', 'created_at': '2024-01-01T00:00:00.000Z'},
         );
-        when(() => dataSource.getMe()).thenAnswer(
-          (_) async => UserProfileModel(
-            status: true,
-            data: const UserProfileDataModel(displayName: 'Alice'),
-          ),
-        );
+        when(
+          () => dataSource.getMe(),
+        ).thenAnswer((_) async => const UserProfileModel(displayName: 'Alice'));
 
         final result = await repository.getCurrentUser();
 

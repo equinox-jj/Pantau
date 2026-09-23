@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pantau/core/error/error.dart';
+import 'package:pantau/core/network/api_response.dart';
 import 'package:pantau/core/utils/enums/enums.dart';
 import 'package:pantau/features/resolver/data/datasources/resolver_remote_datasource.dart';
 import 'package:pantau/features/resolver/data/model/resolver_model.dart';
@@ -34,11 +35,18 @@ void main() {
           offset: any(named: 'offset'),
         ),
       ).thenAnswer(
-        (_) async => const QueueModel(
-          data: QueueDataModel(
+        (_) async => const ResponseData(
+          data: QueueModel(
             items: [QueueReportDataModel(id: 'q1', status: 'reported')],
             counts: QueueCountsModel(open: 1),
-            meta: QueueMetaModel(hasNext: true),
+          ),
+          pagination: Pagination(
+            page: 1,
+            limit: 20,
+            offset: 0,
+            total: 21,
+            totalPages: 2,
+            hasNext: true,
           ),
         ),
       );
@@ -67,7 +75,7 @@ void main() {
           limit: any(named: 'limit'),
           offset: any(named: 'offset'),
         ),
-      ).thenAnswer((_) async => const QueueModel());
+      ).thenAnswer((_) async => const ResponseData(data: QueueModel()));
 
       await repository.getQueue(
         tab: QueueTab.inProgress,

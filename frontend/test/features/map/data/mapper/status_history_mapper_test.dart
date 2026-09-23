@@ -6,22 +6,11 @@ import 'package:pantau/features/map/data/model/model.dart';
 void main() {
   group('StatusHistoryModelMapper.toEntities', () {
     test('sorts entries oldest first regardless of input order', () {
-      const model = StatusHistoryModel(
-        data: [
-          StatusHistoryEntryModel(
-            id: 'c',
-            createdAt: '2024-05-03T00:00:00.000Z',
-          ),
-          StatusHistoryEntryModel(
-            id: 'a',
-            createdAt: '2024-05-01T00:00:00.000Z',
-          ),
-          StatusHistoryEntryModel(
-            id: 'b',
-            createdAt: '2024-05-02T00:00:00.000Z',
-          ),
-        ],
-      );
+      const model = <StatusHistoryEntryModel>[
+        StatusHistoryEntryModel(id: 'c', createdAt: '2024-05-03T00:00:00.000Z'),
+        StatusHistoryEntryModel(id: 'a', createdAt: '2024-05-01T00:00:00.000Z'),
+        StatusHistoryEntryModel(id: 'b', createdAt: '2024-05-02T00:00:00.000Z'),
+      ];
 
       final entities = model.toEntities();
 
@@ -29,16 +18,14 @@ void main() {
     });
 
     test('entries with a null createdAt sort to the end', () {
-      const model = StatusHistoryModel(
-        data: [
-          StatusHistoryEntryModel(id: 'null1'),
-          StatusHistoryEntryModel(
-            id: 'dated',
-            createdAt: '2024-05-01T00:00:00.000Z',
-          ),
-          StatusHistoryEntryModel(id: 'null2'),
-        ],
-      );
+      const model = <StatusHistoryEntryModel>[
+        StatusHistoryEntryModel(id: 'null1'),
+        StatusHistoryEntryModel(
+          id: 'dated',
+          createdAt: '2024-05-01T00:00:00.000Z',
+        ),
+        StatusHistoryEntryModel(id: 'null2'),
+      ];
 
       final entities = model.toEntities();
 
@@ -49,8 +36,8 @@ void main() {
       );
     });
 
-    test('null data yields an empty list', () {
-      const model = StatusHistoryModel();
+    test('empty list yields an empty list', () {
+      const model = <StatusHistoryEntryModel>[];
       expect(model.toEntities(), isEmpty);
     });
   });

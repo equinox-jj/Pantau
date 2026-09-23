@@ -6,26 +6,6 @@ part of 'report_categories_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_ReportCategoriesModel _$ReportCategoriesModelFromJson(
-  Map<String, dynamic> json,
-) => _ReportCategoriesModel(
-  status: json['status'] as bool?,
-  message: json['message'] as String?,
-  data: (json['data'] as List<dynamic>?)
-      ?.map(
-        (e) => ReportCategoriesDataModel.fromJson(e as Map<String, dynamic>),
-      )
-      .toList(),
-);
-
-Map<String, dynamic> _$ReportCategoriesModelToJson(
-  _ReportCategoriesModel instance,
-) => <String, dynamic>{
-  'status': instance.status,
-  'message': instance.message,
-  'data': instance.data,
-};
-
 _ReportCategoriesDataModel _$ReportCategoriesDataModelFromJson(
   Map<String, dynamic> json,
 ) => _ReportCategoriesDataModel(

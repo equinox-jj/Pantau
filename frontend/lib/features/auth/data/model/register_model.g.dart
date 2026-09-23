@@ -8,22 +8,6 @@ part of 'register_model.dart';
 
 _RegisterModel _$RegisterModelFromJson(Map<String, dynamic> json) =>
     _RegisterModel(
-      status: json['status'] as bool?,
-      message: json['message'] as String?,
-      data: json['data'] == null
-          ? null
-          : RegisterDataModel.fromJson(json['data'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$RegisterModelToJson(_RegisterModel instance) =>
-    <String, dynamic>{
-      'status': instance.status,
-      'message': instance.message,
-      'data': instance.data,
-    };
-
-_RegisterDataModel _$RegisterDataModelFromJson(Map<String, dynamic> json) =>
-    _RegisterDataModel(
       token: json['token'] as String?,
       expiresIn: (json['expires_in'] as num?)?.toInt(),
       userResponse: json['user_response'] == null
@@ -33,7 +17,7 @@ _RegisterDataModel _$RegisterDataModelFromJson(Map<String, dynamic> json) =>
             ),
     );
 
-Map<String, dynamic> _$RegisterDataModelToJson(_RegisterDataModel instance) =>
+Map<String, dynamic> _$RegisterModelToJson(_RegisterModel instance) =>
     <String, dynamic>{
       'token': instance.token,
       'expires_in': instance.expiresIn,
@@ -42,9 +26,9 @@ Map<String, dynamic> _$RegisterDataModelToJson(_RegisterDataModel instance) =>
 
 _RegisterUserModel _$RegisterUserModelFromJson(Map<String, dynamic> json) =>
     _RegisterUserModel(
-      uuid: json['uuid'] as String?,
+      id: json['id'] as String?,
       email: json['email'] as String?,
-      username: json['username'] as String?,
+      displayName: json['display_name'] as String?,
       role: json['role'] as String?,
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
@@ -52,9 +36,9 @@ _RegisterUserModel _$RegisterUserModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$RegisterUserModelToJson(_RegisterUserModel instance) =>
     <String, dynamic>{
-      'uuid': instance.uuid,
+      'id': instance.id,
       'email': instance.email,
-      'username': instance.username,
+      'display_name': instance.displayName,
       'role': instance.role,
       'created_at': instance.createdAt,
       'updated_at': instance.updatedAt,

@@ -1,66 +1,116 @@
-/// Generic envelope for a single-object API response.
-///
-/// Decoupled from json_serializable so the generic `T` can be deserialized
-/// through a caller-supplied [fromJsonT] converter.
-class ApiResponse<T> {
-  const ApiResponse({this.data, this.message, this.statusCode});
+import '../error/exceptions.dart';
 
-  /// Parses [json], decoding the `data` field with [fromJsonT].
-  factory ApiResponse.fromJson(
-    Map<String, dynamic> json,
-    T Function(Object? json) fromJsonT,
-  ) {
-    final rawData = json['data'];
-    return ApiResponse<T>(
-      data: rawData == null ? null : fromJsonT(rawData),
-      message: json['message'] as String?,
-      statusCode: json['status_code'] as int? ?? json['statusCode'] as int?,
-    );
+ResponseData<T> decodeApiResponse<T>(
+  Object? json,
+  T Function(Object?) fromJsonT,
+) {
+  if (json is! Map<String, dynamic>) {
+    throw const UnknownException('Malformed response');
   }
-
-  /// Null when the body carried no `data`.
-  final T? data;
-
-  final String? message;
-  final int? statusCode;
+  return ApiResponse<T>.fromJson(json, fromJsonT).response;
 }
 
-/// Generic envelope for a paginated list response (reqres.in shape).
-class PaginatedResponse<T> {
-  const PaginatedResponse({
-    required this.items,
-    required this.page,
-    required this.perPage,
-    required this.total,
-    required this.totalPages,
+/// The envelope returned by Pantau endpoints.
+class ApiResponse<T> {
+  const ApiResponse({
+    required this.success,
+    required this.response,
+    required this.errors,
   });
 
-  /// Parses [json], decoding each element of `data` with [fromJsonT].
-  factory PaginatedResponse.fromJson(
+  factory ApiResponse.fromJson(
     Map<String, dynamic> json,
-    T Function(Object? json) fromJsonT,
+    T Function(Object?) fromJsonT,
   ) {
-    final rawList = (json['data'] as List<dynamic>? ?? <dynamic>[]);
-    return PaginatedResponse<T>(
-      items: rawList.map(fromJsonT).toList(),
-      page: json['page'] as int? ?? 1,
-      perPage: json['per_page'] as int? ?? rawList.length,
-      total: json['total'] as int? ?? rawList.length,
-      totalPages: json['total_pages'] as int? ?? 1,
+    final errors = (json['errors'] as List<dynamic>? ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .map(ErrorDetail.fromJson)
+        .toList(growable: false);
+    if (json['success'] != true) {
+      throw UnknownException(
+        errors.isEmpty ? 'Request failed' : errors.first.message,
+      );
+    }
+
+    final body = json['response'];
+    if (body is! Map<String, dynamic>) {
+      throw const UnknownException('Malformed response');
+    }
+    return ApiResponse<T>(
+      success: true,
+      response: ResponseData<T>.fromJson(body, fromJsonT),
+      errors: errors,
     );
   }
 
-  final List<T> items;
+  final bool success;
+  final ResponseData<T> response;
+  final List<ErrorDetail> errors;
+}
 
-  /// 1-based.
+class ResponseData<T> {
+  const ResponseData({this.data, this.pagination});
+
+  factory ResponseData.fromJson(
+    Map<String, dynamic> json,
+    T Function(Object?) fromJsonT,
+  ) {
+    final rawPagination = json['pagination'];
+    return ResponseData<T>(
+      data: json['data'] == null ? null : fromJsonT(json['data']),
+      pagination: rawPagination is Map<String, dynamic>
+          ? Pagination.fromJson(rawPagination)
+          : null,
+    );
+  }
+
+  final T? data;
+  final Pagination? pagination;
+
+  T requireData() {
+    final value = data;
+    if (value == null) throw const UnknownException('Missing response data');
+    return value;
+  }
+}
+
+class Pagination {
+  const Pagination({
+    required this.page,
+    required this.limit,
+    required this.offset,
+    required this.total,
+    required this.totalPages,
+    required this.hasNext,
+  });
+
+  factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
+    page: json['page'] as int? ?? 0,
+    limit: json['limit'] as int? ?? 0,
+    offset: json['offset'] as int? ?? 0,
+    total: json['total'] as int? ?? 0,
+    totalPages: json['total_pages'] as int? ?? 0,
+    hasNext: json['has_next'] as bool? ?? false,
+  );
+
   final int page;
-
-  final int perPage;
-
-  /// Across all pages.
+  final int limit;
+  final int offset;
   final int total;
-
   final int totalPages;
+  final bool hasNext;
+}
 
-  bool get hasNextPage => page < totalPages;
+class ErrorDetail {
+  const ErrorDetail({this.code, this.field, required this.message});
+
+  factory ErrorDetail.fromJson(Map<String, dynamic> json) => ErrorDetail(
+    code: json['code'] as int?,
+    field: json['field'] as String?,
+    message: json['message'] as String? ?? 'Request failed',
+  );
+
+  final int? code;
+  final String? field;
+  final String message;
 }

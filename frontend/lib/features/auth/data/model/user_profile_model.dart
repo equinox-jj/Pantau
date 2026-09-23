@@ -5,26 +5,14 @@ part 'user_profile_model.g.dart';
 
 @freezed
 abstract class UserProfileModel with _$UserProfileModel {
-  factory UserProfileModel({
-    @JsonKey(name: "status") bool? status,
-    @JsonKey(name: "message") String? message,
-    @JsonKey(name: "data") UserProfileDataModel? data,
-  }) = _UserProfileModel;
-
-  factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
-      _$UserProfileModelFromJson(json);
-}
-
-@freezed
-abstract class UserProfileDataModel with _$UserProfileDataModel {
-  const factory UserProfileDataModel({
+  const factory UserProfileModel({
     @JsonKey(name: "id") String? id,
     @JsonKey(name: "display_name") String? displayName,
     @JsonKey(name: "joined_at") dynamic joinedAt,
     @JsonKey(name: "reports_count") int? reportsCount,
     @JsonKey(name: "resolved_count") int? resolvedCount,
-  }) = _UserProfileDataModel;
+  }) = _UserProfileModel;
 
-  factory UserProfileDataModel.fromJson(Map<String, dynamic> json) =>
-      _$UserProfileDataModelFromJson(json);
+  factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
+      _$UserProfileModelFromJson(json);
 }

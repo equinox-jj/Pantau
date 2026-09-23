@@ -53,12 +53,10 @@ void main() {
 
   group('FeedReportsModelMapper.toEntities', () {
     test('maps every row in data', () {
-      const model = FeedReportsModel(
-        data: [
-          FeedReportsDataModel(id: 'a', status: 'reported'),
-          FeedReportsDataModel(id: 'b', status: 'resolved'),
-        ],
-      );
+      const model = <FeedReportsDataModel>[
+        FeedReportsDataModel(id: 'a', status: 'reported'),
+        FeedReportsDataModel(id: 'b', status: 'resolved'),
+      ];
 
       final entities = model.toEntities();
 
@@ -67,8 +65,8 @@ void main() {
       expect(entities[1].id, 'b');
     });
 
-    test('null data yields an empty list', () {
-      const model = FeedReportsModel();
+    test('empty list yields an empty list', () {
+      const model = <FeedReportsDataModel>[];
       expect(model.toEntities(), isEmpty);
     });
   });

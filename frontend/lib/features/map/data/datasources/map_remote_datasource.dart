@@ -6,15 +6,15 @@ import '../../../../core/network/network.dart';
 import '../model/model.dart';
 
 abstract class MapRemoteDataSource with BaseRemoteDataSource {
-  Future<NearbyReportsModel> getNearbyReports({
+  Future<List<NearbyReportsDataModel>> getNearbyReports({
     required double latitude,
     required double longitude,
     required int radiusInMeters,
     int limit,
   });
-  Future<ReportCategoriesModel> getReportCategories();
+  Future<List<ReportCategoriesDataModel>> getReportCategories();
   Future<ReportDetailModel> getReportDetail(String id);
-  Future<StatusHistoryModel> getReportHistory(String id);
+  Future<List<StatusHistoryEntryModel>> getReportHistory(String id);
 
   /// Advances a report's status. `toStatus` is the wire value (matches
   /// [ReportStatus.slug] — resolver-only server-side).
@@ -67,7 +67,7 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
   );
 
   @override
-  Future<NearbyReportsModel> getNearbyReports({
+  Future<List<NearbyReportsDataModel>> getNearbyReports({
     required double latitude,
     required double longitude,
     required int radiusInMeters,
@@ -83,42 +83,62 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
       },
     );
 
-    return NearbyReportsModel.fromJson(response.data);
+    return decodeApiResponse(
+          response.data,
+          (json) => (json as List<dynamic>)
+              .map(
+                (item) => NearbyReportsDataModel.fromJson(
+                  item as Map<String, dynamic>,
+                ),
+              )
+              .toList(growable: false),
+        ).data ??
+        const [];
   });
 
   @override
-  Future<ReportCategoriesModel> getReportCategories() => safeApiCall(() async {
-    final response = await _dioClient.get(ApiEndpoints.reportCategories);
+  Future<List<ReportCategoriesDataModel>> getReportCategories() =>
+      safeApiCall(() async {
+        final response = await _dioClient.get(ApiEndpoints.reportCategories);
 
-    return ReportCategoriesModel.fromJson(response.data);
-  });
+        return decodeApiResponse(
+              response.data,
+              (json) => (json as List<dynamic>)
+                  .map(
+                    (item) => ReportCategoriesDataModel.fromJson(
+                      item as Map<String, dynamic>,
+                    ),
+                  )
+                  .toList(growable: false),
+            ).data ??
+            const [];
+      });
 
   @override
   Future<ReportDetailModel> getReportDetail(String id) => safeApiCall(() async {
     final response = await _dioClient.get(ApiEndpoints.reportDetail(id));
 
-    return ReportDetailModel.fromJson(response.data);
+    return decodeApiResponse(
+      response.data,
+      (json) => ReportDetailModel.fromJson(json as Map<String, dynamic>),
+    ).requireData();
   });
 
   @override
-  Future<StatusHistoryModel> getReportHistory(String id) =>
+  Future<List<StatusHistoryEntryModel>> getReportHistory(String id) =>
       safeApiCall(() async {
         final response = await _dioClient.get(ApiEndpoints.reportHistory(id));
-        final data = response.data;
-
-        // docs/Pantau_openapi.yaml types this response as a bare array, while
-        // every other endpoint wraps its payload in {status, message, data}.
-        // Both shapes are accepted so the screen survives either backend.
-        if (data is List) {
-          return StatusHistoryModel(
-            data: data
-                .whereType<Map<String, dynamic>>()
-                .map(StatusHistoryEntryModel.fromJson)
-                .toList(growable: false),
-          );
-        }
-
-        return StatusHistoryModel.fromJson(data);
+        return decodeApiResponse(
+              response.data,
+              (json) => (json as List<dynamic>)
+                  .map(
+                    (item) => StatusHistoryEntryModel.fromJson(
+                      item as Map<String, dynamic>,
+                    ),
+                  )
+                  .toList(growable: false),
+            ).data ??
+            const [];
       });
 
   @override
@@ -135,7 +155,10 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
       },
     );
 
-    return ReportDetailModel.fromJson(response.data);
+    return decodeApiResponse(
+      response.data,
+      (json) => ReportDetailModel.fromJson(json as Map<String, dynamic>),
+    ).requireData();
   });
 
   @override
@@ -175,7 +198,10 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
       ),
     );
 
-    return CreateReportModel.fromJson(response.data);
+    return decodeApiResponse(
+      response.data,
+      (json) => CreateReportModel.fromJson(json as Map<String, dynamic>),
+    ).requireData();
   });
 
   @override

@@ -3,34 +3,21 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'resolver_model.freezed.dart';
 part 'resolver_model.g.dart';
 
-/// `GET /queue`.
+/// Payload of `GET /queue`; pagination is in the shared response envelope.
 @freezed
 abstract class QueueModel with _$QueueModel {
   const factory QueueModel({
-    @JsonKey(name: "status") bool? status,
-    @JsonKey(name: "message") String? message,
-    @JsonKey(name: "data") QueueDataModel? data,
+    @JsonKey(name: "items") List<QueueReportDataModel>? items,
+    @JsonKey(name: "counts") QueueCountsModel? counts,
   }) = _QueueModel;
 
   factory QueueModel.fromJson(Map<String, dynamic> json) =>
       _$QueueModelFromJson(json);
 }
 
-@freezed
-abstract class QueueDataModel with _$QueueDataModel {
-  const factory QueueDataModel({
-    @JsonKey(name: "items") List<QueueReportDataModel>? items,
-    @JsonKey(name: "meta") QueueMetaModel? meta,
-    @JsonKey(name: "counts") QueueCountsModel? counts,
-  }) = _QueueDataModel;
-
-  factory QueueDataModel.fromJson(Map<String, dynamic> json) =>
-      _$QueueDataModelFromJson(json);
-}
-
 /// One report row.
 ///
-/// `photo_urls` and `description` are optional on purpose: a payload without
+/// `photo_url` and `description` are optional on purpose: a payload without
 /// them still parses and the card falls back to its no-photo state, same as
 /// the citizen feed's row model.
 @freezed
@@ -39,7 +26,7 @@ abstract class QueueReportDataModel with _$QueueReportDataModel {
     @JsonKey(name: "id") String? id,
     @JsonKey(name: "category") QueueCategoryModel? category,
     @JsonKey(name: "description") String? description,
-    @JsonKey(name: "photo_urls") List<String>? photoUrls,
+    @JsonKey(name: "photo_url") String? photoUrl,
     @JsonKey(name: "status") String? status,
     @JsonKey(name: "latitude") double? latitude,
     @JsonKey(name: "longitude") double? longitude,
@@ -62,20 +49,6 @@ abstract class QueueCategoryModel with _$QueueCategoryModel {
 
   factory QueueCategoryModel.fromJson(Map<String, dynamic> json) =>
       _$QueueCategoryModelFromJson(json);
-}
-
-/// The window the rows were taken from, same shape as `MyReportsMetaModel`.
-@freezed
-abstract class QueueMetaModel with _$QueueMetaModel {
-  const factory QueueMetaModel({
-    @JsonKey(name: "limit") int? limit,
-    @JsonKey(name: "offset") int? offset,
-    @JsonKey(name: "total") int? total,
-    @JsonKey(name: "has_next") bool? hasNext,
-  }) = _QueueMetaModel;
-
-  factory QueueMetaModel.fromJson(Map<String, dynamic> json) =>
-      _$QueueMetaModelFromJson(json);
 }
 
 @freezed

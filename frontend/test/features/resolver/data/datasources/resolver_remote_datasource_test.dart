@@ -33,13 +33,15 @@ void main() {
           ),
         ).thenAnswer(
           (_) async => _response({
-            'status': true,
-            'data': {
-              'items': [
-                {'id': 'q1', 'status': 'reported'},
-              ],
-              'counts': {'open': 1, 'in_progress': 0, 'resolved': 0},
-              'meta': {'has_next': false},
+            'success': true,
+            'response': {
+              'data': {
+                'items': [
+                  {'id': 'q1', 'status': 'reported'},
+                ],
+                'counts': {'open': 1, 'in_progress': 0, 'resolved': 0},
+              },
+              'pagination': {'has_next': false},
             },
           }),
         );
@@ -80,7 +82,12 @@ void main() {
           ApiEndpoints.queue,
           queryParameters: any(named: 'queryParameters'),
         ),
-      ).thenAnswer((_) async => _response({'data': <String, dynamic>{}}));
+      ).thenAnswer(
+        (_) async => _response({
+          'success': true,
+          'response': {'data': <String, dynamic>{}},
+        }),
+      );
 
       await dataSource.getQueue(
         tab: QueueTab.inProgress,
@@ -105,7 +112,12 @@ void main() {
           ApiEndpoints.queue,
           queryParameters: any(named: 'queryParameters'),
         ),
-      ).thenAnswer((_) async => _response({'data': <String, dynamic>{}}));
+      ).thenAnswer(
+        (_) async => _response({
+          'success': true,
+          'response': {'data': <String, dynamic>{}},
+        }),
+      );
 
       await dataSource.getQueue(
         tab: QueueTab.resolved,

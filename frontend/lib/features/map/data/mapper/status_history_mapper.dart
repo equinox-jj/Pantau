@@ -3,13 +3,11 @@ import '../../../../core/utils/helpers/helpers.dart';
 import '../../domain/entity/entity.dart';
 import '../model/model.dart';
 
-extension StatusHistoryModelMapper on StatusHistoryModel {
+extension StatusHistoryModelMapper on List<StatusHistoryEntryModel> {
   /// Oldest first. Server ordering is not guaranteed, and the timeline reads
   /// top-down, so the order is enforced here rather than in the widget.
   List<StatusHistoryEntry> toEntities() {
-    final entries = (data ?? const <StatusHistoryEntryModel>[])
-        .map((entry) => entry.toEntity())
-        .toList();
+    final entries = map((entry) => entry.toEntity()).toList();
 
     entries.sort((left, right) {
       final leftDate = left.createdAt;

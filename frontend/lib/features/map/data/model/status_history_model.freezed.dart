@@ -14,283 +14,6 @@ part of 'status_history_model.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$StatusHistoryModel {
-
-@JsonKey(name: "status") bool? get status;@JsonKey(name: "message") String? get message;@JsonKey(name: "data") List<StatusHistoryEntryModel>? get data;
-/// Create a copy of StatusHistoryModel
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$StatusHistoryModelCopyWith<StatusHistoryModel> get copyWith => _$StatusHistoryModelCopyWithImpl<StatusHistoryModel>(this as StatusHistoryModel, _$identity);
-
-  /// Serializes this StatusHistoryModel to a JSON map.
-  Map<String, dynamic> toJson();
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatusHistoryModel&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message)&&const DeepCollectionEquality().equals(other.data, data));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,status,message,const DeepCollectionEquality().hash(data));
-
-@override
-String toString() {
-  return 'StatusHistoryModel(status: $status, message: $message, data: $data)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class $StatusHistoryModelCopyWith<$Res>  {
-  factory $StatusHistoryModelCopyWith(StatusHistoryModel value, $Res Function(StatusHistoryModel) _then) = _$StatusHistoryModelCopyWithImpl;
-@useResult
-$Res call({
-@JsonKey(name: "status") bool? status,@JsonKey(name: "message") String? message,@JsonKey(name: "data") List<StatusHistoryEntryModel>? data
-});
-
-
-
-
-}
-/// @nodoc
-class _$StatusHistoryModelCopyWithImpl<$Res>
-    implements $StatusHistoryModelCopyWith<$Res> {
-  _$StatusHistoryModelCopyWithImpl(this._self, this._then);
-
-  final StatusHistoryModel _self;
-  final $Res Function(StatusHistoryModel) _then;
-
-/// Create a copy of StatusHistoryModel
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = freezed,Object? message = freezed,Object? data = freezed,}) {
-  return _then(StatusHistoryModel(
-status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as bool?,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String?,data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
-as List<StatusHistoryEntryModel>?,
-  ));
-}
-
-}
-
-
-/// Adds pattern-matching-related methods to [StatusHistoryModel].
-extension StatusHistoryModelPatterns on StatusHistoryModel {
-/// A variant of `map` that fallback to returning `orElse`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _StatusHistoryModel value)?  $default,{required TResult orElse(),}){
-final _that = this;
-switch (_that) {
-case _StatusHistoryModel() when $default != null:
-return $default(_that);case _:
-  return orElse();
-
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// Callbacks receives the raw object, upcasted.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case final Subclass2 value:
-///     return ...;
-/// }
-/// ```
-
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _StatusHistoryModel value)  $default,){
-final _that = this;
-switch (_that) {
-case _StatusHistoryModel():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
-}
-/// A variant of `map` that fallback to returning `null`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
-
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _StatusHistoryModel value)?  $default,){
-final _that = this;
-switch (_that) {
-case _StatusHistoryModel() when $default != null:
-return $default(_that);case _:
-  return null;
-
-}
-}
-/// A variant of `when` that fallback to an `orElse` callback.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "status")  bool? status, @JsonKey(name: "message")  String? message, @JsonKey(name: "data")  List<StatusHistoryEntryModel>? data)?  $default,{required TResult orElse(),}) {final _that = this;
-switch (_that) {
-case _StatusHistoryModel() when $default != null:
-return $default(_that.status,_that.message,_that.data);case _:
-  return orElse();
-
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// As opposed to `map`, this offers destructuring.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case Subclass2(:final field2):
-///     return ...;
-/// }
-/// ```
-
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "status")  bool? status, @JsonKey(name: "message")  String? message, @JsonKey(name: "data")  List<StatusHistoryEntryModel>? data)  $default,) {final _that = this;
-switch (_that) {
-case _StatusHistoryModel():
-return $default(_that.status,_that.message,_that.data);case _:
-  throw StateError('Unexpected subclass');
-
-}
-}
-/// A variant of `when` that fallback to returning `null`
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
-
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "status")  bool? status, @JsonKey(name: "message")  String? message, @JsonKey(name: "data")  List<StatusHistoryEntryModel>? data)?  $default,) {final _that = this;
-switch (_that) {
-case _StatusHistoryModel() when $default != null:
-return $default(_that.status,_that.message,_that.data);case _:
-  return null;
-
-}
-}
-
-}
-
-/// @nodoc
-@JsonSerializable()
-
-class _StatusHistoryModel implements StatusHistoryModel {
-  const _StatusHistoryModel({@JsonKey(name: "status") this.status, @JsonKey(name: "message") this.message, @JsonKey(name: "data")  List<StatusHistoryEntryModel>? data}): _data = data;
-  factory _StatusHistoryModel.fromJson(Map<String, dynamic> json) => _$StatusHistoryModelFromJson(json);
-
-@override@JsonKey(name: "status") final  bool? status;
-@override@JsonKey(name: "message") final  String? message;
- final  List<StatusHistoryEntryModel>? _data;
-@override@JsonKey(name: "data") List<StatusHistoryEntryModel>? get data {
-  final value = _data;
-  if (value == null) return null;
-  if (_data is EqualUnmodifiableListView) return _data;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(value);
-}
-
-
-/// Create a copy of StatusHistoryModel
-/// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$StatusHistoryModelCopyWith<_StatusHistoryModel> get copyWith => __$StatusHistoryModelCopyWithImpl<_StatusHistoryModel>(this, _$identity);
-
-@override
-Map<String, dynamic> toJson() {
-  return _$StatusHistoryModelToJson(this, );
-}
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatusHistoryModel&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message)&&const DeepCollectionEquality().equals(other._data, _data));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,status,message,const DeepCollectionEquality().hash(_data));
-
-@override
-String toString() {
-  return 'StatusHistoryModel(status: $status, message: $message, data: $data)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$StatusHistoryModelCopyWith<$Res> implements $StatusHistoryModelCopyWith<$Res> {
-  factory _$StatusHistoryModelCopyWith(_StatusHistoryModel value, $Res Function(_StatusHistoryModel) _then) = __$StatusHistoryModelCopyWithImpl;
-@override @useResult
-$Res call({
-@JsonKey(name: "status") bool? status,@JsonKey(name: "message") String? message,@JsonKey(name: "data") List<StatusHistoryEntryModel>? data
-});
-
-
-
-
-}
-/// @nodoc
-class __$StatusHistoryModelCopyWithImpl<$Res>
-    implements _$StatusHistoryModelCopyWith<$Res> {
-  __$StatusHistoryModelCopyWithImpl(this._self, this._then);
-
-  final _StatusHistoryModel _self;
-  final $Res Function(_StatusHistoryModel) _then;
-
-/// Create a copy of StatusHistoryModel
-/// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = freezed,Object? message = freezed,Object? data = freezed,}) {
-  return _then(_StatusHistoryModel(
-status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as bool?,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String?,data: freezed == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
-as List<StatusHistoryEntryModel>?,
-  ));
-}
-
-
-}
-
-
-/// @nodoc
 mixin _$StatusHistoryEntryModel {
 
 @JsonKey(name: "id") String? get id;@JsonKey(name: "from_status") String? get fromStatus;@JsonKey(name: "to_status") String? get toStatus;@JsonKey(name: "note") String? get note;@JsonKey(name: "actor_role") String? get actorRole;@JsonKey(name: "created_at") String? get createdAt;
@@ -306,16 +29,21 @@ $StatusHistoryEntryModelCopyWith<StatusHistoryEntryModel> get copyWith => _$Stat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatusHistoryEntryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.fromStatus, fromStatus) || other.fromStatus == fromStatus)&&(identical(other.toStatus, toStatus) || other.toStatus == toStatus)&&(identical(other.note, note) || other.note == note)&&(identical(other.actorRole, actorRole) || other.actorRole == actorRole)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  final _this = this as StatusHistoryEntryModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatusHistoryEntryModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.fromStatus, _this.fromStatus) || other.fromStatus == _this.fromStatus)&&(identical(other.toStatus, _this.toStatus) || other.toStatus == _this.toStatus)&&(identical(other.note, _this.note) || other.note == _this.note)&&(identical(other.actorRole, _this.actorRole) || other.actorRole == _this.actorRole)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,fromStatus,toStatus,note,actorRole,createdAt);
+int get hashCode {
+  final _this = this as StatusHistoryEntryModel;
+  return Object.hash(runtimeType,_this.id,_this.fromStatus,_this.toStatus,_this.note,_this.actorRole,_this.createdAt);
+}
 
 @override
 String toString() {
-  return 'StatusHistoryEntryModel(id: $id, fromStatus: $fromStatus, toStatus: $toStatus, note: $note, actorRole: $actorRole, createdAt: $createdAt)';
+  final _this = this as StatusHistoryEntryModel;
+  return 'StatusHistoryEntryModel(id: ${_this.id}, fromStatus: ${_this.fromStatus}, toStatus: ${_this.toStatus}, note: ${_this.note}, actorRole: ${_this.actorRole}, createdAt: ${_this.createdAt})';
 }
 
 
@@ -515,16 +243,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatusHistoryEntryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.fromStatus, fromStatus) || other.fromStatus == fromStatus)&&(identical(other.toStatus, toStatus) || other.toStatus == toStatus)&&(identical(other.note, note) || other.note == note)&&(identical(other.actorRole, actorRole) || other.actorRole == actorRole)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatusHistoryEntryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.fromStatus, fromStatus) || other.fromStatus == fromStatus)&&(identical(other.toStatus, toStatus) || other.toStatus == toStatus)&&(identical(other.note, note) || other.note == note)&&(identical(other.actorRole, actorRole) || other.actorRole == actorRole)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,fromStatus,toStatus,note,actorRole,createdAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,fromStatus,toStatus,note,actorRole,createdAt);
+}
 
 @override
 String toString() {
-  return 'StatusHistoryEntryModel(id: $id, fromStatus: $fromStatus, toStatus: $toStatus, note: $note, actorRole: $actorRole, createdAt: $createdAt)';
+    return 'StatusHistoryEntryModel(id: $id, fromStatus: $fromStatus, toStatus: $toStatus, note: $note, actorRole: $actorRole, createdAt: $createdAt)';
 }
 
 

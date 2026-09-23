@@ -23,7 +23,7 @@ void main() {
   });
 
   test('delegates to repository.login with the params fields', () async {
-    const login = Login(status: true);
+    const login = Login(token: 'tok');
     when(
       () => repository.login(
         email: any(named: 'email'),

@@ -83,6 +83,13 @@ AppException _mapResponse(Response<dynamic>? response) {
 }
 
 String? _extractMessage(Object? data) {
+  if (data is Map && data['errors'] is List) {
+    for (final item in data['errors'] as List) {
+      if (item is Map && item['message'] is String) {
+        return item['message'] as String;
+      }
+    }
+  }
   if (data is Map && data['message'] is String) {
     return data['message'] as String;
   }

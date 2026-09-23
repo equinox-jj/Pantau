@@ -5,12 +5,10 @@ import 'package:pantau/features/map/data/model/model.dart';
 void main() {
   group('ReportCategoriesModelMapper.toEntities', () {
     test('maps every row in data', () {
-      const model = ReportCategoriesModel(
-        data: [
-          ReportCategoriesDataModel(id: 1, name: 'Pothole'),
-          ReportCategoriesDataModel(id: 2, name: 'Trash'),
-        ],
-      );
+      const model = <ReportCategoriesDataModel>[
+        ReportCategoriesDataModel(id: 1, name: 'Pothole'),
+        ReportCategoriesDataModel(id: 2, name: 'Trash'),
+      ];
 
       final entities = model.toEntities();
 
@@ -19,8 +17,8 @@ void main() {
       expect(entities[1].id, 2);
     });
 
-    test('null data yields an empty list', () {
-      const model = ReportCategoriesModel();
+    test('empty list yields an empty list', () {
+      const model = <ReportCategoriesDataModel>[];
       expect(model.toEntities(), isEmpty);
     });
   });

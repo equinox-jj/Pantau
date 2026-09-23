@@ -6,18 +6,6 @@ part 'report_detail_model.g.dart';
 @freezed
 abstract class ReportDetailModel with _$ReportDetailModel {
   const factory ReportDetailModel({
-    @JsonKey(name: "status") bool? status,
-    @JsonKey(name: "message") String? message,
-    @JsonKey(name: "data") ReportDetailDataModel? data,
-  }) = _ReportDetailModel;
-
-  factory ReportDetailModel.fromJson(Map<String, dynamic> json) =>
-      _$ReportDetailModelFromJson(json);
-}
-
-@freezed
-abstract class ReportDetailDataModel with _$ReportDetailDataModel {
-  const factory ReportDetailDataModel({
     @JsonKey(name: "id") String? id,
     @JsonKey(name: "category") ReportDetailCategoryModel? category,
     @JsonKey(name: "description") String? description,
@@ -27,10 +15,10 @@ abstract class ReportDetailDataModel with _$ReportDetailDataModel {
     @JsonKey(name: "status") String? status,
     @JsonKey(name: "created_at") String? createdAt,
     @JsonKey(name: "updated_at") String? updatedAt,
-  }) = _ReportDetailDataModel;
+  }) = _ReportDetailModel;
 
-  factory ReportDetailDataModel.fromJson(Map<String, dynamic> json) =>
-      _$ReportDetailDataModelFromJson(json);
+  factory ReportDetailModel.fromJson(Map<String, dynamic> json) =>
+      _$ReportDetailModelFromJson(json);
 }
 
 @freezed

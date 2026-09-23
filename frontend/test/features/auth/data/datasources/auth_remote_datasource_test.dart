@@ -33,12 +33,13 @@ void main() {
           ),
         ).thenAnswer(
           (_) async => _response({
-            'status': true,
-            'message': 'ok',
-            'data': {
-              'token': 'tok',
-              'expires_in': 3600,
-              'user_response': {'uuid': 'u1', 'email': 'a@b.com'},
+            'success': true,
+            'response': {
+              'data': {
+                'token': 'tok',
+                'expires_in': 3600,
+                'user_response': {'id': 'u1', 'email': 'a@b.com'},
+              },
             },
           }),
         );
@@ -48,9 +49,8 @@ void main() {
           password: 'secret',
         );
 
-        expect(result.status, isTrue);
-        expect(result.data?.token, 'tok');
-        expect(result.data?.userResponse?.uuid, 'u1');
+        expect(result.token, 'tok');
+        expect(result.userResponse?.id, 'u1');
 
         final captured = verify(
           () => dioClient.post<dynamic>(
@@ -113,10 +113,12 @@ void main() {
         ),
       ).thenAnswer(
         (_) async => _response({
-          'status': true,
-          'data': {
-            'token': 'tok2',
-            'user_response': {'uuid': 'u2', 'username': 'newbie'},
+          'success': true,
+          'response': {
+            'data': {
+              'token': 'tok2',
+              'user_response': {'id': 'u2', 'display_name': 'newbie'},
+            },
           },
         }),
       );
@@ -127,8 +129,8 @@ void main() {
         displayName: 'New User',
       );
 
-      expect(result.data?.token, 'tok2');
-      expect(result.data?.userResponse?.username, 'newbie');
+      expect(result.token, 'tok2');
+      expect(result.userResponse?.displayName, 'newbie');
 
       final captured = verify(
         () => dioClient.post<dynamic>(
@@ -174,22 +176,24 @@ void main() {
     test('hits GET /users/me and parses the body', () async {
       when(() => dioClient.get<dynamic>(ApiEndpoints.me)).thenAnswer(
         (_) async => _response({
-          'status': true,
-          'data': {
-            'id': 'u1',
-            'display_name': 'Jane',
-            'reports_count': 3,
-            'resolved_count': 1,
+          'success': true,
+          'response': {
+            'data': {
+              'id': 'u1',
+              'display_name': 'Jane',
+              'reports_count': 3,
+              'resolved_count': 1,
+            },
           },
         }),
       );
 
       final result = await dataSource.getMe();
 
-      expect(result.data?.id, 'u1');
-      expect(result.data?.displayName, 'Jane');
-      expect(result.data?.reportsCount, 3);
-      expect(result.data?.resolvedCount, 1);
+      expect(result.id, 'u1');
+      expect(result.displayName, 'Jane');
+      expect(result.reportsCount, 3);
+      expect(result.resolvedCount, 1);
 
       verify(() => dioClient.get<dynamic>(ApiEndpoints.me)).called(1);
     });

@@ -3,13 +3,7 @@ import '../model/model.dart';
 
 extension RegisterModelMapper on RegisterModel {
   Register toEntity() {
-    return Register(status: status, message: message, data: data?.toEntity());
-  }
-}
-
-extension RegisterDataModelMapper on RegisterDataModel {
-  RegisterData toEntity() {
-    return RegisterData(
+    return Register(
       token: token,
       expiresIn: expiresIn,
       user: userResponse?.toEntity(),
@@ -20,9 +14,9 @@ extension RegisterDataModelMapper on RegisterDataModel {
 extension RegisterUserModelMapper on RegisterUserModel {
   RegisterUser toEntity() {
     return RegisterUser(
-      uuid: uuid,
+      uuid: id,
       email: email,
-      username: username,
+      displayName: displayName,
       role: role,
       createdAt: _parseDate(createdAt),
       updatedAt: _parseDate(updatedAt),

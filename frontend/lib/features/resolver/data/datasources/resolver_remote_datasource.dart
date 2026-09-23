@@ -6,7 +6,7 @@ import '../model/resolver_model.dart';
 abstract class ResolverRemoteDataSource with BaseRemoteDataSource {
   /// Reports waiting on the resolver within [radiusMeter] of the point,
   /// filtered to [tab] and nearest first.
-  Future<QueueModel> getQueue({
+  Future<ResponseData<QueueModel>> getQueue({
     required QueueTab tab,
     required double latitude,
     required double longitude,
@@ -22,7 +22,7 @@ class ResolverRemoteDataSourceImpl extends ResolverRemoteDataSource {
   final DioClient _dioClient;
 
   @override
-  Future<QueueModel> getQueue({
+  Future<ResponseData<QueueModel>> getQueue({
     required QueueTab tab,
     required double latitude,
     required double longitude,
@@ -42,6 +42,9 @@ class ResolverRemoteDataSourceImpl extends ResolverRemoteDataSource {
       },
     );
 
-    return QueueModel.fromJson(response.data);
+    return decodeApiResponse(
+      response.data,
+      (json) => QueueModel.fromJson(json as Map<String, dynamic>),
+    );
   });
 }

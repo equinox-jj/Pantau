@@ -34,7 +34,7 @@ void main() {
   test(
     'login() success updates state to AsyncData with the returned entity',
     () async {
-      const login = Login(status: true, message: 'ok');
+      const login = Login(token: 'tok');
       when(() => usecase(any())).thenAnswer((_) async => const Right(login));
 
       await container

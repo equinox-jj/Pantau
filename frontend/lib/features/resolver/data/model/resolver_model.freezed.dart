@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$QueueModel {
 
-@JsonKey(name: "status") bool? get status;@JsonKey(name: "message") String? get message;@JsonKey(name: "data") QueueDataModel? get data;
+@JsonKey(name: "items") List<QueueReportDataModel>? get items;@JsonKey(name: "counts") QueueCountsModel? get counts;
 /// Create a copy of QueueModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,21 @@ $QueueModelCopyWith<QueueModel> get copyWith => _$QueueModelCopyWithImpl<QueueMo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is QueueModel&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message)&&(identical(other.data, data) || other.data == data));
+  final _this = this as QueueModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is QueueModel&&const DeepCollectionEquality().equals(other.items, _this.items)&&(identical(other.counts, _this.counts) || other.counts == _this.counts));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,status,message,data);
+int get hashCode {
+  final _this = this as QueueModel;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.items),_this.counts);
+}
 
 @override
 String toString() {
-  return 'QueueModel(status: $status, message: $message, data: $data)';
+  final _this = this as QueueModel;
+  return 'QueueModel(items: ${_this.items}, counts: ${_this.counts})';
 }
 
 
@@ -49,11 +54,11 @@ abstract mixin class $QueueModelCopyWith<$Res>  {
   factory $QueueModelCopyWith(QueueModel value, $Res Function(QueueModel) _then) = _$QueueModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "status") bool? status,@JsonKey(name: "message") String? message,@JsonKey(name: "data") QueueDataModel? data
+@JsonKey(name: "items") List<QueueReportDataModel>? items,@JsonKey(name: "counts") QueueCountsModel? counts
 });
 
 
-$QueueDataModelCopyWith<$Res>? get data;
+$QueueCountsModelCopyWith<$Res>? get counts;
 
 }
 /// @nodoc
@@ -66,25 +71,24 @@ class _$QueueModelCopyWithImpl<$Res>
 
 /// Create a copy of QueueModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = freezed,Object? message = freezed,Object? data = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? items = freezed,Object? counts = freezed,}) {
   return _then(QueueModel(
-status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as bool?,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String?,data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
-as QueueDataModel?,
+items: freezed == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
+as List<QueueReportDataModel>?,counts: freezed == counts ? _self.counts : counts // ignore: cast_nullable_to_non_nullable
+as QueueCountsModel?,
   ));
 }
 /// Create a copy of QueueModel
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$QueueDataModelCopyWith<$Res>? get data {
-    if (_self.data == null) {
+$QueueCountsModelCopyWith<$Res>? get counts {
+    if (_self.counts == null) {
     return null;
   }
 
-  return $QueueDataModelCopyWith<$Res>(_self.data!, (value) {
-    return _then(_self.copyWith(data: value));
+  return $QueueCountsModelCopyWith<$Res>(_self.counts!, (value) {
+    return _then(_self.copyWith(counts: value));
   });
 }
 }
@@ -168,10 +172,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "status")  bool? status, @JsonKey(name: "message")  String? message, @JsonKey(name: "data")  QueueDataModel? data)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "items")  List<QueueReportDataModel>? items, @JsonKey(name: "counts")  QueueCountsModel? counts)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _QueueModel() when $default != null:
-return $default(_that.status,_that.message,_that.data);case _:
+return $default(_that.items,_that.counts);case _:
   return orElse();
 
 }
@@ -189,10 +193,10 @@ return $default(_that.status,_that.message,_that.data);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "status")  bool? status, @JsonKey(name: "message")  String? message, @JsonKey(name: "data")  QueueDataModel? data)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "items")  List<QueueReportDataModel>? items, @JsonKey(name: "counts")  QueueCountsModel? counts)  $default,) {final _that = this;
 switch (_that) {
 case _QueueModel():
-return $default(_that.status,_that.message,_that.data);case _:
+return $default(_that.items,_that.counts);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -209,10 +213,10 @@ return $default(_that.status,_that.message,_that.data);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "status")  bool? status, @JsonKey(name: "message")  String? message, @JsonKey(name: "data")  QueueDataModel? data)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "items")  List<QueueReportDataModel>? items, @JsonKey(name: "counts")  QueueCountsModel? counts)?  $default,) {final _that = this;
 switch (_that) {
 case _QueueModel() when $default != null:
-return $default(_that.status,_that.message,_that.data);case _:
+return $default(_that.items,_that.counts);case _:
   return null;
 
 }
@@ -224,12 +228,19 @@ return $default(_that.status,_that.message,_that.data);case _:
 @JsonSerializable()
 
 class _QueueModel implements QueueModel {
-  const _QueueModel({@JsonKey(name: "status") this.status, @JsonKey(name: "message") this.message, @JsonKey(name: "data") this.data});
+  const _QueueModel({@JsonKey(name: "items")  List<QueueReportDataModel>? items, @JsonKey(name: "counts") this.counts}): _items = items;
   factory _QueueModel.fromJson(Map<String, dynamic> json) => _$QueueModelFromJson(json);
 
-@override@JsonKey(name: "status") final  bool? status;
-@override@JsonKey(name: "message") final  String? message;
-@override@JsonKey(name: "data") final  QueueDataModel? data;
+ final  List<QueueReportDataModel>? _items;
+@override@JsonKey(name: "items") List<QueueReportDataModel>? get items {
+  final value = _items;
+  if (value == null) return null;
+  if (_items is EqualUnmodifiableListView) return _items;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+@override@JsonKey(name: "counts") final  QueueCountsModel? counts;
 
 /// Create a copy of QueueModel
 /// with the given fields replaced by the non-null parameter values.
@@ -244,16 +255,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _QueueModel&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message)&&(identical(other.data, data) || other.data == data));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _QueueModel&&const DeepCollectionEquality().equals(other.items, _items)&&(identical(other.counts, counts) || other.counts == counts));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,status,message,data);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),counts);
+}
 
 @override
 String toString() {
-  return 'QueueModel(status: $status, message: $message, data: $data)';
+    return 'QueueModel(items: $items, counts: $counts)';
 }
 
 
@@ -264,11 +277,11 @@ abstract mixin class _$QueueModelCopyWith<$Res> implements $QueueModelCopyWith<$
   factory _$QueueModelCopyWith(_QueueModel value, $Res Function(_QueueModel) _then) = __$QueueModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "status") bool? status,@JsonKey(name: "message") String? message,@JsonKey(name: "data") QueueDataModel? data
+@JsonKey(name: "items") List<QueueReportDataModel>? items,@JsonKey(name: "counts") QueueCountsModel? counts
 });
 
 
-@override $QueueDataModelCopyWith<$Res>? get data;
+@override $QueueCountsModelCopyWith<$Res>? get counts;
 
 }
 /// @nodoc
@@ -281,341 +294,15 @@ class __$QueueModelCopyWithImpl<$Res>
 
 /// Create a copy of QueueModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = freezed,Object? message = freezed,Object? data = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? items = freezed,Object? counts = freezed,}) {
   return _then(_QueueModel(
-status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as bool?,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String?,data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
-as QueueDataModel?,
+items: freezed == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
+as List<QueueReportDataModel>?,counts: freezed == counts ? _self.counts : counts // ignore: cast_nullable_to_non_nullable
+as QueueCountsModel?,
   ));
 }
 
 /// Create a copy of QueueModel
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$QueueDataModelCopyWith<$Res>? get data {
-    if (_self.data == null) {
-    return null;
-  }
-
-  return $QueueDataModelCopyWith<$Res>(_self.data!, (value) {
-    return _then(_self.copyWith(data: value));
-  });
-}
-}
-
-
-/// @nodoc
-mixin _$QueueDataModel {
-
-@JsonKey(name: "items") List<QueueReportDataModel>? get items;@JsonKey(name: "meta") QueueMetaModel? get meta;@JsonKey(name: "counts") QueueCountsModel? get counts;
-/// Create a copy of QueueDataModel
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$QueueDataModelCopyWith<QueueDataModel> get copyWith => _$QueueDataModelCopyWithImpl<QueueDataModel>(this as QueueDataModel, _$identity);
-
-  /// Serializes this QueueDataModel to a JSON map.
-  Map<String, dynamic> toJson();
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is QueueDataModel&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.meta, meta) || other.meta == meta)&&(identical(other.counts, counts) || other.counts == counts));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(items),meta,counts);
-
-@override
-String toString() {
-  return 'QueueDataModel(items: $items, meta: $meta, counts: $counts)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class $QueueDataModelCopyWith<$Res>  {
-  factory $QueueDataModelCopyWith(QueueDataModel value, $Res Function(QueueDataModel) _then) = _$QueueDataModelCopyWithImpl;
-@useResult
-$Res call({
-@JsonKey(name: "items") List<QueueReportDataModel>? items,@JsonKey(name: "meta") QueueMetaModel? meta,@JsonKey(name: "counts") QueueCountsModel? counts
-});
-
-
-$QueueMetaModelCopyWith<$Res>? get meta;$QueueCountsModelCopyWith<$Res>? get counts;
-
-}
-/// @nodoc
-class _$QueueDataModelCopyWithImpl<$Res>
-    implements $QueueDataModelCopyWith<$Res> {
-  _$QueueDataModelCopyWithImpl(this._self, this._then);
-
-  final QueueDataModel _self;
-  final $Res Function(QueueDataModel) _then;
-
-/// Create a copy of QueueDataModel
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? items = freezed,Object? meta = freezed,Object? counts = freezed,}) {
-  return _then(QueueDataModel(
-items: freezed == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
-as List<QueueReportDataModel>?,meta: freezed == meta ? _self.meta : meta // ignore: cast_nullable_to_non_nullable
-as QueueMetaModel?,counts: freezed == counts ? _self.counts : counts // ignore: cast_nullable_to_non_nullable
-as QueueCountsModel?,
-  ));
-}
-/// Create a copy of QueueDataModel
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$QueueMetaModelCopyWith<$Res>? get meta {
-    if (_self.meta == null) {
-    return null;
-  }
-
-  return $QueueMetaModelCopyWith<$Res>(_self.meta!, (value) {
-    return _then(_self.copyWith(meta: value));
-  });
-}/// Create a copy of QueueDataModel
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$QueueCountsModelCopyWith<$Res>? get counts {
-    if (_self.counts == null) {
-    return null;
-  }
-
-  return $QueueCountsModelCopyWith<$Res>(_self.counts!, (value) {
-    return _then(_self.copyWith(counts: value));
-  });
-}
-}
-
-
-/// Adds pattern-matching-related methods to [QueueDataModel].
-extension QueueDataModelPatterns on QueueDataModel {
-/// A variant of `map` that fallback to returning `orElse`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _QueueDataModel value)?  $default,{required TResult orElse(),}){
-final _that = this;
-switch (_that) {
-case _QueueDataModel() when $default != null:
-return $default(_that);case _:
-  return orElse();
-
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// Callbacks receives the raw object, upcasted.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case final Subclass2 value:
-///     return ...;
-/// }
-/// ```
-
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _QueueDataModel value)  $default,){
-final _that = this;
-switch (_that) {
-case _QueueDataModel():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
-}
-/// A variant of `map` that fallback to returning `null`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
-
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _QueueDataModel value)?  $default,){
-final _that = this;
-switch (_that) {
-case _QueueDataModel() when $default != null:
-return $default(_that);case _:
-  return null;
-
-}
-}
-/// A variant of `when` that fallback to an `orElse` callback.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "items")  List<QueueReportDataModel>? items, @JsonKey(name: "meta")  QueueMetaModel? meta, @JsonKey(name: "counts")  QueueCountsModel? counts)?  $default,{required TResult orElse(),}) {final _that = this;
-switch (_that) {
-case _QueueDataModel() when $default != null:
-return $default(_that.items,_that.meta,_that.counts);case _:
-  return orElse();
-
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// As opposed to `map`, this offers destructuring.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case Subclass2(:final field2):
-///     return ...;
-/// }
-/// ```
-
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "items")  List<QueueReportDataModel>? items, @JsonKey(name: "meta")  QueueMetaModel? meta, @JsonKey(name: "counts")  QueueCountsModel? counts)  $default,) {final _that = this;
-switch (_that) {
-case _QueueDataModel():
-return $default(_that.items,_that.meta,_that.counts);case _:
-  throw StateError('Unexpected subclass');
-
-}
-}
-/// A variant of `when` that fallback to returning `null`
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
-
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "items")  List<QueueReportDataModel>? items, @JsonKey(name: "meta")  QueueMetaModel? meta, @JsonKey(name: "counts")  QueueCountsModel? counts)?  $default,) {final _that = this;
-switch (_that) {
-case _QueueDataModel() when $default != null:
-return $default(_that.items,_that.meta,_that.counts);case _:
-  return null;
-
-}
-}
-
-}
-
-/// @nodoc
-@JsonSerializable()
-
-class _QueueDataModel implements QueueDataModel {
-  const _QueueDataModel({@JsonKey(name: "items")  List<QueueReportDataModel>? items, @JsonKey(name: "meta") this.meta, @JsonKey(name: "counts") this.counts}): _items = items;
-  factory _QueueDataModel.fromJson(Map<String, dynamic> json) => _$QueueDataModelFromJson(json);
-
- final  List<QueueReportDataModel>? _items;
-@override@JsonKey(name: "items") List<QueueReportDataModel>? get items {
-  final value = _items;
-  if (value == null) return null;
-  if (_items is EqualUnmodifiableListView) return _items;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(value);
-}
-
-@override@JsonKey(name: "meta") final  QueueMetaModel? meta;
-@override@JsonKey(name: "counts") final  QueueCountsModel? counts;
-
-/// Create a copy of QueueDataModel
-/// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$QueueDataModelCopyWith<_QueueDataModel> get copyWith => __$QueueDataModelCopyWithImpl<_QueueDataModel>(this, _$identity);
-
-@override
-Map<String, dynamic> toJson() {
-  return _$QueueDataModelToJson(this, );
-}
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _QueueDataModel&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.meta, meta) || other.meta == meta)&&(identical(other.counts, counts) || other.counts == counts));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),meta,counts);
-
-@override
-String toString() {
-  return 'QueueDataModel(items: $items, meta: $meta, counts: $counts)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$QueueDataModelCopyWith<$Res> implements $QueueDataModelCopyWith<$Res> {
-  factory _$QueueDataModelCopyWith(_QueueDataModel value, $Res Function(_QueueDataModel) _then) = __$QueueDataModelCopyWithImpl;
-@override @useResult
-$Res call({
-@JsonKey(name: "items") List<QueueReportDataModel>? items,@JsonKey(name: "meta") QueueMetaModel? meta,@JsonKey(name: "counts") QueueCountsModel? counts
-});
-
-
-@override $QueueMetaModelCopyWith<$Res>? get meta;@override $QueueCountsModelCopyWith<$Res>? get counts;
-
-}
-/// @nodoc
-class __$QueueDataModelCopyWithImpl<$Res>
-    implements _$QueueDataModelCopyWith<$Res> {
-  __$QueueDataModelCopyWithImpl(this._self, this._then);
-
-  final _QueueDataModel _self;
-  final $Res Function(_QueueDataModel) _then;
-
-/// Create a copy of QueueDataModel
-/// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? items = freezed,Object? meta = freezed,Object? counts = freezed,}) {
-  return _then(_QueueDataModel(
-items: freezed == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
-as List<QueueReportDataModel>?,meta: freezed == meta ? _self.meta : meta // ignore: cast_nullable_to_non_nullable
-as QueueMetaModel?,counts: freezed == counts ? _self.counts : counts // ignore: cast_nullable_to_non_nullable
-as QueueCountsModel?,
-  ));
-}
-
-/// Create a copy of QueueDataModel
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$QueueMetaModelCopyWith<$Res>? get meta {
-    if (_self.meta == null) {
-    return null;
-  }
-
-  return $QueueMetaModelCopyWith<$Res>(_self.meta!, (value) {
-    return _then(_self.copyWith(meta: value));
-  });
-}/// Create a copy of QueueDataModel
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -634,7 +321,7 @@ $QueueCountsModelCopyWith<$Res>? get counts {
 /// @nodoc
 mixin _$QueueReportDataModel {
 
-@JsonKey(name: "id") String? get id;@JsonKey(name: "category") QueueCategoryModel? get category;@JsonKey(name: "description") String? get description;@JsonKey(name: "photo_urls") List<String>? get photoUrls;@JsonKey(name: "status") String? get status;@JsonKey(name: "latitude") double? get latitude;@JsonKey(name: "longitude") double? get longitude;@JsonKey(name: "distance_meter") double? get distanceMeter;@JsonKey(name: "created_at") String? get createdAt;
+@JsonKey(name: "id") String? get id;@JsonKey(name: "category") QueueCategoryModel? get category;@JsonKey(name: "description") String? get description;@JsonKey(name: "photo_url") String? get photoUrl;@JsonKey(name: "status") String? get status;@JsonKey(name: "latitude") double? get latitude;@JsonKey(name: "longitude") double? get longitude;@JsonKey(name: "distance_meter") double? get distanceMeter;@JsonKey(name: "created_at") String? get createdAt;
 /// Create a copy of QueueReportDataModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -647,16 +334,21 @@ $QueueReportDataModelCopyWith<QueueReportDataModel> get copyWith => _$QueueRepor
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is QueueReportDataModel&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.photoUrls, photoUrls)&&(identical(other.status, status) || other.status == status)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.distanceMeter, distanceMeter) || other.distanceMeter == distanceMeter)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  final _this = this as QueueReportDataModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is QueueReportDataModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.category, _this.category) || other.category == _this.category)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.photoUrl, _this.photoUrl) || other.photoUrl == _this.photoUrl)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.latitude, _this.latitude) || other.latitude == _this.latitude)&&(identical(other.longitude, _this.longitude) || other.longitude == _this.longitude)&&(identical(other.distanceMeter, _this.distanceMeter) || other.distanceMeter == _this.distanceMeter)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,category,description,const DeepCollectionEquality().hash(photoUrls),status,latitude,longitude,distanceMeter,createdAt);
+int get hashCode {
+  final _this = this as QueueReportDataModel;
+  return Object.hash(runtimeType,_this.id,_this.category,_this.description,_this.photoUrl,_this.status,_this.latitude,_this.longitude,_this.distanceMeter,_this.createdAt);
+}
 
 @override
 String toString() {
-  return 'QueueReportDataModel(id: $id, category: $category, description: $description, photoUrls: $photoUrls, status: $status, latitude: $latitude, longitude: $longitude, distanceMeter: $distanceMeter, createdAt: $createdAt)';
+  final _this = this as QueueReportDataModel;
+  return 'QueueReportDataModel(id: ${_this.id}, category: ${_this.category}, description: ${_this.description}, photoUrl: ${_this.photoUrl}, status: ${_this.status}, latitude: ${_this.latitude}, longitude: ${_this.longitude}, distanceMeter: ${_this.distanceMeter}, createdAt: ${_this.createdAt})';
 }
 
 
@@ -667,7 +359,7 @@ abstract mixin class $QueueReportDataModelCopyWith<$Res>  {
   factory $QueueReportDataModelCopyWith(QueueReportDataModel value, $Res Function(QueueReportDataModel) _then) = _$QueueReportDataModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "id") String? id,@JsonKey(name: "category") QueueCategoryModel? category,@JsonKey(name: "description") String? description,@JsonKey(name: "photo_urls") List<String>? photoUrls,@JsonKey(name: "status") String? status,@JsonKey(name: "latitude") double? latitude,@JsonKey(name: "longitude") double? longitude,@JsonKey(name: "distance_meter") double? distanceMeter,@JsonKey(name: "created_at") String? createdAt
+@JsonKey(name: "id") String? id,@JsonKey(name: "category") QueueCategoryModel? category,@JsonKey(name: "description") String? description,@JsonKey(name: "photo_url") String? photoUrl,@JsonKey(name: "status") String? status,@JsonKey(name: "latitude") double? latitude,@JsonKey(name: "longitude") double? longitude,@JsonKey(name: "distance_meter") double? distanceMeter,@JsonKey(name: "created_at") String? createdAt
 });
 
 
@@ -684,13 +376,13 @@ class _$QueueReportDataModelCopyWithImpl<$Res>
 
 /// Create a copy of QueueReportDataModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? category = freezed,Object? description = freezed,Object? photoUrls = freezed,Object? status = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? distanceMeter = freezed,Object? createdAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? category = freezed,Object? description = freezed,Object? photoUrl = freezed,Object? status = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? distanceMeter = freezed,Object? createdAt = freezed,}) {
   return _then(QueueReportDataModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as QueueCategoryModel?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,photoUrls: freezed == photoUrls ? _self.photoUrls : photoUrls // ignore: cast_nullable_to_non_nullable
-as List<String>?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String?,photoUrl: freezed == photoUrl ? _self.photoUrl : photoUrl // ignore: cast_nullable_to_non_nullable
+as String?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double?,distanceMeter: freezed == distanceMeter ? _self.distanceMeter : distanceMeter // ignore: cast_nullable_to_non_nullable
@@ -792,10 +484,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "category")  QueueCategoryModel? category, @JsonKey(name: "description")  String? description, @JsonKey(name: "photo_urls")  List<String>? photoUrls, @JsonKey(name: "status")  String? status, @JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude, @JsonKey(name: "distance_meter")  double? distanceMeter, @JsonKey(name: "created_at")  String? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "category")  QueueCategoryModel? category, @JsonKey(name: "description")  String? description, @JsonKey(name: "photo_url")  String? photoUrl, @JsonKey(name: "status")  String? status, @JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude, @JsonKey(name: "distance_meter")  double? distanceMeter, @JsonKey(name: "created_at")  String? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _QueueReportDataModel() when $default != null:
-return $default(_that.id,_that.category,_that.description,_that.photoUrls,_that.status,_that.latitude,_that.longitude,_that.distanceMeter,_that.createdAt);case _:
+return $default(_that.id,_that.category,_that.description,_that.photoUrl,_that.status,_that.latitude,_that.longitude,_that.distanceMeter,_that.createdAt);case _:
   return orElse();
 
 }
@@ -813,10 +505,10 @@ return $default(_that.id,_that.category,_that.description,_that.photoUrls,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "category")  QueueCategoryModel? category, @JsonKey(name: "description")  String? description, @JsonKey(name: "photo_urls")  List<String>? photoUrls, @JsonKey(name: "status")  String? status, @JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude, @JsonKey(name: "distance_meter")  double? distanceMeter, @JsonKey(name: "created_at")  String? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "category")  QueueCategoryModel? category, @JsonKey(name: "description")  String? description, @JsonKey(name: "photo_url")  String? photoUrl, @JsonKey(name: "status")  String? status, @JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude, @JsonKey(name: "distance_meter")  double? distanceMeter, @JsonKey(name: "created_at")  String? createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _QueueReportDataModel():
-return $default(_that.id,_that.category,_that.description,_that.photoUrls,_that.status,_that.latitude,_that.longitude,_that.distanceMeter,_that.createdAt);case _:
+return $default(_that.id,_that.category,_that.description,_that.photoUrl,_that.status,_that.latitude,_that.longitude,_that.distanceMeter,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -833,10 +525,10 @@ return $default(_that.id,_that.category,_that.description,_that.photoUrls,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "category")  QueueCategoryModel? category, @JsonKey(name: "description")  String? description, @JsonKey(name: "photo_urls")  List<String>? photoUrls, @JsonKey(name: "status")  String? status, @JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude, @JsonKey(name: "distance_meter")  double? distanceMeter, @JsonKey(name: "created_at")  String? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "category")  QueueCategoryModel? category, @JsonKey(name: "description")  String? description, @JsonKey(name: "photo_url")  String? photoUrl, @JsonKey(name: "status")  String? status, @JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude, @JsonKey(name: "distance_meter")  double? distanceMeter, @JsonKey(name: "created_at")  String? createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _QueueReportDataModel() when $default != null:
-return $default(_that.id,_that.category,_that.description,_that.photoUrls,_that.status,_that.latitude,_that.longitude,_that.distanceMeter,_that.createdAt);case _:
+return $default(_that.id,_that.category,_that.description,_that.photoUrl,_that.status,_that.latitude,_that.longitude,_that.distanceMeter,_that.createdAt);case _:
   return null;
 
 }
@@ -848,21 +540,13 @@ return $default(_that.id,_that.category,_that.description,_that.photoUrls,_that.
 @JsonSerializable()
 
 class _QueueReportDataModel implements QueueReportDataModel {
-  const _QueueReportDataModel({@JsonKey(name: "id") this.id, @JsonKey(name: "category") this.category, @JsonKey(name: "description") this.description, @JsonKey(name: "photo_urls")  List<String>? photoUrls, @JsonKey(name: "status") this.status, @JsonKey(name: "latitude") this.latitude, @JsonKey(name: "longitude") this.longitude, @JsonKey(name: "distance_meter") this.distanceMeter, @JsonKey(name: "created_at") this.createdAt}): _photoUrls = photoUrls;
+  const _QueueReportDataModel({@JsonKey(name: "id") this.id, @JsonKey(name: "category") this.category, @JsonKey(name: "description") this.description, @JsonKey(name: "photo_url") this.photoUrl, @JsonKey(name: "status") this.status, @JsonKey(name: "latitude") this.latitude, @JsonKey(name: "longitude") this.longitude, @JsonKey(name: "distance_meter") this.distanceMeter, @JsonKey(name: "created_at") this.createdAt});
   factory _QueueReportDataModel.fromJson(Map<String, dynamic> json) => _$QueueReportDataModelFromJson(json);
 
 @override@JsonKey(name: "id") final  String? id;
 @override@JsonKey(name: "category") final  QueueCategoryModel? category;
 @override@JsonKey(name: "description") final  String? description;
- final  List<String>? _photoUrls;
-@override@JsonKey(name: "photo_urls") List<String>? get photoUrls {
-  final value = _photoUrls;
-  if (value == null) return null;
-  if (_photoUrls is EqualUnmodifiableListView) return _photoUrls;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(value);
-}
-
+@override@JsonKey(name: "photo_url") final  String? photoUrl;
 @override@JsonKey(name: "status") final  String? status;
 @override@JsonKey(name: "latitude") final  double? latitude;
 @override@JsonKey(name: "longitude") final  double? longitude;
@@ -882,16 +566,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _QueueReportDataModel&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._photoUrls, _photoUrls)&&(identical(other.status, status) || other.status == status)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.distanceMeter, distanceMeter) || other.distanceMeter == distanceMeter)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _QueueReportDataModel&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.description, description) || other.description == description)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.status, status) || other.status == status)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.distanceMeter, distanceMeter) || other.distanceMeter == distanceMeter)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,category,description,const DeepCollectionEquality().hash(_photoUrls),status,latitude,longitude,distanceMeter,createdAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,category,description,photoUrl,status,latitude,longitude,distanceMeter,createdAt);
+}
 
 @override
 String toString() {
-  return 'QueueReportDataModel(id: $id, category: $category, description: $description, photoUrls: $photoUrls, status: $status, latitude: $latitude, longitude: $longitude, distanceMeter: $distanceMeter, createdAt: $createdAt)';
+    return 'QueueReportDataModel(id: $id, category: $category, description: $description, photoUrl: $photoUrl, status: $status, latitude: $latitude, longitude: $longitude, distanceMeter: $distanceMeter, createdAt: $createdAt)';
 }
 
 
@@ -902,7 +588,7 @@ abstract mixin class _$QueueReportDataModelCopyWith<$Res> implements $QueueRepor
   factory _$QueueReportDataModelCopyWith(_QueueReportDataModel value, $Res Function(_QueueReportDataModel) _then) = __$QueueReportDataModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "id") String? id,@JsonKey(name: "category") QueueCategoryModel? category,@JsonKey(name: "description") String? description,@JsonKey(name: "photo_urls") List<String>? photoUrls,@JsonKey(name: "status") String? status,@JsonKey(name: "latitude") double? latitude,@JsonKey(name: "longitude") double? longitude,@JsonKey(name: "distance_meter") double? distanceMeter,@JsonKey(name: "created_at") String? createdAt
+@JsonKey(name: "id") String? id,@JsonKey(name: "category") QueueCategoryModel? category,@JsonKey(name: "description") String? description,@JsonKey(name: "photo_url") String? photoUrl,@JsonKey(name: "status") String? status,@JsonKey(name: "latitude") double? latitude,@JsonKey(name: "longitude") double? longitude,@JsonKey(name: "distance_meter") double? distanceMeter,@JsonKey(name: "created_at") String? createdAt
 });
 
 
@@ -919,13 +605,13 @@ class __$QueueReportDataModelCopyWithImpl<$Res>
 
 /// Create a copy of QueueReportDataModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? category = freezed,Object? description = freezed,Object? photoUrls = freezed,Object? status = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? distanceMeter = freezed,Object? createdAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? category = freezed,Object? description = freezed,Object? photoUrl = freezed,Object? status = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? distanceMeter = freezed,Object? createdAt = freezed,}) {
   return _then(_QueueReportDataModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as QueueCategoryModel?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,photoUrls: freezed == photoUrls ? _self._photoUrls : photoUrls // ignore: cast_nullable_to_non_nullable
-as List<String>?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String?,photoUrl: freezed == photoUrl ? _self.photoUrl : photoUrl // ignore: cast_nullable_to_non_nullable
+as String?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double?,distanceMeter: freezed == distanceMeter ? _self.distanceMeter : distanceMeter // ignore: cast_nullable_to_non_nullable
@@ -966,16 +652,21 @@ $QueueCategoryModelCopyWith<QueueCategoryModel> get copyWith => _$QueueCategoryM
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is QueueCategoryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.isActive, isActive) || other.isActive == isActive));
+  final _this = this as QueueCategoryModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is QueueCategoryModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.slug, _this.slug) || other.slug == _this.slug)&&(identical(other.isActive, _this.isActive) || other.isActive == _this.isActive));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,slug,isActive);
+int get hashCode {
+  final _this = this as QueueCategoryModel;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.slug,_this.isActive);
+}
 
 @override
 String toString() {
-  return 'QueueCategoryModel(id: $id, name: $name, slug: $slug, isActive: $isActive)';
+  final _this = this as QueueCategoryModel;
+  return 'QueueCategoryModel(id: ${_this.id}, name: ${_this.name}, slug: ${_this.slug}, isActive: ${_this.isActive})';
 }
 
 
@@ -1171,16 +862,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _QueueCategoryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.isActive, isActive) || other.isActive == isActive));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _QueueCategoryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.isActive, isActive) || other.isActive == isActive));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,slug,isActive);
+int get hashCode {
+    return Object.hash(runtimeType,id,name,slug,isActive);
+}
 
 @override
 String toString() {
-  return 'QueueCategoryModel(id: $id, name: $name, slug: $slug, isActive: $isActive)';
+    return 'QueueCategoryModel(id: $id, name: $name, slug: $slug, isActive: $isActive)';
 }
 
 
@@ -1223,278 +916,6 @@ as bool?,
 
 
 /// @nodoc
-mixin _$QueueMetaModel {
-
-@JsonKey(name: "limit") int? get limit;@JsonKey(name: "offset") int? get offset;@JsonKey(name: "total") int? get total;@JsonKey(name: "has_next") bool? get hasNext;
-/// Create a copy of QueueMetaModel
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$QueueMetaModelCopyWith<QueueMetaModel> get copyWith => _$QueueMetaModelCopyWithImpl<QueueMetaModel>(this as QueueMetaModel, _$identity);
-
-  /// Serializes this QueueMetaModel to a JSON map.
-  Map<String, dynamic> toJson();
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is QueueMetaModel&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.total, total) || other.total == total)&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,limit,offset,total,hasNext);
-
-@override
-String toString() {
-  return 'QueueMetaModel(limit: $limit, offset: $offset, total: $total, hasNext: $hasNext)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class $QueueMetaModelCopyWith<$Res>  {
-  factory $QueueMetaModelCopyWith(QueueMetaModel value, $Res Function(QueueMetaModel) _then) = _$QueueMetaModelCopyWithImpl;
-@useResult
-$Res call({
-@JsonKey(name: "limit") int? limit,@JsonKey(name: "offset") int? offset,@JsonKey(name: "total") int? total,@JsonKey(name: "has_next") bool? hasNext
-});
-
-
-
-
-}
-/// @nodoc
-class _$QueueMetaModelCopyWithImpl<$Res>
-    implements $QueueMetaModelCopyWith<$Res> {
-  _$QueueMetaModelCopyWithImpl(this._self, this._then);
-
-  final QueueMetaModel _self;
-  final $Res Function(QueueMetaModel) _then;
-
-/// Create a copy of QueueMetaModel
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? limit = freezed,Object? offset = freezed,Object? total = freezed,Object? hasNext = freezed,}) {
-  return _then(QueueMetaModel(
-limit: freezed == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
-as int?,offset: freezed == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
-as int?,total: freezed == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
-as int?,hasNext: freezed == hasNext ? _self.hasNext : hasNext // ignore: cast_nullable_to_non_nullable
-as bool?,
-  ));
-}
-
-}
-
-
-/// Adds pattern-matching-related methods to [QueueMetaModel].
-extension QueueMetaModelPatterns on QueueMetaModel {
-/// A variant of `map` that fallback to returning `orElse`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _QueueMetaModel value)?  $default,{required TResult orElse(),}){
-final _that = this;
-switch (_that) {
-case _QueueMetaModel() when $default != null:
-return $default(_that);case _:
-  return orElse();
-
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// Callbacks receives the raw object, upcasted.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case final Subclass2 value:
-///     return ...;
-/// }
-/// ```
-
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _QueueMetaModel value)  $default,){
-final _that = this;
-switch (_that) {
-case _QueueMetaModel():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
-}
-/// A variant of `map` that fallback to returning `null`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
-
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _QueueMetaModel value)?  $default,){
-final _that = this;
-switch (_that) {
-case _QueueMetaModel() when $default != null:
-return $default(_that);case _:
-  return null;
-
-}
-}
-/// A variant of `when` that fallback to an `orElse` callback.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "limit")  int? limit, @JsonKey(name: "offset")  int? offset, @JsonKey(name: "total")  int? total, @JsonKey(name: "has_next")  bool? hasNext)?  $default,{required TResult orElse(),}) {final _that = this;
-switch (_that) {
-case _QueueMetaModel() when $default != null:
-return $default(_that.limit,_that.offset,_that.total,_that.hasNext);case _:
-  return orElse();
-
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// As opposed to `map`, this offers destructuring.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case Subclass2(:final field2):
-///     return ...;
-/// }
-/// ```
-
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "limit")  int? limit, @JsonKey(name: "offset")  int? offset, @JsonKey(name: "total")  int? total, @JsonKey(name: "has_next")  bool? hasNext)  $default,) {final _that = this;
-switch (_that) {
-case _QueueMetaModel():
-return $default(_that.limit,_that.offset,_that.total,_that.hasNext);case _:
-  throw StateError('Unexpected subclass');
-
-}
-}
-/// A variant of `when` that fallback to returning `null`
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
-
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "limit")  int? limit, @JsonKey(name: "offset")  int? offset, @JsonKey(name: "total")  int? total, @JsonKey(name: "has_next")  bool? hasNext)?  $default,) {final _that = this;
-switch (_that) {
-case _QueueMetaModel() when $default != null:
-return $default(_that.limit,_that.offset,_that.total,_that.hasNext);case _:
-  return null;
-
-}
-}
-
-}
-
-/// @nodoc
-@JsonSerializable()
-
-class _QueueMetaModel implements QueueMetaModel {
-  const _QueueMetaModel({@JsonKey(name: "limit") this.limit, @JsonKey(name: "offset") this.offset, @JsonKey(name: "total") this.total, @JsonKey(name: "has_next") this.hasNext});
-  factory _QueueMetaModel.fromJson(Map<String, dynamic> json) => _$QueueMetaModelFromJson(json);
-
-@override@JsonKey(name: "limit") final  int? limit;
-@override@JsonKey(name: "offset") final  int? offset;
-@override@JsonKey(name: "total") final  int? total;
-@override@JsonKey(name: "has_next") final  bool? hasNext;
-
-/// Create a copy of QueueMetaModel
-/// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$QueueMetaModelCopyWith<_QueueMetaModel> get copyWith => __$QueueMetaModelCopyWithImpl<_QueueMetaModel>(this, _$identity);
-
-@override
-Map<String, dynamic> toJson() {
-  return _$QueueMetaModelToJson(this, );
-}
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _QueueMetaModel&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.total, total) || other.total == total)&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,limit,offset,total,hasNext);
-
-@override
-String toString() {
-  return 'QueueMetaModel(limit: $limit, offset: $offset, total: $total, hasNext: $hasNext)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$QueueMetaModelCopyWith<$Res> implements $QueueMetaModelCopyWith<$Res> {
-  factory _$QueueMetaModelCopyWith(_QueueMetaModel value, $Res Function(_QueueMetaModel) _then) = __$QueueMetaModelCopyWithImpl;
-@override @useResult
-$Res call({
-@JsonKey(name: "limit") int? limit,@JsonKey(name: "offset") int? offset,@JsonKey(name: "total") int? total,@JsonKey(name: "has_next") bool? hasNext
-});
-
-
-
-
-}
-/// @nodoc
-class __$QueueMetaModelCopyWithImpl<$Res>
-    implements _$QueueMetaModelCopyWith<$Res> {
-  __$QueueMetaModelCopyWithImpl(this._self, this._then);
-
-  final _QueueMetaModel _self;
-  final $Res Function(_QueueMetaModel) _then;
-
-/// Create a copy of QueueMetaModel
-/// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? limit = freezed,Object? offset = freezed,Object? total = freezed,Object? hasNext = freezed,}) {
-  return _then(_QueueMetaModel(
-limit: freezed == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
-as int?,offset: freezed == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
-as int?,total: freezed == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
-as int?,hasNext: freezed == hasNext ? _self.hasNext : hasNext // ignore: cast_nullable_to_non_nullable
-as bool?,
-  ));
-}
-
-
-}
-
-
-/// @nodoc
 mixin _$QueueCountsModel {
 
 @JsonKey(name: "open") int? get open;@JsonKey(name: "in_progress") int? get inProgress;@JsonKey(name: "resolved") int? get resolved;
@@ -1510,16 +931,21 @@ $QueueCountsModelCopyWith<QueueCountsModel> get copyWith => _$QueueCountsModelCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is QueueCountsModel&&(identical(other.open, open) || other.open == open)&&(identical(other.inProgress, inProgress) || other.inProgress == inProgress)&&(identical(other.resolved, resolved) || other.resolved == resolved));
+  final _this = this as QueueCountsModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is QueueCountsModel&&(identical(other.open, _this.open) || other.open == _this.open)&&(identical(other.inProgress, _this.inProgress) || other.inProgress == _this.inProgress)&&(identical(other.resolved, _this.resolved) || other.resolved == _this.resolved));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,open,inProgress,resolved);
+int get hashCode {
+  final _this = this as QueueCountsModel;
+  return Object.hash(runtimeType,_this.open,_this.inProgress,_this.resolved);
+}
 
 @override
 String toString() {
-  return 'QueueCountsModel(open: $open, inProgress: $inProgress, resolved: $resolved)';
+  final _this = this as QueueCountsModel;
+  return 'QueueCountsModel(open: ${_this.open}, inProgress: ${_this.inProgress}, resolved: ${_this.resolved})';
 }
 
 
@@ -1713,16 +1139,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _QueueCountsModel&&(identical(other.open, open) || other.open == open)&&(identical(other.inProgress, inProgress) || other.inProgress == inProgress)&&(identical(other.resolved, resolved) || other.resolved == resolved));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _QueueCountsModel&&(identical(other.open, open) || other.open == open)&&(identical(other.inProgress, inProgress) || other.inProgress == inProgress)&&(identical(other.resolved, resolved) || other.resolved == resolved));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,open,inProgress,resolved);
+int get hashCode {
+    return Object.hash(runtimeType,open,inProgress,resolved);
+}
 
 @override
 String toString() {
-  return 'QueueCountsModel(open: $open, inProgress: $inProgress, resolved: $resolved)';
+    return 'QueueCountsModel(open: $open, inProgress: $inProgress, resolved: $resolved)';
 }
 
 

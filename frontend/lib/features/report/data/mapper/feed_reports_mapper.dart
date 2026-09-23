@@ -3,9 +3,9 @@ import '../../../../core/utils/helpers/helpers.dart';
 import '../../domain/entity/entity.dart';
 import '../model/model.dart';
 
-extension FeedReportsModelMapper on FeedReportsModel {
+extension FeedReportsModelMapper on List<FeedReportsDataModel> {
   List<FeedReport> toEntities() =>
-      data?.map((e) => e.toEntity()).toList(growable: false) ?? const [];
+      map((e) => e.toEntity()).toList(growable: false);
 }
 
 extension FeedReportsDataModelMapper on FeedReportsDataModel {

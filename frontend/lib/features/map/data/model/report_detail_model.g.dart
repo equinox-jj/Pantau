@@ -8,55 +8,35 @@ part of 'report_detail_model.dart';
 
 _ReportDetailModel _$ReportDetailModelFromJson(Map<String, dynamic> json) =>
     _ReportDetailModel(
-      status: json['status'] as bool?,
-      message: json['message'] as String?,
-      data: json['data'] == null
+      id: json['id'] as String?,
+      category: json['category'] == null
           ? null
-          : ReportDetailDataModel.fromJson(
-              json['data'] as Map<String, dynamic>,
+          : ReportDetailCategoryModel.fromJson(
+              json['category'] as Map<String, dynamic>,
             ),
+      description: json['description'] as String?,
+      photoUrls: (json['photo_urls'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      latitude: (json['latitude'] as num?)?.toDouble(),
+      longitude: (json['longitude'] as num?)?.toDouble(),
+      status: json['status'] as String?,
+      createdAt: json['created_at'] as String?,
+      updatedAt: json['updated_at'] as String?,
     );
 
 Map<String, dynamic> _$ReportDetailModelToJson(_ReportDetailModel instance) =>
     <String, dynamic>{
+      'id': instance.id,
+      'category': instance.category,
+      'description': instance.description,
+      'photo_urls': instance.photoUrls,
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
       'status': instance.status,
-      'message': instance.message,
-      'data': instance.data,
+      'created_at': instance.createdAt,
+      'updated_at': instance.updatedAt,
     };
-
-_ReportDetailDataModel _$ReportDetailDataModelFromJson(
-  Map<String, dynamic> json,
-) => _ReportDetailDataModel(
-  id: json['id'] as String?,
-  category: json['category'] == null
-      ? null
-      : ReportDetailCategoryModel.fromJson(
-          json['category'] as Map<String, dynamic>,
-        ),
-  description: json['description'] as String?,
-  photoUrls: (json['photo_urls'] as List<dynamic>?)
-      ?.map((e) => e as String)
-      .toList(),
-  latitude: (json['latitude'] as num?)?.toDouble(),
-  longitude: (json['longitude'] as num?)?.toDouble(),
-  status: json['status'] as String?,
-  createdAt: json['created_at'] as String?,
-  updatedAt: json['updated_at'] as String?,
-);
-
-Map<String, dynamic> _$ReportDetailDataModelToJson(
-  _ReportDetailDataModel instance,
-) => <String, dynamic>{
-  'id': instance.id,
-  'category': instance.category,
-  'description': instance.description,
-  'photo_urls': instance.photoUrls,
-  'latitude': instance.latitude,
-  'longitude': instance.longitude,
-  'status': instance.status,
-  'created_at': instance.createdAt,
-  'updated_at': instance.updatedAt,
-};
 
 _ReportDetailCategoryModel _$ReportDetailCategoryModelFromJson(
   Map<String, dynamic> json,

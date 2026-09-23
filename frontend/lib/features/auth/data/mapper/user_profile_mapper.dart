@@ -1,7 +1,7 @@
 import '../../domain/entity/entity.dart';
 import '../model/model.dart';
 
-extension UserProfileDataModelMapper on UserProfileDataModel {
+extension UserProfileModelMapper on UserProfileModel {
   CurrentUser toEntity() {
     return CurrentUser(
       uuid: id,

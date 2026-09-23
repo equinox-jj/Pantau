@@ -6,12 +6,10 @@ import 'package:pantau/features/map/data/model/model.dart';
 void main() {
   group('NearbyReportsModelMapper.toEntities', () {
     test('maps every row in data', () {
-      const model = NearbyReportsModel(
-        data: [
-          NearbyReportsDataModel(id: 'a', status: 'reported'),
-          NearbyReportsDataModel(id: 'b', status: 'resolved'),
-        ],
-      );
+      const model = <NearbyReportsDataModel>[
+        NearbyReportsDataModel(id: 'a', status: 'reported'),
+        NearbyReportsDataModel(id: 'b', status: 'resolved'),
+      ];
 
       final entities = model.toEntities();
 
@@ -20,8 +18,8 @@ void main() {
       expect(entities[1].id, 'b');
     });
 
-    test('null data yields an empty list', () {
-      const model = NearbyReportsModel();
+    test('empty list yields an empty list', () {
+      const model = <NearbyReportsDataModel>[];
       expect(model.toEntities(), isEmpty);
     });
   });

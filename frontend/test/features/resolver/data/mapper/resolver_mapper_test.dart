@@ -8,26 +8,23 @@ void main() {
     test('maps items, counts and hasNext from a full payload', () {
       final createdAt = DateTime(2024, 1, 1).toIso8601String();
       final model = QueueModel(
-        data: QueueDataModel(
-          items: [
-            QueueReportDataModel(
-              id: 'q1',
-              category: const QueueCategoryModel(id: 3, name: 'Trash'),
-              description: 'desc',
-              photoUrls: ['https://x/1.png'],
-              status: 'in_progress',
-              latitude: -6.2,
-              longitude: 106.8,
-              distanceMeter: 120,
-              createdAt: createdAt,
-            ),
-          ],
-          meta: const QueueMetaModel(hasNext: true),
-          counts: const QueueCountsModel(open: 2, inProgress: 1, resolved: 5),
-        ),
+        items: [
+          QueueReportDataModel(
+            id: 'q1',
+            category: const QueueCategoryModel(id: 3, name: 'Trash'),
+            description: 'desc',
+            photoUrl: 'https://x/1.png',
+            status: 'in_progress',
+            latitude: -6.2,
+            longitude: 106.8,
+            distanceMeter: 120,
+            createdAt: createdAt,
+          ),
+        ],
+        counts: const QueueCountsModel(open: 2, inProgress: 1, resolved: 5),
       );
 
-      final entity = model.toEntity();
+      final entity = model.toEntity(hasNext: true);
 
       expect(entity.items, hasLength(1));
       final item = entity.items.single;
@@ -50,7 +47,7 @@ void main() {
     test('null data yields empty items, zeroed counts and hasNext false', () {
       const model = QueueModel();
 
-      final entity = model.toEntity();
+      final entity = model.toEntity(hasNext: false);
 
       expect(entity.items, isEmpty);
       expect(entity.counts.open, 0);
@@ -59,22 +56,22 @@ void main() {
       expect(entity.hasNext, isFalse);
     });
 
-    test('null items with non-null data yields an empty list', () {
-      const model = QueueModel(data: QueueDataModel());
+    test('null items yields an empty list', () {
+      const model = QueueModel();
 
-      expect(model.toEntity().items, isEmpty);
+      expect(model.toEntity(hasNext: false).items, isEmpty);
     });
 
-    test('null meta defaults hasNext to false', () {
-      const model = QueueModel(data: QueueDataModel(meta: null));
+    test('hasNext comes from pagination', () {
+      const model = QueueModel();
 
-      expect(model.toEntity().hasNext, isFalse);
+      expect(model.toEntity(hasNext: false).hasNext, isFalse);
     });
 
     test('null counts defaults to a zeroed QueueCounts', () {
-      const model = QueueModel(data: QueueDataModel(counts: null));
+      const model = QueueModel(counts: null);
 
-      final entity = model.toEntity();
+      final entity = model.toEntity(hasNext: false);
       expect(entity.counts.open, 0);
       expect(entity.counts.inProgress, 0);
       expect(entity.counts.resolved, 0);

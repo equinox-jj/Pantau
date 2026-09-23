@@ -29,7 +29,10 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
           options: Options(extra: {ApiEndpoints.kNoAuth: true}),
         );
 
-        return LoginModel.fromJson(response.data);
+        return decodeApiResponse(
+          response.data,
+          (json) => LoginModel.fromJson(json as Map<String, dynamic>),
+        ).requireData();
       });
 
   @override
@@ -44,13 +47,19 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
       options: Options(extra: {ApiEndpoints.kNoAuth: true}),
     );
 
-    return RegisterModel.fromJson(response.data);
+    return decodeApiResponse(
+      response.data,
+      (json) => RegisterModel.fromJson(json as Map<String, dynamic>),
+    ).requireData();
   });
 
   @override
   Future<UserProfileModel> getMe() => safeApiCall(() async {
     final response = await _dioClient.get(ApiEndpoints.me);
 
-    return UserProfileModel.fromJson(response.data);
+    return decodeApiResponse(
+      response.data,
+      (json) => UserProfileModel.fromJson(json as Map<String, dynamic>),
+    ).requireData();
   });
 }

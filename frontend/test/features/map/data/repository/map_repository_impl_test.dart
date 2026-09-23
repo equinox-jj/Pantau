@@ -32,9 +32,9 @@ void main() {
           limit: any(named: 'limit'),
         ),
       ).thenAnswer(
-        (_) async => const NearbyReportsModel(
-          data: [NearbyReportsDataModel(id: 'r1', status: 'reported')],
-        ),
+        (_) async => const [
+          NearbyReportsDataModel(id: 'r1', status: 'reported'),
+        ],
       );
 
       final result = await repository.getNearbyReports(
@@ -77,9 +77,7 @@ void main() {
   group('getReportCategories', () {
     test('returns Right of mapped entities on success', () async {
       when(() => dataSource.getReportCategories()).thenAnswer(
-        (_) async => const ReportCategoriesModel(
-          data: [ReportCategoriesDataModel(id: 1, name: 'Pothole')],
-        ),
+        (_) async => const [ReportCategoriesDataModel(id: 1, name: 'Pothole')],
       );
 
       final result = await repository.getReportCategories();
@@ -108,9 +106,7 @@ void main() {
   group('getReportDetail', () {
     test('returns Right of mapped entity on success', () async {
       when(() => dataSource.getReportDetail('r1')).thenAnswer(
-        (_) async => const ReportDetailModel(
-          data: ReportDetailDataModel(id: 'r1', status: 'resolved'),
-        ),
+        (_) async => const ReportDetailModel(id: 'r1', status: 'resolved'),
       );
 
       final result = await repository.getReportDetail('r1');
@@ -139,9 +135,9 @@ void main() {
   group('getReportHistory', () {
     test('returns Right of mapped entities on success', () async {
       when(() => dataSource.getReportHistory('r1')).thenAnswer(
-        (_) async => const StatusHistoryModel(
-          data: [StatusHistoryEntryModel(id: 's1', toStatus: 'reported')],
-        ),
+        (_) async => const [
+          StatusHistoryEntryModel(id: 's1', toStatus: 'reported'),
+        ],
       );
 
       final result = await repository.getReportHistory('r1');
@@ -178,9 +174,7 @@ void main() {
           longitude: any(named: 'longitude'),
         ),
       ).thenAnswer(
-        (_) async => const CreateReportModel(
-          data: CreateReportDataModel(id: 'r1', status: 'reported'),
-        ),
+        (_) async => const CreateReportModel(id: 'r1', status: 'reported'),
       );
 
       final result = await repository.createReport(
@@ -236,9 +230,8 @@ void main() {
             note: any(named: 'note'),
           ),
         ).thenAnswer(
-          (_) async => const ReportDetailModel(
-            data: ReportDetailDataModel(id: 'r1', status: 'acknowledged'),
-          ),
+          (_) async =>
+              const ReportDetailModel(id: 'r1', status: 'acknowledged'),
         );
 
         final result = await repository.updateReportStatus(

@@ -3,22 +3,12 @@ import 'package:pantau/features/report/data/mapper/mapper.dart';
 import 'package:pantau/features/report/data/model/model.dart';
 
 void main() {
-  group('MyReportsModelMapper.toEntities', () {
-    test('maps the rows nested under data.items', () {
-      const model = MyReportsModel(
-        data: MyReportsDataModel(
-          items: [
-            FeedReportsDataModel(id: 'a', status: 'reported'),
-            FeedReportsDataModel(id: 'b', status: 'closed'),
-          ],
-          meta: MyReportsMetaModel(
-            limit: 50,
-            offset: 0,
-            total: 2,
-            hasNext: false,
-          ),
-        ),
-      );
+  group('FeedReportsModelMapper.toEntities for my reports', () {
+    test('maps every row', () {
+      const model = <FeedReportsDataModel>[
+        FeedReportsDataModel(id: 'a', status: 'reported'),
+        FeedReportsDataModel(id: 'b', status: 'closed'),
+      ];
 
       final entities = model.toEntities();
 
@@ -27,13 +17,8 @@ void main() {
       expect(entities[1].id, 'b');
     });
 
-    test('null data yields an empty list', () {
-      const model = MyReportsModel();
-      expect(model.toEntities(), isEmpty);
-    });
-
-    test('null items with non-null data yields an empty list', () {
-      const model = MyReportsModel(data: MyReportsDataModel());
+    test('empty list yields an empty list', () {
+      const model = <FeedReportsDataModel>[];
       expect(model.toEntities(), isEmpty);
     });
   });

@@ -30,6 +30,8 @@ class ResolverRepositoryImpl extends ResolverRepository {
       offset: offset,
     );
 
-    return result.toEntity();
+    return result.requireData().toEntity(
+      hasNext: result.pagination?.hasNext ?? false,
+    );
   });
 }

@@ -4,15 +4,15 @@ import '../../domain/entity/resolver_entity.dart';
 import '../model/resolver_model.dart';
 
 extension QueueModelMapper on QueueModel {
-  QueueResult toEntity() {
+  QueueResult toEntity({required bool hasNext}) {
     final items =
-        data?.items?.map((e) => e.toEntity()).toList(growable: false) ??
+        this.items?.map((e) => e.toEntity()).toList(growable: false) ??
         const <QueueReport>[];
 
     return QueueResult(
       items: items,
-      counts: data?.counts?.toEntity() ?? const QueueCounts(),
-      hasNext: data?.meta?.hasNext ?? false,
+      counts: counts?.toEntity() ?? const QueueCounts(),
+      hasNext: hasNext,
     );
   }
 }
@@ -25,7 +25,7 @@ extension QueueReportDataModelMapper on QueueReportDataModel {
       categoryName: category?.name,
       status: ReportStatus.fromSlug(status),
       description: description,
-      photoUrl: photoUrls?.firstOrNull,
+      photoUrl: photoUrl,
       latitude: latitude,
       longitude: longitude,
       distanceMeter: distanceMeter,

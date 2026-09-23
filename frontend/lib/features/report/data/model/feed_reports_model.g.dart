@@ -6,22 +6,6 @@ part of 'feed_reports_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_FeedReportsModel _$FeedReportsModelFromJson(Map<String, dynamic> json) =>
-    _FeedReportsModel(
-      status: json['status'] as bool?,
-      message: json['message'] as String?,
-      data: (json['data'] as List<dynamic>?)
-          ?.map((e) => FeedReportsDataModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
-
-Map<String, dynamic> _$FeedReportsModelToJson(_FeedReportsModel instance) =>
-    <String, dynamic>{
-      'status': instance.status,
-      'message': instance.message,
-      'data': instance.data,
-    };
-
 _FeedReportsDataModel _$FeedReportsDataModelFromJson(
   Map<String, dynamic> json,
 ) => _FeedReportsDataModel(

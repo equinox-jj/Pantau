@@ -1,21 +1,9 @@
-import '../../../../core/error/error.dart';
 import '../../../../core/utils/enums/enums.dart';
 import '../../../../core/utils/helpers/helpers.dart';
 import '../../domain/entity/entity.dart';
 import '../model/model.dart';
 
 extension ReportDetailModelMapper on ReportDetailModel {
-  ReportDetail toEntity() {
-    final data = this.data;
-    if (data == null) {
-      throw const NotFoundException('Report not found');
-    }
-
-    return data.toEntity();
-  }
-}
-
-extension ReportDetailDataModelMapper on ReportDetailDataModel {
   ReportDetail toEntity() {
     return ReportDetail(
       id: id,

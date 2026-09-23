@@ -1,16 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pantau/core/error/exceptions.dart';
 import 'package:pantau/core/utils/enums/enums.dart';
 import 'package:pantau/features/map/data/mapper/mapper.dart';
 import 'package:pantau/features/map/data/model/model.dart';
 
 void main() {
   group('ReportDetailModelMapper.toEntity', () {
-    test('maps the nested data into a ReportDetail entity', () {
-      const model = ReportDetailModel(
-        status: true,
-        data: ReportDetailDataModel(id: 'r1', status: 'resolved'),
-      );
+    test('maps a report into a ReportDetail entity', () {
+      const model = ReportDetailModel(id: 'r1', status: 'resolved');
 
       final entity = model.toEntity();
 
@@ -18,16 +14,16 @@ void main() {
       expect(entity.status, ReportStatus.resolved);
     });
 
-    test('throws NotFoundException when data is null', () {
+    test('missing fields map to safe defaults', () {
       const model = ReportDetailModel();
-
-      expect(() => model.toEntity(), throwsA(isA<NotFoundException>()));
+      expect(model.toEntity().id, isNull);
+      expect(model.toEntity().photoUrls, isEmpty);
     });
   });
 
-  group('ReportDetailDataModelMapper.toEntity', () {
+  group('ReportDetailModelMapper.toEntity fields', () {
     test('maps every field, including nested category and dates', () {
-      const model = ReportDetailDataModel(
+      const model = ReportDetailModel(
         id: 'r1',
         category: ReportDetailCategoryModel(
           id: 3,
@@ -58,7 +54,7 @@ void main() {
     });
 
     test('null category, unparsable status and dates yield safe defaults', () {
-      const model = ReportDetailDataModel(id: 'r2', status: 'bogus');
+      const model = ReportDetailModel(id: 'r2', status: 'bogus');
 
       final entity = model.toEntity();
 

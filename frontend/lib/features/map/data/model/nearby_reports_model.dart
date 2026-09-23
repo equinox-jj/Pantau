@@ -4,18 +4,6 @@ part 'nearby_reports_model.freezed.dart';
 part 'nearby_reports_model.g.dart';
 
 @freezed
-abstract class NearbyReportsModel with _$NearbyReportsModel {
-  const factory NearbyReportsModel({
-    @JsonKey(name: "status") bool? status,
-    @JsonKey(name: "message") String? message,
-    @JsonKey(name: "data") List<NearbyReportsDataModel>? data,
-  }) = _NearbyReportsModel;
-
-  factory NearbyReportsModel.fromJson(Map<String, dynamic> json) =>
-      _$NearbyReportsModelFromJson(json);
-}
-
-@freezed
 abstract class NearbyReportsDataModel with _$NearbyReportsDataModel {
   const factory NearbyReportsDataModel({
     @JsonKey(name: "id") String? id,

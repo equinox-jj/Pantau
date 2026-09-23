@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class ApiEndpoints {
   const ApiEndpoints._();
 
@@ -6,14 +8,14 @@ class ApiEndpoints {
 
   /// Android emulator's loopback alias differs from the host's;
   /// every other target (iOS sim, desktop, web) reaches it via 127.0.0.1.
-  static const String baseUrl =
-      'http://pantau-pantauspringboot-3vj6h4-100-86-64-35.sslip.io/api/v1';
-  // static String get baseUrl {
-  //   final host = !kIsWeb && defaultTargetPlatform == TargetPlatform.android
-  //       ? '10.0.2.2'
-  //       : '127.0.0.1';
-  //   return 'http://$host:8080/api/v1';
-  // }
+  // static const String baseUrl =
+  //     'http://pantau-pantauspringboot-3vj6h4-100-86-64-35.sslip.io/api/v1';
+  static String get baseUrl {
+    final host = !kIsWeb && defaultTargetPlatform == TargetPlatform.android
+        ? '10.0.2.2'
+        : '127.0.0.1';
+    return 'http://$host:8080/api/v1';
+  }
 
   static const String login = '/auth/login';
   static const String register = '/auth/register';

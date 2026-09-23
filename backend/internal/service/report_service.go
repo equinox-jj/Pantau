@@ -251,7 +251,7 @@ func (sv *reportServiceImpl) UpdateReportStatus(ctx context.Context, id uuid.UUI
 		}
 		from, to := rpt.Status, *request.ToStatus
 		if !utils.IsReportStatusTransitionAllowed(from, to) {
-			return fmt.Errorf("%w: Cannot move a report from %s to %s", apperror.ErrIllegalTransition, from, to)
+			return apperror.ErrIllegalTransition
 		}
 		if to == enums.ReportStatusRejected && (request.Note == nil || strings.TrimSpace(*request.Note) == "") {
 			return apperror.Validation("A note is required when rejecting a report")
@@ -474,7 +474,7 @@ func (sv *reportServiceImpl) deleteUploads(ctx context.Context, uploads []upload
 
 func (sv *reportServiceImpl) rollbackUploads(ctx context.Context, uploads []upload.UploadResponse, cause error) error {
 	if err := sv.deleteUploads(ctx, uploads); err != nil {
-		return fmt.Errorf("%w; upload cleanup failed: %v", cause, err)
+		return err
 	}
 	return cause
 }
@@ -536,10 +536,10 @@ func (sv *reportServiceImpl) assertEditableBy(rpt *entity.Report, requester *ent
 		return apperror.ErrUnauthorized
 	}
 	if rpt.ReporterID != requester.ID {
-		return fmt.Errorf("%w: You do not have permission to modify this report", apperror.ErrForbidden)
+		return apperror.ErrForbidden
 	}
 	if rpt.Status != enums.ReportStatusReported {
-		return fmt.Errorf("%w: Report can no longer be edited or deleted once a resolver has acted on it", apperror.ErrIllegalTransition)
+		return apperror.ErrIllegalTransition
 	}
 	return nil
 }

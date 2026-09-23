@@ -2,7 +2,6 @@ package config
 
 import (
 	"errors"
-	"fmt"
 	"log/slog"
 	"os"
 	"strconv"
@@ -124,11 +123,11 @@ func NewConfig(v *viper.Viper) (*Config, error) {
 	}
 	maxFileBytes, err := parseByteSize(cfg.Upload.MaxFileSize)
 	if err != nil {
-		return nil, fmt.Errorf("upload.max_file_size: %w", err)
+		return nil, err
 	}
 	maxRequestBytes, err := parseByteSize(cfg.Upload.MaxRequestSize)
 	if err != nil {
-		return nil, fmt.Errorf("upload.max_request_size: %w", err)
+		return nil, err
 	}
 	if maxRequestBytes <= maxFileBytes || maxRequestBytes > int64(^uint(0)>>1) {
 		return nil, errors.New("upload.max_request_size must exceed max_file_size and fit in an int")

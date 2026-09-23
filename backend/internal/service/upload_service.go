@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"image"
 	_ "image/jpeg"
 	_ "image/png"
@@ -66,7 +65,7 @@ func (sv *uploadServiceImpl) Upload(ctx context.Context, file *multipart.FileHea
 	)
 	if err != nil {
 		slog.Error("[UploadService] Failed to upload image", "filename", file.Filename, "error", err)
-		return nil, fmt.Errorf("%w: %v", apperror.ErrUploadFailed, err)
+		return nil, err
 	}
 
 	return &upload.UploadResponse{
@@ -91,7 +90,7 @@ func (sv *uploadServiceImpl) Delete(ctx context.Context, id string) error {
 	)
 	if err != nil {
 		slog.Error("[UploadService] Failed to delete image", "id", id, "error", err)
-		return fmt.Errorf("%w: %v", apperror.ErrDeleteFailed, err)
+		return apperror.ErrDeleteFailed
 	}
 
 	if result.Result != "ok" &&
@@ -99,11 +98,7 @@ func (sv *uploadServiceImpl) Delete(ctx context.Context, id string) error {
 		result.Result != "not_found" {
 
 		slog.Error("[UploadService] Unexpected image deletion status", "id", id, "status", result.Result, "error", apperror.ErrDeleteFailed)
-		return fmt.Errorf(
-			"%w: cloudinary status: %s",
-			apperror.ErrDeleteFailed,
-			result.Result,
-		)
+		return apperror.ErrDeleteFailed
 	}
 
 	return nil

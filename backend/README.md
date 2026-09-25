@@ -11,21 +11,7 @@ Pantau is a Go API for reporting local issues. Citizens can submit reports with 
 ## Run locally
 
 1. Create a PostgreSQL database named `pantau` (or set `DB_NAME` to another database). The database user must be able to create extensions, types, and tables when applying migrations.
-2. Set the required configuration in your shell or in a local `.env` file in the project root:
-
-   ```dotenv
-   DB_HOST=localhost
-   DB_PORT=5432
-   DB_NAME=pantau
-   DB_USER=postgres
-   DB_PASSWORD=your_database_password
-   JWT_SECRET_KEY=replace_with_a_random_secret_of_at_least_32_bytes
-   CLOUDINARY_NAME=your_cloud_name
-   CLOUDINARY_KEY=your_api_key
-   CLOUDINARY_SECRET=your_api_secret
-   ```
-
-   Keep `.env` out of version control. `config.yaml` supplies development defaults; environment variables override it. The JWT secret must be at least 32 bytes long and contain no whitespace.
+2. Copy `.env.example` to `.env` in the backend directory and replace the database, JWT, and Cloudinary placeholders with your own values. You can also set these variables in your shell; shell values override `.env`. Keep `.env` out of version control. The JWT secret must be at least 32 bytes long and contain no whitespace.
 
 3. Apply the SQL migrations in numeric order. For a new database, one way to do this with `psql` is:
 
@@ -43,7 +29,7 @@ Pantau is a Go API for reporting local issues. Citizens can submit reports with 
    go run ./cmd/api
    ```
 
-   It listens on port `8080` by default. Set `APP_PORT` to change the port.
+   The sample `.env` listens on port `8080`. Set `APP_PORT` to change the port.
 
 ## API
 

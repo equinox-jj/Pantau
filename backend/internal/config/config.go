@@ -2,7 +2,7 @@ package config
 
 import (
 	"errors"
-	"log/slog"
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -13,104 +13,111 @@ import (
 )
 
 type Config struct {
-	Server     serverConfig     `mapstructure:"server"`
-	App        appConfig        `mapstructure:"app"`
-	Database   databaseConfig   `mapstructure:"database"`
-	Migration  migrationConfig  `mapstructure:"migration"`
-	GORM       gormConfig       `mapstructure:"gorm"`
-	Upload     uploadConfig     `mapstructure:"upload"`
-	Logging    loggingConfig    `mapstructure:"logging"`
-	JWT        jwtConfig        `mapstructure:"jwt"`
-	Cloudinary cloudinaryConfig `mapstructure:"cloudinary"`
+	Server     serverConfig
+	App        appConfig
+	Database   databaseConfig
+	Migration  migrationConfig
+	GORM       gormConfig
+	Upload     uploadConfig
+	Logging    loggingConfig
+	JWT        jwtConfig
+	Cloudinary cloudinaryConfig
 }
 
 type serverConfig struct {
-	Port int `mapstructure:"port"`
+	Port int
 }
 
 type appConfig struct {
-	Name string `mapstructure:"name"`
-	Env  string `mapstructure:"env"`
+	Name string
+	Env  string
 }
 
 type databaseConfig struct {
-	Host         string `mapstructure:"host"`
-	Port         int    `mapstructure:"port"`
-	Name         string `mapstructure:"name"`
-	User         string `mapstructure:"user"`
-	Password     string `mapstructure:"password"`
-	MaxOpenConns int    `mapstructure:"max_open_conns"`
-	MaxIdleConns int    `mapstructure:"max_idle_conns"`
+	Host         string
+	Port         int
+	Name         string
+	User         string
+	Password     string
+	MaxOpenConns int
+	MaxIdleConns int
 }
 
 type migrationConfig struct {
-	Enabled bool `mapstructure:"enabled"`
+	Enabled bool
 }
 
 type gormConfig struct {
-	ShowSQL bool `mapstructure:"show_sql"`
+	ShowSQL bool
 }
 
 type uploadConfig struct {
-	Enabled         bool   `mapstructure:"enabled"`
-	MaxFileSize     string `mapstructure:"max_file_size"`
-	MaxRequestSize  string `mapstructure:"max_request_size"`
-	MaxFileBytes    int64  `mapstructure:"-"`
-	MaxRequestBytes int    `mapstructure:"-"`
+	Enabled         bool
+	MaxFileSize     string
+	MaxRequestSize  string
+	MaxFileBytes    int64
+	MaxRequestBytes int
 }
 
 type loggingConfig struct {
-	Level string `mapstructure:"level"`
+	Level string
 }
 
 type jwtConfig struct {
-	SecretKey  string        `mapstructure:"secret_key"`
-	Expiration time.Duration `mapstructure:"expiration"`
+	SecretKey  string
+	Expiration time.Duration
 }
 
 type cloudinaryConfig struct {
-	CloudName string `mapstructure:"cloud_name"`
-	APIKey    string `mapstructure:"api_key"`
-	APISecret string `mapstructure:"api_secret"`
+	CloudName string
+	APIKey    string
+	APISecret string
 }
 
-func NewConfig(v *viper.Viper) (*Config, error) {
-	setDefaults(v)
-
-	v.SetConfigName("config")
-	v.SetConfigType("yaml")
-	v.AddConfigPath(".")
-	v.AddConfigPath("./config")
-
-	if err := v.ReadInConfig(); err != nil {
-
-		if _, ok := errors.AsType[viper.ConfigFileNotFoundError](err); !ok {
-			slog.Error("[Config] Failed to read configuration", "error", err)
-			return nil, err
-		}
+func NewConfig() (*Config, error) {
+	v := viper.New()
+	v.SetConfigFile(".env")
+	v.SetConfigType("env")
+	if err := v.ReadInConfig(); err != nil && !errors.Is(err, os.ErrNotExist) {
+		return nil, fmt.Errorf("read .env: %w", err)
 	}
-
-	v.SetEnvKeyReplacer(
-		strings.NewReplacer(".", "_"),
-	)
-
 	v.AutomaticEnv()
 
-	if err := bindEnv(v); err != nil {
-		slog.Error("[Config] Failed to bind environment variables", "error", err)
-		return nil, err
+	cfg := &Config{
+		Server: serverConfig{Port: v.GetInt("APP_PORT")},
+		App: appConfig{
+			Name: v.GetString("APP_NAME"),
+			Env:  v.GetString("APP_ENV"),
+		},
+		Database: databaseConfig{
+			Host:         v.GetString("DB_HOST"),
+			Port:         v.GetInt("DB_PORT"),
+			Name:         v.GetString("DB_NAME"),
+			User:         v.GetString("DB_USER"),
+			Password:     v.GetString("DB_PASSWORD"),
+			MaxOpenConns: v.GetInt("DB_MAX_OPEN_CONNS"),
+			MaxIdleConns: v.GetInt("DB_MAX_IDLE_CONNS"),
+		},
+		Migration: migrationConfig{Enabled: v.GetBool("MIGRATION_ENABLED")},
+		GORM:      gormConfig{ShowSQL: v.GetBool("GORM_SHOW_SQL")},
+		Upload: uploadConfig{
+			Enabled:        v.GetBool("UPLOAD_ENABLED"),
+			MaxFileSize:    v.GetString("UPLOAD_MAX_FILE_SIZE"),
+			MaxRequestSize: v.GetString("UPLOAD_MAX_REQUEST_SIZE"),
+		},
+		Logging: loggingConfig{Level: v.GetString("LOG_LEVEL")},
+		JWT: jwtConfig{
+			SecretKey:  v.GetString("JWT_SECRET_KEY"),
+			Expiration: v.GetDuration("JWT_EXPIRATION"),
+		},
+		Cloudinary: cloudinaryConfig{
+			CloudName: v.GetString("CLOUDINARY_NAME"),
+			APIKey:    v.GetString("CLOUDINARY_KEY"),
+			APISecret: v.GetString("CLOUDINARY_SECRET"),
+		},
 	}
-
-	if err := mergeDotenv(v); err != nil {
-		slog.Error("[Config] Failed to merge dotenv configuration", "error", err)
-		return nil, err
-	}
-
-	var cfg Config
-
-	if err := v.Unmarshal(&cfg); err != nil {
-		slog.Error("[Config] Failed to decode configuration", "error", err)
-		return nil, err
+	if cfg.Server.Port <= 0 || cfg.Server.Port > 65535 {
+		return nil, errors.New("app_port must be between 1 and 65535")
 	}
 	if len(cfg.JWT.SecretKey) < 32 || strings.IndexFunc(cfg.JWT.SecretKey, unicode.IsSpace) >= 0 {
 		return nil, errors.New("jwt.secret_key must contain at least 32 bytes and no whitespace")
@@ -135,7 +142,7 @@ func NewConfig(v *viper.Viper) (*Config, error) {
 	cfg.Upload.MaxFileBytes = maxFileBytes
 	cfg.Upload.MaxRequestBytes = int(maxRequestBytes)
 
-	return &cfg, nil
+	return cfg, nil
 }
 
 func parseByteSize(value string) (int64, error) {
@@ -155,98 +162,4 @@ func parseByteSize(value string) (int64, error) {
 		}
 	}
 	return 0, errors.New("must use B, KB, MB, or GB units")
-}
-
-func setDefaults(v *viper.Viper) {
-	v.SetDefault("server.port", 8080)
-
-	v.SetDefault("app.name", "pantau")
-	v.SetDefault("app.env", "production")
-
-	v.SetDefault("database.host", "localhost")
-	v.SetDefault("database.port", 5432)
-	v.SetDefault("database.name", "pantau")
-	v.SetDefault("database.user", "postgres")
-	v.SetDefault("database.password", "")
-	v.SetDefault("database.max_open_conns", 25)
-	v.SetDefault("database.max_idle_conns", 10)
-
-	v.SetDefault("migration.enabled", true)
-
-	v.SetDefault("gorm.show_sql", false)
-
-	v.SetDefault("upload.enabled", true)
-	v.SetDefault("upload.max_file_size", "5MB")
-	v.SetDefault("upload.max_request_size", "21MB")
-
-	v.SetDefault("logging.level", "INFO")
-
-	v.SetDefault("jwt.expiration", "15m")
-}
-
-var envBindings = map[string]string{
-	"server.port": "APP_PORT",
-	"app.env":     "APP_ENV",
-
-	"database.host":           "DB_HOST",
-	"database.port":           "DB_PORT",
-	"database.name":           "DB_NAME",
-	"database.user":           "DB_USER",
-	"database.password":       "DB_PASSWORD",
-	"database.max_open_conns": "DB_MAX_OPEN_CONNS",
-	"database.max_idle_conns": "DB_MAX_IDLE_CONNS",
-
-	"logging.level": "LOG_LEVEL",
-
-	"jwt.secret_key": "JWT_SECRET_KEY",
-	"jwt.expiration": "JWT_EXPIRATION",
-
-	"cloudinary.cloud_name": "CLOUDINARY_NAME",
-	"cloudinary.api_key":    "CLOUDINARY_KEY",
-	"cloudinary.api_secret": "CLOUDINARY_SECRET",
-}
-
-func bindEnv(v *viper.Viper) error {
-	for key, env := range envBindings {
-		if err := v.BindEnv(key, env); err != nil {
-			slog.Error("[Config] Failed to bind environment variable", "key", key, "env", env, "error", err)
-			return err
-		}
-	}
-
-	return nil
-}
-
-// mergeDotenv maps flat .env names to nested config keys. Merging at the
-// config-file layer keeps real environment variables above .env values.
-func mergeDotenv(v *viper.Viper) error {
-	dotenv := viper.New()
-	dotenv.SetConfigFile(".env")
-	dotenv.SetConfigType("env")
-	if err := dotenv.ReadInConfig(); err != nil {
-		if errors.Is(err, os.ErrNotExist) {
-			return nil
-		}
-		slog.Error("[Config] Failed to read dotenv file", "error", err)
-		return err
-	}
-
-	overrides := viper.New()
-	for _, key := range v.AllKeys() {
-		name := strings.ToUpper(strings.ReplaceAll(key, ".", "_"))
-		value := dotenv.GetString(name)
-		if value == "" {
-			if alias, ok := envBindings[key]; ok {
-				value = dotenv.GetString(alias)
-			}
-		}
-		if value != "" {
-			overrides.Set(key, value)
-		}
-	}
-	if err := v.MergeConfigMap(overrides.AllSettings()); err != nil {
-		slog.Error("[Config] Failed to merge configuration map", "error", err)
-		return err
-	}
-	return nil
 }

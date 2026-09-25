@@ -6,6 +6,5 @@ var Module = fx.Module(
 	"config",
 	fx.Provide(
 		NewConfig,
-		NewViper,
 	),
 )

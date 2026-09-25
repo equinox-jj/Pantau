@@ -5,8 +5,7 @@ import (
 	"errors"
 	"log/slog"
 	"pantau/internal/entity"
-
-	apperror "pantau/pkg/errors"
+	"pantau/pkg/errs"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -35,7 +34,7 @@ func (repo *userRepositoryImpl) FindByID(ctx context.Context, id uuid.UUID) (*en
 		Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			slog.Error("[UserRepository] User not found by id", "id", id, "error", err)
-			return nil, apperror.ErrUserNotFound
+			return nil, errs.ErrUserNotFound
 		}
 		return nil, err
 	}
@@ -64,7 +63,7 @@ func (repo *userRepositoryImpl) FindByEmail(ctx context.Context, email string) (
 		Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			slog.Error("[UserRepository] User not found by email", "email", email, "error", err)
-			return nil, apperror.ErrEmailNotFound
+			return nil, errs.ErrEmailNotFound
 		}
 
 		slog.Error("[UserRepository] Failed to find user by email", "email", email, "error", err)

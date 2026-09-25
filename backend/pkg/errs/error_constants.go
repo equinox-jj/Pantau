@@ -1,10 +1,10 @@
-package errors
+package errs
 
 import "errors"
 
 var (
-	ErrValidation                    = errors.New("validation failed")
-	ErrIllegalTransition             = errors.New("illegal report status transition")
+	ErrValidation              error = errors.New("validation failed")
+	ErrIllegalTransition       error = errors.New("illegal report status transition")
 	ErrUnauthorized            error = errors.New("unauthorized")
 	ErrForbidden               error = errors.New("forbidden")
 	ErrUserNotFound            error = errors.New("user not found")

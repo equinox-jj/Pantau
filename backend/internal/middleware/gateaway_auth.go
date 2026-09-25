@@ -4,7 +4,7 @@ package middleware
 import (
 	"log/slog"
 	"pantau/internal/repository"
-	apperror "pantau/pkg/errors"
+	"pantau/pkg/errs"
 	"pantau/pkg/security"
 	"pantau/pkg/utils"
 	"strings"
@@ -43,13 +43,13 @@ func (s *GateawayAuth) Authenticate(ctx fiber.Ctx) error {
 	header := strings.Fields(ctx.Get(fiber.HeaderAuthorization))
 	if len(header) != 2 || !strings.EqualFold(header[0], "Bearer") {
 		slog.Error("[GAT] Invalid authorization header", slog.Any("header", header))
-		return apperror.ErrUnauthorized
+		return errs.ErrUnauthorized
 	}
 
 	claims, err := s.jwtService.ParseToken(header[1])
 	if err != nil {
 		slog.Error("[GAT] Invalid token", "error", err)
-		return apperror.ErrUnauthorized
+		return errs.ErrUnauthorized
 	}
 	// Use the stored user record so identity and role reflect current values.
 	user, err := s.users.FindByID(ctx.Context(), claims.UserID)
@@ -59,7 +59,7 @@ func (s *GateawayAuth) Authenticate(ctx fiber.Ctx) error {
 	}
 	if user == nil {
 		slog.Error("[GAT] User not found", "user", user)
-		return apperror.ErrUnauthorized
+		return errs.ErrUnauthorized
 	}
 
 	utils.SetCurrentUser(ctx, user)

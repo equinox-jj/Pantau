@@ -5,7 +5,7 @@ import (
 	"pantau/internal/dto/report"
 	"pantau/internal/enums"
 	"pantau/internal/service"
-	apperror "pantau/pkg/errors"
+	"pantau/pkg/errs"
 	"pantau/pkg/response"
 	"pantau/pkg/utils"
 
@@ -25,7 +25,7 @@ type ReportController interface {
 	UpdateReportStatus(fiber.Ctx) error
 }
 
-type reportControllerImpl struct{ 
+type reportControllerImpl struct {
 	reportService service.ReportService
 }
 
@@ -36,7 +36,7 @@ func NewReportController(reportService service.ReportService) ReportController {
 func (controller *reportControllerImpl) CreateReport(ctx fiber.Ctx) error {
 	user, ok := utils.CurrentUser(ctx)
 	if !ok {
-		return apperror.ErrUnauthorized
+		return errs.ErrUnauthorized
 	}
 	if !reportContentType(ctx, "multipart/form-data") {
 		return ctx.Status(fiber.StatusUnsupportedMediaType).JSON(response.Error(fiber.StatusUnsupportedMediaType, "Expected multipart/form-data"))
@@ -87,7 +87,7 @@ func (controller *reportControllerImpl) GetNearbyReports(ctx fiber.Ctx) error {
 		return err
 	}
 	if query.Latitude == nil || query.Longitude == nil {
-		return apperror.Validation("Latitude and longitude are required")
+		return errs.Validation("Latitude and longitude are required")
 	}
 	result, err := controller.reportService.GetNearbyReports(ctx.Context(), *query.Latitude, *query.Longitude, query.RadiusMeter, query.Limit)
 	if err != nil {
@@ -99,7 +99,7 @@ func (controller *reportControllerImpl) GetNearbyReports(ctx fiber.Ctx) error {
 func (controller *reportControllerImpl) GetMyReports(ctx fiber.Ctx) error {
 	user, ok := utils.CurrentUser(ctx)
 	if !ok {
-		return apperror.ErrUnauthorized
+		return errs.ErrUnauthorized
 	}
 	query := struct {
 		Limit  int `query:"limit"`
@@ -118,7 +118,7 @@ func (controller *reportControllerImpl) GetMyReports(ctx fiber.Ctx) error {
 func (controller *reportControllerImpl) UpdateReport(ctx fiber.Ctx) error {
 	user, ok := utils.CurrentUser(ctx)
 	if !ok {
-		return apperror.ErrUnauthorized
+		return errs.ErrUnauthorized
 	}
 	id, err := reportID(ctx)
 	if err != nil {
@@ -141,7 +141,7 @@ func (controller *reportControllerImpl) UpdateReport(ctx fiber.Ctx) error {
 func (controller *reportControllerImpl) DeleteReport(ctx fiber.Ctx) error {
 	user, ok := utils.CurrentUser(ctx)
 	if !ok {
-		return apperror.ErrUnauthorized
+		return errs.ErrUnauthorized
 	}
 	id, err := reportID(ctx)
 	if err != nil {
@@ -166,7 +166,7 @@ func (controller *reportControllerImpl) GetQueue(ctx fiber.Ctx) error {
 		return err
 	}
 	if query.Latitude == nil || query.Longitude == nil {
-		return apperror.Validation("Latitude and longitude are required")
+		return errs.Validation("Latitude and longitude are required")
 	}
 	result, err := controller.reportService.GetQueue(ctx.Context(), query.Tab, *query.Latitude, *query.Longitude, query.RadiusMeter, query.Limit, query.Offset)
 	if err != nil {
@@ -178,7 +178,7 @@ func (controller *reportControllerImpl) GetQueue(ctx fiber.Ctx) error {
 func (controller *reportControllerImpl) UpdateReportStatus(ctx fiber.Ctx) error {
 	user, ok := utils.CurrentUser(ctx)
 	if !ok {
-		return apperror.ErrUnauthorized
+		return errs.ErrUnauthorized
 	}
 	id, err := reportID(ctx)
 	if err != nil {
@@ -201,7 +201,7 @@ func (controller *reportControllerImpl) UpdateReportStatus(ctx fiber.Ctx) error 
 func reportID(ctx fiber.Ctx) (uuid.UUID, error) {
 	id, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
-		return uuid.Nil, apperror.Validation("Invalid report ID")
+		return uuid.Nil, errs.Validation("Invalid report ID")
 	}
 	return id, nil
 }

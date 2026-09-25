@@ -7,7 +7,7 @@ import (
 	"pantau/internal/entity"
 	"pantau/internal/enums"
 	"pantau/internal/repository"
-	apperror "pantau/pkg/errors"
+	"pantau/pkg/errs"
 )
 
 type UserService interface {
@@ -24,8 +24,8 @@ func NewUserService(reportRepo repository.ReportRepository) UserService {
 
 func (sv *userServiceImpl) GetProfile(ctx context.Context, usr *entity.User) (*user.ProfileResponse, error) {
 	if usr == nil {
-		slog.Error("[UserService.GetProfile] Failed to get profile", "error", apperror.ErrUnauthorized)
-		return nil, apperror.ErrUnauthorized
+		slog.Error("[UserService.GetProfile] Failed to get profile", "error", errs.ErrUnauthorized)
+		return nil, errs.ErrUnauthorized
 	}
 
 	reportsCount, err := sv.reportRepo.CountByReporterID(ctx, usr.ID)

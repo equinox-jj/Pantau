@@ -9,7 +9,7 @@ import (
 	"pantau/internal/entity"
 	"pantau/internal/enums"
 	"pantau/internal/repository"
-	apperror "pantau/pkg/errors"
+	"pantau/pkg/errs"
 	"pantau/pkg/security"
 
 	"github.com/google/uuid"
@@ -46,7 +46,7 @@ func (sv *authServiceImpl) Login(ctx context.Context, req auth.LoginRequest) (*a
 	user, err := sv.userRepo.FindByEmail(ctx, req.Email)
 	if err != nil {
 		slog.Error("[AuthService] Failed to find user by email", "email", req.Email, "error", err)
-		if errors.Is(err, apperror.ErrEmailNotFound) {
+		if errors.Is(err, errs.ErrEmailNotFound) {
 			return nil, sv.rejectUnknownLogin(req.Password)
 		}
 		return nil, err
@@ -61,7 +61,7 @@ func (sv *authServiceImpl) Login(ctx context.Context, req auth.LoginRequest) (*a
 		req.Password,
 	); err != nil {
 		slog.Error("[AuthService] Failed to compare password", "email", req.Email, "error", err)
-		return nil, apperror.ErrInvalidEmailOrPassword
+		return nil, errs.ErrInvalidEmailOrPassword
 	}
 
 	return sv.buildAuthResponse(user)
@@ -75,7 +75,7 @@ func (sv *authServiceImpl) Register(ctx context.Context, req auth.RegisterReques
 	}
 	if exists {
 		slog.Error("[AuthService] User already exists", "email", req.Email, "error", err)
-		return nil, apperror.ErrEmailAlreadyExists
+		return nil, errs.ErrEmailAlreadyExists
 	}
 
 	hashedPassword, err := sv.passHasher.Hash(req.Password)
@@ -111,5 +111,5 @@ func (sv *authServiceImpl) buildAuthResponse(user *entity.User) (*auth.AuthRespo
 
 func (sv *authServiceImpl) rejectUnknownLogin(password string) error {
 	_ = sv.passHasher.Compare(dummyPasswordHash, password)
-	return apperror.ErrInvalidEmailOrPassword
+	return errs.ErrInvalidEmailOrPassword
 }

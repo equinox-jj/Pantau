@@ -17,7 +17,7 @@ import (
 	"pantau/internal/entity"
 	"pantau/internal/repository"
 	"pantau/pkg/database"
-	apperror "pantau/pkg/errors"
+	"pantau/pkg/errs"
 	"pantau/pkg/pagination"
 	"pantau/pkg/response"
 	"pantau/pkg/utils"
@@ -78,12 +78,12 @@ func (sv *reportServiceImpl) CreateReport(
 	request *report.CreateReportRequest,
 ) (*report.ReportResponse, error) {
 	if reporter == nil {
-		err := apperror.ErrUnauthorized
+		err := errs.ErrUnauthorized
 		slog.Error("[ReportService.CreateReport] Failed to create report", "error", err)
 		return nil, err
 	}
 	if request == nil {
-		err := apperror.Validation("Request is required")
+		err := errs.Validation("Request is required")
 		slog.Error("[ReportService.CreateReport] Failed to create report", "error", err)
 		return nil, err
 	}
@@ -204,7 +204,7 @@ func (sv *reportServiceImpl) GetReportHistory(ctx context.Context, id uuid.UUID)
 
 func (sv *reportServiceImpl) GetMyReports(ctx context.Context, reporter *entity.User, limit, offset int) (*response.ResponseData[[]report.ReportResponse], error) {
 	if reporter == nil {
-		err := apperror.ErrUnauthorized
+		err := errs.ErrUnauthorized
 		slog.Error("[ReportService.GetMyReports] Failed to get reporter reports", "limit", limit, "offset", offset, "error", err)
 		return nil, err
 	}
@@ -231,12 +231,12 @@ func (sv *reportServiceImpl) GetMyReports(ctx context.Context, reporter *entity.
 
 func (sv *reportServiceImpl) UpdateReportStatus(ctx context.Context, id uuid.UUID, resolver *entity.User, request *report.UpdateStatusRequest) (*report.ReportResponse, error) {
 	if resolver == nil {
-		err := apperror.ErrUnauthorized
+		err := errs.ErrUnauthorized
 		slog.Error("[ReportService.UpdateReportStatus] Failed to update report status", "report_id", id, "error", err)
 		return nil, err
 	}
 	if request == nil || request.ToStatus == nil {
-		err := apperror.Validation("Target status is required")
+		err := errs.Validation("Target status is required")
 		slog.Error("[ReportService.UpdateReportStatus] Failed to update report status", "report_id", id, "error", err)
 		return nil, err
 	}
@@ -251,10 +251,10 @@ func (sv *reportServiceImpl) UpdateReportStatus(ctx context.Context, id uuid.UUI
 		}
 		from, to := rpt.Status, *request.ToStatus
 		if !utils.IsReportStatusTransitionAllowed(from, to) {
-			return apperror.ErrIllegalTransition
+			return errs.ErrIllegalTransition
 		}
 		if to == enums.ReportStatusRejected && (request.Note == nil || strings.TrimSpace(*request.Note) == "") {
-			return apperror.Validation("A note is required when rejecting a report")
+			return errs.Validation("A note is required when rejecting a report")
 		}
 		rpt.Status = to
 		if err := reports.Save(ctx, rpt); err != nil {
@@ -288,7 +288,7 @@ func (sv *reportServiceImpl) UpdateReport(ctx context.Context, id uuid.UUID, req
 		return nil, err
 	}
 	if request == nil {
-		err := apperror.Validation("Request is required")
+		err := errs.Validation("Request is required")
 		slog.Error("[ReportService.UpdateReport] Failed to update report", "report_id", id, "error", err)
 		return nil, err
 	}
@@ -395,7 +395,7 @@ func (sv *reportServiceImpl) GetQueue(ctx context.Context, tab enums.QueueTab, l
 	}
 	statuses := tab.Statuses()
 	if len(statuses) == 0 {
-		err := apperror.Validation("Invalid queue tab")
+		err := errs.Validation("Invalid queue tab")
 		slog.Error("[ReportService.GetQueue] Failed to get report queue", "limit", limit, "offset", offset, "tab", tab, "error", err)
 		return nil, err
 	}
@@ -451,7 +451,7 @@ func (sv *reportServiceImpl) uploadAll(ctx context.Context, files []*multipart.F
 			return nil, sv.rollbackUploads(ctx, uploads, err)
 		}
 		if uploaded == nil {
-			return nil, sv.rollbackUploads(ctx, uploads, apperror.ErrUploadFailed)
+			return nil, sv.rollbackUploads(ctx, uploads, errs.ErrUploadFailed)
 		}
 		uploads = append(uploads, *uploaded)
 	}
@@ -533,33 +533,33 @@ func (sv *reportServiceImpl) loadPhotoURLsByReport(ctx context.Context, reports 
 
 func (sv *reportServiceImpl) assertEditableBy(rpt *entity.Report, requester *entity.User) error {
 	if requester == nil {
-		return apperror.ErrUnauthorized
+		return errs.ErrUnauthorized
 	}
 	if rpt.ReporterID != requester.ID {
-		return apperror.ErrForbidden
+		return errs.ErrForbidden
 	}
 	if rpt.Status != enums.ReportStatusReported {
-		return apperror.ErrIllegalTransition
+		return errs.ErrIllegalTransition
 	}
 	return nil
 }
 
 func (sv *reportServiceImpl) validateReportFields(categoryID *int64, latitude, longitude *float64) error {
 	if categoryID == nil {
-		return apperror.Validation("Category ID is required")
+		return errs.Validation("Category ID is required")
 	}
 	if latitude == nil || longitude == nil {
-		return apperror.Validation("Latitude and longitude are required")
+		return errs.Validation("Latitude and longitude are required")
 	}
 	return geo.ValidateCoordinates(*latitude, *longitude)
 }
 
 func (sv *reportServiceImpl) validateRadius(radius int) error {
 	if radius <= 0 {
-		return apperror.Validation("Radius must be greater than 0")
+		return errs.Validation("Radius must be greater than 0")
 	}
 	if radius > maxRadiusMeters {
-		return apperror.Validation(fmt.Sprintf("Radius must not exceed %d meters", maxRadiusMeters))
+		return errs.Validation(fmt.Sprintf("Radius must not exceed %d meters", maxRadiusMeters))
 	}
 	return nil
 }

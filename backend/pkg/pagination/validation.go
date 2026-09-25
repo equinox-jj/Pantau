@@ -3,17 +3,16 @@ package pagination
 
 import (
 	"fmt"
-
-	apperror "pantau/pkg/errors"
+	"pantau/pkg/errs"
 )
 
 // ValidateLimit requires a positive limit no greater than the supplied maximum.
 func ValidateLimit(limit, maximum int) error {
 	if limit <= 0 {
-		return apperror.Validation("Limit must be greater than 0")
+		return errs.Validation("Limit must be greater than 0")
 	}
 	if limit > maximum {
-		return apperror.Validation(fmt.Sprintf("Limit must not exceed %d", maximum))
+		return errs.Validation(fmt.Sprintf("Limit must not exceed %d", maximum))
 	}
 	return nil
 }
@@ -24,7 +23,7 @@ func Validate(limit, offset, maximum int) error {
 		return err
 	}
 	if offset < 0 {
-		return apperror.Validation("Offset must not be negative")
+		return errs.Validation("Offset must not be negative")
 	}
 	return nil
 }

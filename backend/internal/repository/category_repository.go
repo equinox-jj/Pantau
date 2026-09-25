@@ -5,10 +5,9 @@ import (
 	"errors"
 	"log/slog"
 	"pantau/internal/entity"
+	"pantau/pkg/errs"
 
 	"gorm.io/gorm"
-
-	apperror "pantau/pkg/errors"
 )
 
 type CategoryRepository interface {
@@ -51,7 +50,7 @@ func (repo *categoryRepositoryImpl) FindBySlug(ctx context.Context, slug string)
 		Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			slog.ErrorContext(ctx, "[CategoryRepository.FindBySlug] Category not found by slug", "slug", slug, "error", err)
-			return nil, apperror.ErrCategoryNotFound
+			return nil, errs.ErrCategoryNotFound
 		}
 		slog.ErrorContext(ctx, "[CategoryRepository.FindBySlug] Failed to find category by slug", "slug", slug, "error", err)
 		return nil, err
@@ -65,7 +64,7 @@ func (repo *categoryRepositoryImpl) FindByID(ctx context.Context, id int64) (*en
 	if err := repo.db.WithContext(ctx).First(&category, "id = ?", id).Error; err != nil {
 		slog.Error("[CategoryRepository.FindByID] Failed to find category", "category_id", id, "error", err)
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, apperror.ErrCategoryNotFound
+			return nil, errs.ErrCategoryNotFound
 		}
 		return nil, err
 	}

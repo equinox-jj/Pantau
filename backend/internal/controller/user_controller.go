@@ -2,7 +2,7 @@ package controller
 
 import (
 	"pantau/internal/service"
-	apperror "pantau/pkg/errors"
+	"pantau/pkg/errs"
 	"pantau/pkg/response"
 	"pantau/pkg/utils"
 
@@ -24,7 +24,7 @@ func NewUserController(userService service.UserService) UserController {
 func (controller *userControllerImpl) GetProfile(ctx fiber.Ctx) error {
 	usr, ok := utils.CurrentUser(ctx)
 	if !ok {
-		return apperror.ErrUnauthorized
+		return errs.ErrUnauthorized
 	}
 
 	result, err := controller.userService.GetProfile(ctx.Context(), usr)

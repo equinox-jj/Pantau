@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"os"
 	"pantau/internal/config"
-	apperror "pantau/pkg/errors"
+	"pantau/pkg/errs"
 	"pantau/pkg/validator"
 
 	"github.com/gofiber/fiber/v3"
@@ -16,7 +16,7 @@ import (
 func NewFiber(cfg *config.Config) *fiber.App {
 	return fiber.New(fiber.Config{
 		AppName:         "Pantau API",
-		ErrorHandler:    apperror.ErrorHandler,
+		ErrorHandler:    errs.ErrorHandler,
 		StructValidator: validator.NewStructValidator(),
 		BodyLimit:       cfg.Upload.MaxRequestBytes,
 	})

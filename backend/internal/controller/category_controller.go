@@ -2,7 +2,7 @@ package controller
 
 import (
 	"pantau/internal/service"
-	apperror "pantau/pkg/errors"
+	"pantau/pkg/errs"
 	"pantau/pkg/response"
 	"strconv"
 
@@ -35,7 +35,7 @@ func (controller *categoryControllerImpl) GetActiveCategories(ctx fiber.Ctx) err
 func (controller *categoryControllerImpl) GetCategoryByID(ctx fiber.Ctx) error {
 	id, err := strconv.ParseInt(ctx.Params("id"), 10, 64)
 	if err != nil {
-		return apperror.Validation("Invalid category ID")
+		return errs.Validation("Invalid category ID")
 	}
 
 	result, err := controller.categoryService.GetCategoryByID(ctx.Context(), id)

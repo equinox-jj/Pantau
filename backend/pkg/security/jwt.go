@@ -4,9 +4,8 @@ import (
 	"log/slog"
 	"pantau/internal/entity"
 	"pantau/internal/enums"
+	"pantau/pkg/errs"
 	"time"
-
-	apperror "pantau/pkg/errors"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
@@ -70,7 +69,7 @@ func (j *jwtServiceImpl) ParseToken(tokenString string) (*claims, error) {
 		func(token *jwt.Token) (any, error) {
 			if token.Method != jwt.SigningMethodHS256 {
 				slog.Error("[JWT] Unexpected token signing method")
-				return nil, apperror.ErrUnexpectedSigningMethod
+				return nil, errs.ErrUnexpectedSigningMethod
 			}
 
 			return j.secret, nil
@@ -86,7 +85,7 @@ func (j *jwtServiceImpl) ParseToken(tokenString string) (*claims, error) {
 	claims, ok := token.Claims.(*claims)
 	if !ok || !token.Valid || claims.UserID == uuid.Nil || claims.Subject != claims.UserID.String() {
 		slog.Error("[JWT] Invalid token")
-		return nil, apperror.ErrInvalidToken
+		return nil, errs.ErrInvalidToken
 	}
 
 	return claims, nil

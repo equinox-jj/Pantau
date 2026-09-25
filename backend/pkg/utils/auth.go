@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"pantau/internal/entity"
 	"pantau/internal/enums"
-	apperror "pantau/pkg/errors"
+	"pantau/pkg/errs"
 	"slices"
 	"time"
 
@@ -41,13 +41,13 @@ func RequireRoles(roles ...enums.UserRole) fiber.Handler {
 		user, ok := CurrentUser(ctx)
 		if !ok {
 			slog.Error("[GAT] User not found", "user", user)
-			return apperror.ErrUnauthorized
+			return errs.ErrUnauthorized
 		}
 		if slices.Contains(roles, user.Role) {
 			return ctx.Next()
 		}
 		slog.Error("[GAT] User does not have access", "user", user)
-		return apperror.ErrForbidden
+		return errs.ErrForbidden
 	}
 }
 

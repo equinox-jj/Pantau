@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"pantau/internal/entity"
 	"pantau/internal/enums"
-	apperror "pantau/pkg/errors"
+	"pantau/pkg/errs"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -46,7 +46,7 @@ func (repo *reportRepositoryImpl) FindNearbyReport(
 	radiusMeters, limit int,
 ) ([]entity.Report, error) {
 	if limit < 0 {
-		return nil, apperror.ErrInvalidLimit
+		return nil, errs.ErrInvalidLimit
 	}
 
 	reports := make([]entity.Report, 0)
@@ -192,7 +192,7 @@ func (repo *reportRepositoryImpl) CountQueueReportsByStatus(
 
 func (reportRepositoryImpl) reportRepositoryError(err error) error {
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return apperror.ErrReportNotFound
+		return errs.ErrReportNotFound
 	}
 	return err
 }

@@ -40,7 +40,6 @@ func StartServer(
 
 			return nil
 		},
-
 		OnStop: func(ctx context.Context) error {
 			if err := app.ShutdownWithContext(ctx); err != nil {
 				slog.Error("[FIBER] Failed to shut down server", "error", err)

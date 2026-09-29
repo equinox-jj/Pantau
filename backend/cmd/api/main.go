@@ -1,13 +1,7 @@
 package main
 
-import (
-	"pantau/internal/app"
-
-	"go.uber.org/fx"
-)
+import "pantau/internal/app"
 
 func main() {
-	fx.New(
-		app.Module,
-	).Run()
+	app.NewUberFX().Run()
 }

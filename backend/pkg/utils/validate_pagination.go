@@ -1,5 +1,4 @@
-// Package pagination validates limit/offset pagination without normalizing input.
-package pagination
+package utils
 
 import (
 	"fmt"

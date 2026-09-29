@@ -26,10 +26,6 @@ type authServiceImpl struct {
 	passHasher security.PasswordHasher
 }
 
-// This cost-10 hash gives unknown accounts the same password-check work as
-// accounts using the application's default bcrypt cost.
-const dummyPasswordHash = "$2a$10$XajjQvNhvvRt5GSeFk1xFeyqRrsxkhBkUiQeg0dt.wU1qD4aFDcga"
-
 func NewAuthService(
 	userRepo repository.UserRepository,
 	jwtService security.JwtService,
@@ -49,6 +45,7 @@ func (sv *authServiceImpl) Login(ctx context.Context, req auth.LoginRequest) (*a
 		if errors.Is(err, errs.ErrEmailNotFound) {
 			return nil, sv.rejectUnknownLogin(req.Password)
 		}
+
 		return nil, err
 	}
 	if user == nil {
@@ -110,6 +107,9 @@ func (sv *authServiceImpl) buildAuthResponse(user *entity.User) (*auth.AuthRespo
 }
 
 func (sv *authServiceImpl) rejectUnknownLogin(password string) error {
+	// This cost-10 hash gives unknown accounts the same password-check work as
+	// accounts using the application's default bcrypt cost.
+	const dummyPasswordHash = "$2a$10$XajjQvNhvvRt5GSeFk1xFeyqRrsxkhBkUiQeg0dt.wU1qD4aFDcga"
 	_ = sv.passHasher.Compare(dummyPasswordHash, password)
 	return errs.ErrInvalidEmailOrPassword
 }

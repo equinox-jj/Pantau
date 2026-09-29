@@ -16,9 +16,7 @@ import (
 	"pantau/internal/dto/upload"
 	"pantau/internal/entity"
 	"pantau/internal/repository"
-	"pantau/pkg/database"
 	"pantau/pkg/errs"
-	"pantau/pkg/pagination"
 	"pantau/pkg/response"
 	"pantau/pkg/utils"
 	"pantau/pkg/utils/geo"
@@ -115,7 +113,7 @@ func (sv *reportServiceImpl) CreateReport(
 
 	var photos []entity.ReportPhoto
 
-	if err = database.WithTransaction(ctx, sv.db, func(tx *gorm.DB) error {
+	if err = utils.WithTransaction(ctx, sv.db, func(tx *gorm.DB) error {
 		reports := repository.NewReportRepository(tx)
 		photoRepo := repository.NewReportPhotoRepository(tx)
 		statuses := repository.NewReportStatusRepository(tx)
@@ -151,24 +149,28 @@ func (sv *reportServiceImpl) GetNearbyReports(ctx context.Context, latitude, lon
 		slog.Error("[ReportService.GetNearbyReports] Failed to get nearby reports", "limit", limit, "error", err)
 		return nil, err
 	}
-	if err := pagination.ValidateLimit(limit, maxNearbyLimit); err != nil {
+	if err := utils.ValidateLimit(limit, maxNearbyLimit); err != nil {
 		slog.Error("[ReportService.GetNearbyReports] Failed to get nearby reports", "limit", limit, "error", err)
 		return nil, err
 	}
+
 	reports, err := sv.reportRepo.FindNearbyReport(ctx, latitude, longitude, radiusMeter, limit)
 	if err != nil {
 		slog.Error("[ReportService.GetNearbyReports] Failed to get nearby reports", "limit", limit, "error", err)
 		return nil, err
 	}
+
 	photos, err := sv.loadPhotoURLsByReport(ctx, reports)
 	if err != nil {
 		slog.Error("[ReportService.GetNearbyReports] Failed to get nearby reports", "limit", limit, "error", err)
 		return nil, err
 	}
+
 	items := make([]report.NearbyReportResponse, 0, len(reports))
 	for i := range reports {
 		items = append(items, *mapper.ReportToNearbyResponse(&reports[i], photos[reports[i].ID]))
 	}
+
 	return items, nil
 }
 
@@ -178,11 +180,13 @@ func (sv *reportServiceImpl) GetReportDetail(ctx context.Context, id uuid.UUID) 
 		slog.Error("[ReportService.GetReportDetail] Failed to get report detail", "report_id", id, "error", err)
 		return nil, err
 	}
+
 	photos, err := sv.reportPhotoRepo.FindByReportID(ctx, id)
 	if err != nil {
 		slog.Error("[ReportService.GetReportDetail] Failed to get report detail", "report_id", id, "error", err)
 		return nil, err
 	}
+
 	return mapper.ReportToResponse(rpt, sv.photoURLs(photos)), nil
 }
 
@@ -191,14 +195,17 @@ func (sv *reportServiceImpl) GetReportHistory(ctx context.Context, id uuid.UUID)
 		slog.Error("[ReportService.GetReportHistory] Failed to get report history", "report_id", id, "error", err)
 		return nil, err
 	}
+
 	history, err := sv.reportStatusRepo.FindByReportID(ctx, id)
 	if err != nil {
 		slog.Error("[ReportService.GetReportHistory] Failed to get report history", "report_id", id, "error", err)
 		return nil, err
 	}
+
 	if history == nil {
 		history = []entity.ReportStatusHistory{}
 	}
+
 	return mapper.ReportStatusesToResponse(history), nil
 }
 
@@ -208,24 +215,28 @@ func (sv *reportServiceImpl) GetMyReports(ctx context.Context, reporter *entity.
 		slog.Error("[ReportService.GetMyReports] Failed to get reporter reports", "limit", limit, "offset", offset, "error", err)
 		return nil, err
 	}
-	if err := pagination.Validate(limit, offset, maxPageSize); err != nil {
+	if err := utils.Validate(limit, offset, maxPageSize); err != nil {
 		slog.Error("[ReportService.GetMyReports] Failed to get reporter reports", "limit", limit, "offset", offset, "error", err)
 		return nil, err
 	}
+
 	reports, total, err := sv.reportRepo.FindByReporterID(ctx, reporter.ID, limit, offset)
 	if err != nil {
 		slog.Error("[ReportService.GetMyReports] Failed to get reporter reports", "limit", limit, "offset", offset, "error", err)
 		return nil, err
 	}
+
 	photos, err := sv.loadPhotoURLsByReport(ctx, reports)
 	if err != nil {
 		slog.Error("[ReportService.GetMyReports] Failed to get reporter reports", "limit", limit, "offset", offset, "error", err)
 		return nil, err
 	}
+
 	items := make([]report.ReportResponse, 0, len(reports))
 	for i := range reports {
 		items = append(items, *mapper.ReportToResponse(&reports[i], photos[reports[i].ID]))
 	}
+
 	return &response.ResponseData[[]report.ReportResponse]{Data: items, Pagination: response.NewPagination(limit, offset, total)}, nil
 }
 
@@ -240,8 +251,9 @@ func (sv *reportServiceImpl) UpdateReportStatus(ctx context.Context, id uuid.UUI
 		slog.Error("[ReportService.UpdateReportStatus] Failed to update report status", "report_id", id, "error", err)
 		return nil, err
 	}
+
 	var result *report.ReportResponse
-	err := database.WithTransaction(ctx, sv.db, func(tx *gorm.DB) error {
+	err := utils.WithTransaction(ctx, sv.db, func(tx *gorm.DB) error {
 		reports := repository.NewReportRepository(tx)
 		photos := repository.NewReportPhotoRepository(tx)
 		statuses := repository.NewReportStatusRepository(tx)
@@ -249,6 +261,7 @@ func (sv *reportServiceImpl) UpdateReportStatus(ctx context.Context, id uuid.UUI
 		if err != nil {
 			return err
 		}
+
 		from, to := rpt.Status, *request.ToStatus
 		if !utils.IsReportStatusTransitionAllowed(from, to) {
 			return errs.ErrIllegalTransition
@@ -256,6 +269,7 @@ func (sv *reportServiceImpl) UpdateReportStatus(ctx context.Context, id uuid.UUI
 		if to == enums.ReportStatusRejected && (request.Note == nil || strings.TrimSpace(*request.Note) == "") {
 			return errs.Validation("A note is required when rejecting a report")
 		}
+
 		rpt.Status = to
 		if err := reports.Save(ctx, rpt); err != nil {
 			return err
@@ -263,17 +277,21 @@ func (sv *reportServiceImpl) UpdateReportStatus(ctx context.Context, id uuid.UUI
 		if err := statuses.Save(ctx, &entity.ReportStatusHistory{ReportID: id, ActorID: resolver.ID, FromStatus: &from, ToStatus: to, Note: request.Note}); err != nil {
 			return err
 		}
+
 		photoRows, err := photos.FindByReportID(ctx, id)
 		if err != nil {
 			return err
 		}
+
 		result = mapper.ReportToResponse(rpt, sv.photoURLs(photoRows))
+
 		return nil
 	})
 	if err != nil {
 		slog.Error("[ReportService.UpdateReportStatus] Failed to update report status", "report_id", id, "error", err)
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -296,19 +314,22 @@ func (sv *reportServiceImpl) UpdateReport(ctx context.Context, id uuid.UUID, req
 		slog.Error("[ReportService.UpdateReport] Failed to update report", "report_id", id, "error", err)
 		return nil, err
 	}
+
 	category, err := sv.categoryRepo.FindByID(ctx, *request.CategoryID)
 	if err != nil {
 		slog.Error("[ReportService.UpdateReport] Failed to update report", "report_id", id, "error", err)
 		return nil, err
 	}
+
 	uploads, err := sv.uploadAll(ctx, request.Photos)
 	if err != nil {
 		slog.Error("[ReportService.UpdateReport] Failed to update report", "report_id", id, "error", err)
 		return nil, err
 	}
+
 	var result *report.ReportResponse
 	var oldPhotos []entity.ReportPhoto
-	err = database.WithTransaction(ctx, sv.db, func(tx *gorm.DB) error {
+	err = utils.WithTransaction(ctx, sv.db, func(tx *gorm.DB) error {
 		reports := repository.NewReportRepository(tx)
 		photos := repository.NewReportPhotoRepository(tx)
 		// Recheck under a row lock in case a resolver acted during upload.
@@ -319,12 +340,14 @@ func (sv *reportServiceImpl) UpdateReport(ctx context.Context, id uuid.UUID, req
 		if err := sv.assertEditableBy(rpt, requester); err != nil {
 			return err
 		}
+
 		rpt.CategoryID, rpt.Category = category.ID, *category
 		rpt.Description = request.Description
 		rpt.Location = geo.GeoPoint{Lat: *request.Latitude, Lng: *request.Longitude}
 		if err := reports.Save(ctx, rpt); err != nil {
 			return err
 		}
+
 		currentPhotos, err := photos.FindByReportID(ctx, id)
 		if err != nil {
 			return err
@@ -334,12 +357,15 @@ func (sv *reportServiceImpl) UpdateReport(ctx context.Context, id uuid.UUID, req
 			if err := photos.DeleteByReportID(ctx, id); err != nil {
 				return err
 			}
+
 			currentPhotos, err = sv.savePhotos(ctx, photos, id, uploads)
 			if err != nil {
 				return err
 			}
 		}
+
 		result = mapper.ReportToResponse(rpt, sv.photoURLs(currentPhotos))
+
 		return nil
 	})
 	if err != nil {
@@ -347,13 +373,15 @@ func (sv *reportServiceImpl) UpdateReport(ctx context.Context, id uuid.UUID, req
 		slog.Error("[ReportService.UpdateReport] Failed to update report", "report_id", id, "error", err)
 		return nil, err
 	}
+
 	sv.deletePhotoAssets(ctx, oldPhotos, id)
+
 	return result, nil
 }
 
 func (sv *reportServiceImpl) DeleteReport(ctx context.Context, id uuid.UUID, requester *entity.User) error {
 	var oldPhotos []entity.ReportPhoto
-	err := database.WithTransaction(ctx, sv.db, func(tx *gorm.DB) error {
+	err := utils.WithTransaction(ctx, sv.db, func(tx *gorm.DB) error {
 		reports := repository.NewReportRepository(tx)
 		photos := repository.NewReportPhotoRepository(tx)
 		rpt, err := reports.FindByIDForUpdate(ctx, id)
@@ -363,6 +391,7 @@ func (sv *reportServiceImpl) DeleteReport(ctx context.Context, id uuid.UUID, req
 		if err := sv.assertEditableBy(rpt, requester); err != nil {
 			return err
 		}
+
 		oldPhotos, err = photos.FindByReportID(ctx, id)
 		if err != nil {
 			return err
@@ -370,13 +399,16 @@ func (sv *reportServiceImpl) DeleteReport(ctx context.Context, id uuid.UUID, req
 		if err := photos.DeleteByReportID(ctx, id); err != nil {
 			return err
 		}
+
 		return reports.Delete(ctx, id)
 	})
 	if err != nil {
 		slog.Error("[ReportService.DeleteReport] Failed to delete report", "report_id", id, "error", err)
 		return err
 	}
+
 	sv.deletePhotoAssets(ctx, oldPhotos, id)
+
 	return nil
 }
 
@@ -389,26 +421,30 @@ func (sv *reportServiceImpl) GetQueue(ctx context.Context, tab enums.QueueTab, l
 		slog.Error("[ReportService.GetQueue] Failed to get report queue", "limit", limit, "offset", offset, "tab", tab, "error", err)
 		return nil, err
 	}
-	if err := pagination.Validate(limit, offset, maxPageSize); err != nil {
+	if err := utils.Validate(limit, offset, maxPageSize); err != nil {
 		slog.Error("[ReportService.GetQueue] Failed to get report queue", "limit", limit, "offset", offset, "tab", tab, "error", err)
 		return nil, err
 	}
+
 	statuses := tab.Statuses()
 	if len(statuses) == 0 {
 		err := errs.Validation("Invalid queue tab")
 		slog.Error("[ReportService.GetQueue] Failed to get report queue", "limit", limit, "offset", offset, "tab", tab, "error", err)
 		return nil, err
 	}
+
 	reports, total, err := sv.reportRepo.FindQueueReports(ctx, statuses, latitude, longitude, radiusMeter, limit, offset)
 	if err != nil {
 		slog.Error("[ReportService.GetQueue] Failed to get report queue", "limit", limit, "offset", offset, "tab", tab, "error", err)
 		return nil, err
 	}
+
 	photos, err := sv.loadPhotoURLsByReport(ctx, reports)
 	if err != nil {
 		slog.Error("[ReportService.GetQueue] Failed to get report queue", "limit", limit, "offset", offset, "tab", tab, "error", err)
 		return nil, err
 	}
+
 	items := make([]report.QueueReportResponse, 0, len(reports))
 	for i := range reports {
 		rpt := &reports[i]
@@ -416,16 +452,19 @@ func (sv *reportServiceImpl) GetQueue(ctx context.Context, tab enums.QueueTab, l
 		if urls := photos[rpt.ID]; len(urls) > 0 {
 			thumbnail = &urls[0]
 		}
+
 		item := mapper.ReportToQueueResponse(rpt, thumbnail)
 		distance := geo.HaversineMeters(geo.GeoPoint{Lat: latitude, Lng: longitude}, rpt.Location)
 		item.DistanceMeter = &distance
 		items = append(items, *item)
 	}
+
 	rows, err := sv.reportRepo.CountQueueReportsByStatus(ctx, latitude, longitude, radiusMeter)
 	if err != nil {
 		slog.Error("[ReportService.GetQueue] Failed to get report queue", "limit", limit, "offset", offset, "tab", tab, "error", err)
 		return nil, err
 	}
+
 	counts := report.QueueCounts{}
 	for _, row := range rows {
 		switch row.Status {
@@ -437,6 +476,7 @@ func (sv *reportServiceImpl) GetQueue(ctx context.Context, tab enums.QueueTab, l
 			counts.Resolved += row.Count
 		}
 	}
+
 	return &response.ResponseData[report.QueueResponse]{
 		Data:       report.QueueResponse{Items: items, Counts: counts},
 		Pagination: response.NewPagination(limit, offset, total),
@@ -453,8 +493,10 @@ func (sv *reportServiceImpl) uploadAll(ctx context.Context, files []*multipart.F
 		if uploaded == nil {
 			return nil, sv.rollbackUploads(ctx, uploads, errs.ErrUploadFailed)
 		}
+
 		uploads = append(uploads, *uploaded)
 	}
+
 	return uploads, nil
 }
 
@@ -469,6 +511,7 @@ func (sv *reportServiceImpl) deleteUploads(ctx context.Context, uploads []upload
 			cleanupErr = errors.Join(cleanupErr, err)
 		}
 	}
+
 	return cleanupErr
 }
 
@@ -476,6 +519,7 @@ func (sv *reportServiceImpl) rollbackUploads(ctx context.Context, uploads []uplo
 	if err := sv.deleteUploads(ctx, uploads); err != nil {
 		return err
 	}
+
 	return cause
 }
 
@@ -500,6 +544,7 @@ func (sv *reportServiceImpl) savePhotos(ctx context.Context, repo repository.Rep
 	if err := repo.SaveAll(ctx, photos); err != nil {
 		return nil, err
 	}
+
 	return photos, nil
 }
 
@@ -508,6 +553,7 @@ func (sv *reportServiceImpl) photoURLs(photos []entity.ReportPhoto) []string {
 	for _, photo := range photos {
 		urls = append(urls, photo.PhotoURL)
 	}
+
 	return urls
 }
 
@@ -516,11 +562,13 @@ func (sv *reportServiceImpl) loadPhotoURLsByReport(ctx context.Context, reports 
 	if len(reports) == 0 {
 		return result, nil
 	}
+
 	ids := make([]uuid.UUID, 0, len(reports))
 	for _, rpt := range reports {
 		ids = append(ids, rpt.ID)
 		result[rpt.ID] = []string{}
 	}
+
 	photos, err := sv.reportPhotoRepo.FindByReportIDs(ctx, ids)
 	if err != nil {
 		return nil, err
@@ -528,6 +576,7 @@ func (sv *reportServiceImpl) loadPhotoURLsByReport(ctx context.Context, reports 
 	for _, photo := range photos {
 		result[photo.ReportID] = append(result[photo.ReportID], photo.PhotoURL)
 	}
+
 	return result, nil
 }
 
@@ -541,6 +590,7 @@ func (sv *reportServiceImpl) assertEditableBy(rpt *entity.Report, requester *ent
 	if rpt.Status != enums.ReportStatusReported {
 		return errs.ErrIllegalTransition
 	}
+
 	return nil
 }
 
@@ -551,6 +601,7 @@ func (sv *reportServiceImpl) validateReportFields(categoryID *int64, latitude, l
 	if latitude == nil || longitude == nil {
 		return errs.Validation("Latitude and longitude are required")
 	}
+
 	return geo.ValidateCoordinates(*latitude, *longitude)
 }
 
@@ -561,5 +612,6 @@ func (sv *reportServiceImpl) validateRadius(radius int) error {
 	if radius > maxRadiusMeters {
 		return errs.Validation(fmt.Sprintf("Radius must not exceed %d meters", maxRadiusMeters))
 	}
+
 	return nil
 }

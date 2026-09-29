@@ -128,10 +128,12 @@ func NewConfig() (*Config, error) {
 	if cfg.Database.MaxOpenConns <= 0 || cfg.Database.MaxIdleConns < 0 || cfg.Database.MaxIdleConns > cfg.Database.MaxOpenConns {
 		return nil, errors.New("database connection limits must be positive and max_idle_conns must not exceed max_open_conns")
 	}
+
 	maxFileBytes, err := parseByteSize(cfg.Upload.MaxFileSize)
 	if err != nil {
 		return nil, err
 	}
+
 	maxRequestBytes, err := parseByteSize(cfg.Upload.MaxRequestSize)
 	if err != nil {
 		return nil, err
@@ -139,12 +141,18 @@ func NewConfig() (*Config, error) {
 	if maxRequestBytes <= maxFileBytes || maxRequestBytes > int64(^uint(0)>>1) {
 		return nil, errors.New("upload.max_request_size must exceed max_file_size and fit in an int")
 	}
+
 	cfg.Upload.MaxFileBytes = maxFileBytes
 	cfg.Upload.MaxRequestBytes = int(maxRequestBytes)
 
 	return cfg, nil
 }
 
+// parseByteSize converts a positive integer followed by B, KB, MB, or GB
+// into bytes. Units are case-insensitive and use powers of 1024.
+// Whitespace around the input and between the number and unit is allowed.
+// It returns an error for invalid input, non-positive sizes, or sizes that
+// exceed the platform's maximum int value.
 func parseByteSize(value string) (int64, error) {
 	value = strings.ToUpper(strings.TrimSpace(value))
 	for _, unit := range []struct {
@@ -161,5 +169,6 @@ func parseByteSize(value string) (int64, error) {
 			return n * unit.factor, nil
 		}
 	}
+	
 	return 0, errors.New("must use B, KB, MB, or GB units")
 }

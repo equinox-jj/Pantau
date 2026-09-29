@@ -2,6 +2,22 @@
 
 Pantau is a civic issue reporting project. Residents can submit reports with a location and photos, see nearby reports, and follow their status. Resolvers can review a queue and update report statuses.
 
+## App showcase
+
+Explore nearby issues, submit a report, and follow its progress.
+
+| Nearby map | Nearby feed | My reports |
+| :---: | :---: | :---: |
+| <img src="docs/screenshots/06-map.png" alt="Map showing nearby civic issues and a report button" width="240"> | <img src="docs/screenshots/07-feed-nearby.png" alt="Feed of nearby civic issue reports" width="240"> | <img src="docs/screenshots/08-my-reports.png" alt="Personal reports screen" width="240"> |
+
+| Create a report | Report details | Status timeline |
+| :---: | :---: | :---: |
+| <img src="docs/screenshots/10-create-report.png" alt="New report form with photos, location, and issue categories" width="240"> | <img src="docs/screenshots/12-report-detail.png" alt="Report details showing the issue photo, category, and current status" width="240"> | <img src="docs/screenshots/13-report-timeline.png" alt="Report status timeline" width="240"> |
+
+[View all 19 screenshots](docs/screenshots), including onboarding, authentication, location selection, and profile screens.
+
+## Project structure
+
 This repository contains two applications:
 
 | Directory | Application | Stack |

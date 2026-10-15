@@ -6,7 +6,7 @@ name: pantau
 
 services:
   pantau-db:
-    image: postgis/postgis:17-3.5-alpine
+    image: postgis/postgis:18-3.6-alpine
     # Official PostGIS images are amd64-only; emulated on Apple Silicon.
     platform: linux/amd64
     restart: unless-stopped
@@ -15,7 +15,7 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s

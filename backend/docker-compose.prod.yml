@@ -2,7 +2,7 @@
 # only the API and the MinIO object port (public image URLs) are.
 # Set MINIO_PUBLIC_URL in .env to the public host serving port 9000.
 # Usage: docker compose -f docker-compose.prod.yml up -d --build
-name: pantau
+name: pantau-prod
 
 services:
   pantau-db:
@@ -45,10 +45,10 @@ services:
       - ./migrations:/migrations:ro
     command:
       - -path=/migrations
-      - -database=postgres://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}?sslmode=disable
+      - -database=postgres://${DB_USER}:${DB_PASSWORD}@pantau-db:5432/${DB_NAME}?sslmode=disable
       - up
     depends_on:
-      postgres:
+      pantau-db:
         condition: service_healthy
     restart: "no"
 

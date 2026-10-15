@@ -13,6 +13,7 @@ import '../../features/map/presentation/pages/map/map.dart';
 import '../../features/map/presentation/pages/report_detail/report_detail.dart';
 import '../../features/onboarding/presentation/pages/onboarding/onboarding.dart';
 import '../../features/onboarding/presentation/pages/splash/splash.dart';
+import '../../features/profile/presentation/pages/change_password/change_password.dart';
 import '../../features/profile/presentation/pages/profile/profile.dart';
 import '../../features/report/presentation/pages/feed/feed.dart';
 import '../../features/resolver/presentation/pages/map/map.dart';
@@ -70,6 +71,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             ),
           ),
         ],
+      ),
+      GoRoute(
+        path: AppRoutes.changePassword,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const ChangePasswordPage(),
       ),
       GoRoute(
         path: AppRoutes.reportDetail,

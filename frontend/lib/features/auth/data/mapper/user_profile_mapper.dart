@@ -6,6 +6,7 @@ extension UserProfileModelMapper on UserProfileModel {
     return CurrentUser(
       uuid: id,
       displayName: displayName,
+      avatarUrl: avatarUrl,
       createdAt: _parseDate(joinedAt),
       reportsCount: reportsCount,
       resolvedCount: resolvedCount,

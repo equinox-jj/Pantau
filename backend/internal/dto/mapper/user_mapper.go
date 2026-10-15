@@ -33,6 +33,7 @@ func UserToResponse(
 	return &user.UserResponse{
 		ID:            usr.ID,
 		DisplayName:   usr.DisplayName,
+		AvatarURL:     usr.AvatarURL,
 		JoinedAt:      usr.CreatedAt,
 		ReportsCount:  reportsCount,
 		ResolvedCount: resolvedCount,

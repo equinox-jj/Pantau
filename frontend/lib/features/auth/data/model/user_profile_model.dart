@@ -8,6 +8,7 @@ abstract class UserProfileModel with _$UserProfileModel {
   const factory UserProfileModel({
     @JsonKey(name: "id") String? id,
     @JsonKey(name: "display_name") String? displayName,
+    @JsonKey(name: "avatar_url") String? avatarUrl,
     @JsonKey(name: "joined_at") dynamic joinedAt,
     @JsonKey(name: "reports_count") int? reportsCount,
     @JsonKey(name: "resolved_count") int? resolvedCount,

@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 
 import '../../../../core/theme/theme.dart';
+import 'profile_icon_badge.dart';
 
 /// Single row that opens a static contact dialog. No backend, no
 /// dependency — the app has no support ticketing or `url_launcher`.
@@ -28,7 +29,7 @@ class ProfileHelpCard extends StatelessWidget {
             ),
             child: Row(
               children: [
-                const _IconBadge(icon: Icons.help_outline),
+                const ProfileIconBadge(icon: Icons.help_outline),
                 const Gap(AppSpacing.xs),
                 Expanded(
                   child: Text(
@@ -67,29 +68,6 @@ class ProfileHelpCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _IconBadge extends StatelessWidget {
-  const _IconBadge({required this.icon});
-
-  final IconData icon;
-
-  static const _size = 38.0;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: _size,
-      height: _size,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: AppColors.fillSubtle,
-        borderRadius: AppRadius.radiusMd,
-        border: Border.all(color: AppColors.borderDefault),
-      ),
-      child: Icon(icon, size: 18, color: AppColors.textSecondary),
     );
   }
 }

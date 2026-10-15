@@ -14,6 +14,7 @@ abstract class CurrentUser with _$CurrentUser {
     String? role,
     DateTime? createdAt,
     String? displayName,
+    String? avatarUrl,
     int? reportsCount,
     int? resolvedCount,
   }) = _CurrentUser;

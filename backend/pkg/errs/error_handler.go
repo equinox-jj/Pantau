@@ -125,6 +125,10 @@ func ErrorHandler(
 	case errors.Is(err, ErrDeleteFailed):
 		status = fiber.StatusInternalServerError
 		message = ErrDeleteFailed.Error()
+	case errors.Is(err, ErrInvalidCurrentPassword):
+		// 400, not 401: clients treat 401 as an expired session.
+		status = fiber.StatusBadRequest
+		message = ErrInvalidCurrentPassword.Error()
 	}
 
 	return ctx.
@@ -151,6 +155,8 @@ func validationMessage(err validator.FieldError) string {
 			" must be at most " +
 			err.Param() +
 			" characters"
+	case "nefield":
+		return err.Field() + " must be different from the current password"
 	default:
 		return err.Field() + " is invalid"
 	}

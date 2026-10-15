@@ -16,6 +16,9 @@ type UserRepository interface {
 	Create(ctx context.Context, user *entity.User) error
 	FindByEmail(ctx context.Context, email string) (*entity.User, error)
 	ExistsByEmail(ctx context.Context, email string) (bool, error)
+	UpdatePassword(ctx context.Context, id uuid.UUID, hash string) error
+	// UpdateAvatar sets the avatar URL and object key; nil values clear them.
+	UpdateAvatar(ctx context.Context, id uuid.UUID, url, key *string) error
 }
 
 type userRepositoryImpl struct {
@@ -86,4 +89,36 @@ func (repo *userRepositoryImpl) ExistsByEmail(ctx context.Context, email string)
 	}
 
 	return count > 0, nil
+}
+
+func (repo *userRepositoryImpl) UpdatePassword(ctx context.Context, id uuid.UUID, hash string) error {
+	result := repo.db.WithContext(ctx).
+		Model(&entity.User{}).
+		Where("id = ?", id).
+		Update("password", hash)
+	if result.Error != nil {
+		slog.Error("[UserRepository] Failed to update password", "id", id, "error", result.Error)
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		slog.Error("[UserRepository] User not found when updating password", "id", id, "error", errs.ErrUserNotFound)
+		return errs.ErrUserNotFound
+	}
+	return nil
+}
+
+func (repo *userRepositoryImpl) UpdateAvatar(ctx context.Context, id uuid.UUID, url, key *string) error {
+	result := repo.db.WithContext(ctx).
+		Model(&entity.User{}).
+		Where("id = ?", id).
+		Updates(map[string]any{"avatar_url": url, "avatar_object_key": key})
+	if result.Error != nil {
+		slog.Error("[UserRepository] Failed to update avatar", "id", id, "error", result.Error)
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		slog.Error("[UserRepository] User not found when updating avatar", "id", id, "error", errs.ErrUserNotFound)
+		return errs.ErrUserNotFound
+	}
+	return nil
 }

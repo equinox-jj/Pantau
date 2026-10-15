@@ -1,13 +1,21 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../core/theme/theme.dart';
 import '../../../auth/di/di.dart';
+import '../pages/profile/provider/provider.dart';
+import 'avatar_actions_sheet.dart';
 
-typedef _Identity = ({String? name, String? email, DateTime? createdAt});
+typedef _Identity = ({
+  String? name,
+  String? email,
+  DateTime? createdAt,
+  String? avatarUrl,
+});
 
 /// Avatar, name, email and join date of the signed-in user.
 class ProfileIdentityCard extends ConsumerWidget {
@@ -25,6 +33,7 @@ class ProfileIdentityCard extends ConsumerWidget {
             name: user?.displayName ?? user?.username,
             email: user?.email,
             createdAt: user?.createdAt,
+            avatarUrl: user?.avatarUrl,
           ),
         ),
       ),
@@ -43,6 +52,7 @@ class ProfileIdentityCard extends ConsumerWidget {
             name: 'Loading name',
             email: 'loading@email.com',
             createdAt: null,
+            avatarUrl: null,
           ),
         ),
       ),
@@ -50,7 +60,7 @@ class ProfileIdentityCard extends ConsumerWidget {
   }
 }
 
-class _ProfileIdentityContent extends StatelessWidget {
+class _ProfileIdentityContent extends ConsumerWidget {
   const _ProfileIdentityContent({required this.identity});
 
   final _Identity identity;
@@ -70,8 +80,48 @@ class _ProfileIdentityContent extends StatelessWidget {
     return '$first$last'.toUpperCase();
   }
 
+  Future<void> _onAvatarTap(BuildContext context, WidgetRef ref) async {
+    final hasAvatar = identity.avatarUrl != null;
+    final action = await AvatarActionsSheet.show(context, hasAvatar: hasAvatar);
+    if (action == null || !context.mounted) return;
+
+    final notifier = ref.read(avatarProvider.notifier);
+    switch (action) {
+      case AvatarAction.camera || AvatarAction.gallery:
+        // image_picker re-encodes and downsizes while picking; avatars are
+        // shown small, so 1024px is plenty.
+        final file = await ImagePicker().pickImage(
+          source: action == AvatarAction.camera
+              ? ImageSource.camera
+              : ImageSource.gallery,
+          imageQuality: 70,
+          maxWidth: 1024,
+          maxHeight: 1024,
+        );
+        await notifier.upload(file?.path);
+      case AvatarAction.remove:
+        final confirmed = await showDialog<bool>(
+          context: context,
+          builder: (dialogContext) => AlertDialog(
+            title: const Text('Remove profile photo?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+                child: const Text('Remove'),
+              ),
+            ],
+          ),
+        );
+        if (confirmed ?? false) await notifier.remove();
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final joined = identity.createdAt != null
         ? 'Joined ${DateFormat('MMM yyyy').format(identity.createdAt!)}'
         : null;
@@ -89,7 +139,12 @@ class _ProfileIdentityContent extends StatelessWidget {
         ),
         child: Row(
           children: [
-            _Avatar(initials: _initials, size: _avatarSize),
+            _Avatar(
+              initials: _initials,
+              avatarUrl: identity.avatarUrl,
+              size: _avatarSize,
+              onTap: () => _onAvatarTap(context, ref),
+            ),
             const Gap(AppSpacing.md),
             Expanded(
               child: Column(
@@ -126,7 +181,75 @@ class _ProfileIdentityContent extends StatelessWidget {
 }
 
 class _Avatar extends StatelessWidget {
-  const _Avatar({required this.initials, required this.size});
+  const _Avatar({
+    required this.initials,
+    required this.avatarUrl,
+    required this.size,
+    required this.onTap,
+  });
+
+  final String initials;
+  final String? avatarUrl;
+  final double size;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final initialsAvatar = _InitialsAvatar(initials: initials, size: size);
+    final url = avatarUrl;
+
+    return Semantics(
+      button: true,
+      label: 'Change profile photo',
+      child: GestureDetector(
+        onTap: onTap,
+        child: SizedBox(
+          width: size,
+          height: size,
+          child: Stack(
+            children: [
+              if (url == null)
+                initialsAvatar
+              else
+                ClipOval(
+                  child: Image.network(
+                    url,
+                    width: size,
+                    height: size,
+                    fit: BoxFit.cover,
+                    cacheWidth: (size * MediaQuery.devicePixelRatioOf(context))
+                        .round(),
+                    // MinIO unreachable from this device, deleted object, …
+                    errorBuilder: (_, _, _) => initialsAvatar,
+                  ),
+                ),
+              Positioned(
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.surfaceRaised,
+                    border: Border.all(color: AppColors.borderDefault),
+                  ),
+                  child: const Icon(
+                    Icons.photo_camera_outlined,
+                    size: 12,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _InitialsAvatar extends StatelessWidget {
+  const _InitialsAvatar({required this.initials, required this.size});
 
   final String initials;
   final double size;

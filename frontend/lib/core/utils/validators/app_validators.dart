@@ -24,6 +24,22 @@ abstract final class AppValidators {
     return null;
   }
 
+  /// [password] rules, plus the new value must differ from
+  /// [currentPasswordController]'s current text.
+  static FormFieldValidator<String> newPassword(
+    TextEditingController currentPasswordController,
+  ) {
+    return (value) {
+      final error = password(value);
+      if (error != null) return error;
+      if (value == currentPasswordController.text) {
+        return 'New password must be different';
+      }
+
+      return null;
+    };
+  }
+
   static String? required(String? value, {String fieldName = 'This field'}) {
     if ((value ?? '').trim().isEmpty) return '$fieldName is required';
 

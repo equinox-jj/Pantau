@@ -486,7 +486,7 @@ func (sv *reportServiceImpl) GetQueue(ctx context.Context, tab enums.QueueTab, l
 func (sv *reportServiceImpl) uploadAll(ctx context.Context, files []*multipart.FileHeader) ([]upload.UploadResponse, error) {
 	uploads := make([]upload.UploadResponse, 0, len(files))
 	for _, file := range files {
-		uploaded, err := sv.uploadService.Upload(ctx, file)
+		uploaded, err := sv.uploadService.Upload(ctx, file, "reports")
 		if err != nil {
 			return nil, sv.rollbackUploads(ctx, uploads, err)
 		}
@@ -531,7 +531,7 @@ func (sv *reportServiceImpl) deletePhotoAssets(ctx context.Context, photos []ent
 			continue
 		}
 		if err := sv.uploadService.Delete(cleanupCtx, *photo.PhotoPublicID); err != nil {
-			slog.Error("[ReportService.deletePhotoAssets] Failed to delete Cloudinary asset for report", "public_id", *photo.PhotoPublicID, "report_id", reportID, "error", err)
+			slog.Error("[ReportService.deletePhotoAssets] Failed to delete storage object for report", "public_id", *photo.PhotoPublicID, "report_id", reportID, "error", err)
 		}
 	}
 }

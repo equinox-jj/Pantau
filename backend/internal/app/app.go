@@ -10,9 +10,9 @@ import (
 	"pantau/internal/repository"
 	"pantau/internal/routes"
 	"pantau/internal/service"
+	"pantau/internal/storage"
 	"pantau/pkg/security"
 
-	"github.com/cloudinary/cloudinary-go/v2"
 	"go.uber.org/fx"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -87,7 +87,7 @@ func provideMiddleware() fx.Option {
 
 func provideUtilities() fx.Option {
 	return fx.Provide(
-		provideCloudinary,
+		storage.NewMinioStorage,
 		fx.Annotate(
 			security.NewPasswordHasher,
 			fx.ParamTags(
@@ -120,14 +120,6 @@ func provideUtilities() fx.Option {
 
 func provideServer() fx.Option {
 	return fx.Provide(NewFiber)
-}
-
-func provideCloudinary(cfg *config.Config) (*cloudinary.Cloudinary, error) {
-	return cloudinary.NewFromParams(
-		cfg.Cloudinary.CloudName,
-		cfg.Cloudinary.APIKey,
-		cfg.Cloudinary.APISecret,
-	)
 }
 
 func provideJwtSecret(cfg *config.Config) string {

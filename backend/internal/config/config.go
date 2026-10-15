@@ -13,15 +13,15 @@ import (
 )
 
 type Config struct {
-	Server     serverConfig
-	App        appConfig
-	Database   databaseConfig
-	Migration  migrationConfig
-	GORM       gormConfig
-	Upload     uploadConfig
-	Logging    loggingConfig
-	JWT        jwtConfig
-	Cloudinary cloudinaryConfig
+	Server    serverConfig
+	App       appConfig
+	Database  databaseConfig
+	Migration migrationConfig
+	GORM      gormConfig
+	Upload    uploadConfig
+	Logging   loggingConfig
+	JWT       jwtConfig
+	MinIO     minioConfig
 }
 
 type serverConfig struct {
@@ -68,10 +68,13 @@ type jwtConfig struct {
 	Expiration time.Duration
 }
 
-type cloudinaryConfig struct {
-	CloudName string
-	APIKey    string
-	APISecret string
+type minioConfig struct {
+	Endpoint  string
+	AccessKey string
+	SecretKey string
+	UseSSL    bool
+	Bucket    string
+	PublicURL string
 }
 
 func NewConfig() (*Config, error) {
@@ -110,10 +113,13 @@ func NewConfig() (*Config, error) {
 			SecretKey:  v.GetString("JWT_SECRET_KEY"),
 			Expiration: v.GetDuration("JWT_EXPIRATION"),
 		},
-		Cloudinary: cloudinaryConfig{
-			CloudName: v.GetString("CLOUDINARY_NAME"),
-			APIKey:    v.GetString("CLOUDINARY_KEY"),
-			APISecret: v.GetString("CLOUDINARY_SECRET"),
+		MinIO: minioConfig{
+			Endpoint:  v.GetString("MINIO_ENDPOINT"),
+			AccessKey: v.GetString("MINIO_ROOT_USER"),
+			SecretKey: v.GetString("MINIO_ROOT_PASSWORD"),
+			UseSSL:    v.GetBool("MINIO_USE_SSL"),
+			Bucket:    v.GetString("MINIO_BUCKET"),
+			PublicURL: v.GetString("MINIO_PUBLIC_URL"),
 		},
 	}
 	if cfg.Server.Port <= 0 || cfg.Server.Port > 65535 {
@@ -127,6 +133,10 @@ func NewConfig() (*Config, error) {
 	}
 	if cfg.Database.MaxOpenConns <= 0 || cfg.Database.MaxIdleConns < 0 || cfg.Database.MaxIdleConns > cfg.Database.MaxOpenConns {
 		return nil, errors.New("database connection limits must be positive and max_idle_conns must not exceed max_open_conns")
+	}
+
+	if cfg.MinIO.Endpoint == "" || cfg.MinIO.AccessKey == "" || cfg.MinIO.SecretKey == "" || cfg.MinIO.Bucket == "" || cfg.MinIO.PublicURL == "" {
+		return nil, errors.New("minio endpoint, credentials, bucket and public url are required")
 	}
 
 	maxFileBytes, err := parseByteSize(cfg.Upload.MaxFileSize)
@@ -169,6 +179,6 @@ func parseByteSize(value string) (int64, error) {
 			return n * unit.factor, nil
 		}
 	}
-	
+
 	return 0, errors.New("must use B, KB, MB, or GB units")
 }

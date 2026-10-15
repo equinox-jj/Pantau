@@ -31,6 +31,21 @@ void main() {
       expect(entity.createdAt, now);
     });
 
+    test('maps avatar_url from JSON to avatarUrl', () {
+      final model = UserProfileModel.fromJson({
+        'id': 'u1',
+        'avatar_url': 'http://minio/pantau/avatars/u/a.png',
+      });
+
+      expect(model.toEntity().avatarUrl, 'http://minio/pantau/avatars/u/a.png');
+    });
+
+    test('missing avatar_url maps to null', () {
+      final model = UserProfileModel.fromJson({'id': 'u1'});
+
+      expect(model.toEntity().avatarUrl, isNull);
+    });
+
     test('null and unparsable joinedAt values yield a null createdAt', () {
       const nullModel = UserProfileModel(id: 'u1');
       const badModel = UserProfileModel(id: 'u1', joinedAt: 'not-a-date');

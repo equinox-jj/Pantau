@@ -19,36 +19,40 @@ class ProfilePage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Profile')),
       body: LogoutListener(
-        child: SafeArea(
-          child: RefreshIndicator(
-            onRefresh: () => Future.wait([
-              ref.read(myReportsProvider.notifier).refresh(),
-              ref.refresh(currentUserProvider.future),
-            ]),
-            backgroundColor: AppColors.surfaceRaised,
-            color: AppColors.accent,
-            child: ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.lg,
-                AppSpacing.sm,
-                AppSpacing.lg,
-                AppSpacing.xl2,
-              ),
-              children: [
-                const ProfileIdentityCard(),
-                const Gap(AppSpacing.md),
-                const ProfileStatsRow(),
-                const Gap(AppSpacing.md),
-                const ProfileHelpCard(),
-                const Gap(AppSpacing.xl),
-                AppButton(
-                  text: 'Sign out',
-                  variant: AppButtonVariant.secondary,
-                  leading: const Icon(Icons.logout),
-                  onPressed: () => _confirmSignOut(context, ref),
+        child: AvatarListener(
+          child: SafeArea(
+            child: RefreshIndicator(
+              onRefresh: () => Future.wait([
+                ref.read(myReportsProvider.notifier).refresh(),
+                ref.refresh(currentUserProvider.future),
+              ]),
+              backgroundColor: AppColors.surfaceRaised,
+              color: AppColors.accent,
+              child: ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.lg,
+                  AppSpacing.sm,
+                  AppSpacing.lg,
+                  AppSpacing.xl2,
                 ),
-              ],
+                children: [
+                  const ProfileIdentityCard(),
+                  const Gap(AppSpacing.md),
+                  const ProfileStatsRow(),
+                  const Gap(AppSpacing.md),
+                  const ProfileAccountCard(),
+                  const Gap(AppSpacing.md),
+                  const ProfileHelpCard(),
+                  const Gap(AppSpacing.xl),
+                  AppButton(
+                    text: 'Sign out',
+                    variant: AppButtonVariant.secondary,
+                    leading: const Icon(Icons.logout),
+                    onPressed: () => _confirmSignOut(context, ref),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

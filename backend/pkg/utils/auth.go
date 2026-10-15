@@ -21,6 +21,7 @@ type principal struct {
 	Email       string
 	Role        enums.UserRole
 	DisplayName string
+	AvatarURL   *string
 	CreatedAt   time.Time
 }
 
@@ -28,7 +29,7 @@ type principal struct {
 func SetCurrentUser(ctx fiber.Ctx, user *entity.User) {
 	ctx.Locals(principalKey{}, principal{
 		ID: user.ID, Email: user.Email, Role: user.Role,
-		DisplayName: user.DisplayName, CreatedAt: user.CreatedAt,
+		DisplayName: user.DisplayName, AvatarURL: user.AvatarURL, CreatedAt: user.CreatedAt,
 	})
 }
 
@@ -61,6 +62,6 @@ func CurrentUser(ctx fiber.Ctx) (*entity.User, bool) {
 	}
 	return &entity.User{
 		ID: user.ID, Email: user.Email, Role: user.Role,
-		DisplayName: user.DisplayName, CreatedAt: user.CreatedAt,
+		DisplayName: user.DisplayName, AvatarURL: user.AvatarURL, CreatedAt: user.CreatedAt,
 	}, true
 }

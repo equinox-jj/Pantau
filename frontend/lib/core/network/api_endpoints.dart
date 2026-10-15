@@ -20,6 +20,10 @@ class ApiEndpoints {
   static const String login = '/auth/login';
   static const String register = '/auth/register';
   static const String me = '/users/me';
+  static const String changePassword = '/users/me/password';
+
+  /// PUT (multipart `avatar`) adds or replaces; DELETE removes.
+  static const String avatar = '/users/me/avatar';
 
   /// Backs the feed as well as the map: the same radius query, read as a list.
   static const String nearbyReports = '/reports/nearby';

@@ -285,6 +285,22 @@ void main() {
       },
     );
 
+    test('takes avatarUrl from getMe', () async {
+      when(
+        () => userProfileStorage.read(),
+      ).thenAnswer((_) async => {'uuid': 'u1', 'email': 'a@b.com'});
+      when(() => dataSource.getMe()).thenAnswer(
+        (_) async => const UserProfileModel(id: 'u1', avatarUrl: 'x'),
+      );
+
+      final result = await repository.getCurrentUser();
+
+      result.fold(
+        (l) => fail('expected Right, got Left($l)'),
+        (r) => expect(r?.avatarUrl, 'x'),
+      );
+    });
+
     test(
       'merges profile fields from getMe on top of the cached identity',
       () async {

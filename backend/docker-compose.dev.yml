@@ -1,0 +1,85 @@
+# Development stack: Postgres/PostGIS, MinIO, migrations and the API.
+# Usage: docker compose -f docker-compose.dev.yml up -d --build
+name: pantau-dev
+
+services:
+  pantau-db:
+    image: postgis/postgis:17-3.5-alpine
+    # Official PostGIS images are amd64-only; emulated on Apple Silicon.
+    platform: linux/amd64
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      # 5433 on the host so it does not clash with a locally installed Postgres.
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  minio:
+    image: pgsty/minio:RELEASE.2026-08-04T00-00-00Z
+    command: server /data --console-address :9001
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - miniodata:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrate:
+    image: migrate/migrate:v4.18.3
+    volumes:
+      - ./migrations:/migrations:ro
+    command:
+      - -path=/migrations
+      - -database=postgres://${DB_USER}:${DB_PASSWORD}@pantau-db:5432/${DB_NAME}?sslmode=disable
+      - up
+    depends_on:
+      pantau-db:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    build:
+      context: .
+      target: dev
+    env_file: .env
+    environment:
+      APP_ENV: development
+      APP_PORT: 8080
+      DB_HOST: pantau-db
+      DB_PORT: 5432
+      MINIO_ENDPOINT: minio:9000
+      # The api talks to MinIO inside the compose network over plain HTTP;
+      # put TLS on MINIO_PUBLIC_URL instead.
+      MINIO_USE_SSL: "false"
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    volumes:
+      - .:/app
+      - gomodcache:/go/pkg/mod
+      - gobuildcache:/root/.cache/go-build
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      minio:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  miniodata:
+  gomodcache:
+  gobuildcache:

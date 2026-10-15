@@ -94,13 +94,15 @@ class AuthRepositoryImpl extends AuthRepository {
 
     // `GET /users/me` refreshes display name and report stats. Its own
     // [uuid]/[createdAt] (joined date) take priority; cached email and role
-    // remain because this endpoint does not return them.
+    // remain because this endpoint does not return them. [avatarUrl] is
+    // server-owned and never cached, so a removed photo cannot linger.
     final profile = (await _authRemoteDataSource.getMe()).toEntity();
 
     return cached.copyWith(
       uuid: profile.uuid ?? cached.uuid,
       createdAt: profile.createdAt ?? cached.createdAt,
       displayName: profile.displayName ?? cached.displayName,
+      avatarUrl: profile.avatarUrl,
       reportsCount: profile.reportsCount,
       resolvedCount: profile.resolvedCount,
     );

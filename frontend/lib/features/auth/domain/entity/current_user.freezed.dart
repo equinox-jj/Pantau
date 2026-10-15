@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CurrentUser {
 
- String? get uuid; String? get email; String? get username; String? get role; DateTime? get createdAt; String? get displayName; int? get reportsCount; int? get resolvedCount;
+ String? get uuid; String? get email; String? get username; String? get role; DateTime? get createdAt; String? get displayName; String? get avatarUrl; int? get reportsCount; int? get resolvedCount;
 /// Create a copy of CurrentUser
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,21 @@ $CurrentUserCopyWith<CurrentUser> get copyWith => _$CurrentUserCopyWithImpl<Curr
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CurrentUser&&(identical(other.uuid, uuid) || other.uuid == uuid)&&(identical(other.email, email) || other.email == email)&&(identical(other.username, username) || other.username == username)&&(identical(other.role, role) || other.role == role)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.reportsCount, reportsCount) || other.reportsCount == reportsCount)&&(identical(other.resolvedCount, resolvedCount) || other.resolvedCount == resolvedCount));
+  final _this = this as CurrentUser;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CurrentUser&&(identical(other.uuid, _this.uuid) || other.uuid == _this.uuid)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.username, _this.username) || other.username == _this.username)&&(identical(other.role, _this.role) || other.role == _this.role)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&(identical(other.avatarUrl, _this.avatarUrl) || other.avatarUrl == _this.avatarUrl)&&(identical(other.reportsCount, _this.reportsCount) || other.reportsCount == _this.reportsCount)&&(identical(other.resolvedCount, _this.resolvedCount) || other.resolvedCount == _this.resolvedCount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,uuid,email,username,role,createdAt,displayName,reportsCount,resolvedCount);
+int get hashCode {
+  final _this = this as CurrentUser;
+  return Object.hash(runtimeType,_this.uuid,_this.email,_this.username,_this.role,_this.createdAt,_this.displayName,_this.avatarUrl,_this.reportsCount,_this.resolvedCount);
+}
 
 @override
 String toString() {
-  return 'CurrentUser(uuid: $uuid, email: $email, username: $username, role: $role, createdAt: $createdAt, displayName: $displayName, reportsCount: $reportsCount, resolvedCount: $resolvedCount)';
+  final _this = this as CurrentUser;
+  return 'CurrentUser(uuid: ${_this.uuid}, email: ${_this.email}, username: ${_this.username}, role: ${_this.role}, createdAt: ${_this.createdAt}, displayName: ${_this.displayName}, avatarUrl: ${_this.avatarUrl}, reportsCount: ${_this.reportsCount}, resolvedCount: ${_this.resolvedCount})';
 }
 
 
@@ -46,7 +51,7 @@ abstract mixin class $CurrentUserCopyWith<$Res>  {
   factory $CurrentUserCopyWith(CurrentUser value, $Res Function(CurrentUser) _then) = _$CurrentUserCopyWithImpl;
 @useResult
 $Res call({
- String? uuid, String? email, String? username, String? role, DateTime? createdAt, String? displayName, int? reportsCount, int? resolvedCount
+ String? uuid, String? email, String? username, String? role, DateTime? createdAt, String? displayName, String? avatarUrl, int? reportsCount, int? resolvedCount
 });
 
 
@@ -63,7 +68,7 @@ class _$CurrentUserCopyWithImpl<$Res>
 
 /// Create a copy of CurrentUser
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? uuid = freezed,Object? email = freezed,Object? username = freezed,Object? role = freezed,Object? createdAt = freezed,Object? displayName = freezed,Object? reportsCount = freezed,Object? resolvedCount = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? uuid = freezed,Object? email = freezed,Object? username = freezed,Object? role = freezed,Object? createdAt = freezed,Object? displayName = freezed,Object? avatarUrl = freezed,Object? reportsCount = freezed,Object? resolvedCount = freezed,}) {
   return _then(CurrentUser(
 uuid: freezed == uuid ? _self.uuid : uuid // ignore: cast_nullable_to_non_nullable
 as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
@@ -71,6 +76,7 @@ as String?,username: freezed == username ? _self.username : username // ignore: 
 as String?,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,displayName: freezed == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
+as String?,avatarUrl: freezed == avatarUrl ? _self.avatarUrl : avatarUrl // ignore: cast_nullable_to_non_nullable
 as String?,reportsCount: freezed == reportsCount ? _self.reportsCount : reportsCount // ignore: cast_nullable_to_non_nullable
 as int?,resolvedCount: freezed == resolvedCount ? _self.resolvedCount : resolvedCount // ignore: cast_nullable_to_non_nullable
 as int?,
@@ -158,10 +164,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? uuid,  String? email,  String? username,  String? role,  DateTime? createdAt,  String? displayName,  int? reportsCount,  int? resolvedCount)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? uuid,  String? email,  String? username,  String? role,  DateTime? createdAt,  String? displayName,  String? avatarUrl,  int? reportsCount,  int? resolvedCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CurrentUser() when $default != null:
-return $default(_that.uuid,_that.email,_that.username,_that.role,_that.createdAt,_that.displayName,_that.reportsCount,_that.resolvedCount);case _:
+return $default(_that.uuid,_that.email,_that.username,_that.role,_that.createdAt,_that.displayName,_that.avatarUrl,_that.reportsCount,_that.resolvedCount);case _:
   return orElse();
 
 }
@@ -179,10 +185,10 @@ return $default(_that.uuid,_that.email,_that.username,_that.role,_that.createdAt
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? uuid,  String? email,  String? username,  String? role,  DateTime? createdAt,  String? displayName,  int? reportsCount,  int? resolvedCount)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? uuid,  String? email,  String? username,  String? role,  DateTime? createdAt,  String? displayName,  String? avatarUrl,  int? reportsCount,  int? resolvedCount)  $default,) {final _that = this;
 switch (_that) {
 case _CurrentUser():
-return $default(_that.uuid,_that.email,_that.username,_that.role,_that.createdAt,_that.displayName,_that.reportsCount,_that.resolvedCount);case _:
+return $default(_that.uuid,_that.email,_that.username,_that.role,_that.createdAt,_that.displayName,_that.avatarUrl,_that.reportsCount,_that.resolvedCount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +205,10 @@ return $default(_that.uuid,_that.email,_that.username,_that.role,_that.createdAt
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? uuid,  String? email,  String? username,  String? role,  DateTime? createdAt,  String? displayName,  int? reportsCount,  int? resolvedCount)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? uuid,  String? email,  String? username,  String? role,  DateTime? createdAt,  String? displayName,  String? avatarUrl,  int? reportsCount,  int? resolvedCount)?  $default,) {final _that = this;
 switch (_that) {
 case _CurrentUser() when $default != null:
-return $default(_that.uuid,_that.email,_that.username,_that.role,_that.createdAt,_that.displayName,_that.reportsCount,_that.resolvedCount);case _:
+return $default(_that.uuid,_that.email,_that.username,_that.role,_that.createdAt,_that.displayName,_that.avatarUrl,_that.reportsCount,_that.resolvedCount);case _:
   return null;
 
 }
@@ -214,7 +220,7 @@ return $default(_that.uuid,_that.email,_that.username,_that.role,_that.createdAt
 
 
 class _CurrentUser implements CurrentUser {
-  const _CurrentUser({this.uuid, this.email, this.username, this.role, this.createdAt, this.displayName, this.reportsCount, this.resolvedCount});
+  const _CurrentUser({this.uuid, this.email, this.username, this.role, this.createdAt, this.displayName, this.avatarUrl, this.reportsCount, this.resolvedCount});
   
 
 @override final  String? uuid;
@@ -223,6 +229,7 @@ class _CurrentUser implements CurrentUser {
 @override final  String? role;
 @override final  DateTime? createdAt;
 @override final  String? displayName;
+@override final  String? avatarUrl;
 @override final  int? reportsCount;
 @override final  int? resolvedCount;
 
@@ -236,16 +243,18 @@ _$CurrentUserCopyWith<_CurrentUser> get copyWith => __$CurrentUserCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CurrentUser&&(identical(other.uuid, uuid) || other.uuid == uuid)&&(identical(other.email, email) || other.email == email)&&(identical(other.username, username) || other.username == username)&&(identical(other.role, role) || other.role == role)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.reportsCount, reportsCount) || other.reportsCount == reportsCount)&&(identical(other.resolvedCount, resolvedCount) || other.resolvedCount == resolvedCount));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CurrentUser&&(identical(other.uuid, uuid) || other.uuid == uuid)&&(identical(other.email, email) || other.email == email)&&(identical(other.username, username) || other.username == username)&&(identical(other.role, role) || other.role == role)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.reportsCount, reportsCount) || other.reportsCount == reportsCount)&&(identical(other.resolvedCount, resolvedCount) || other.resolvedCount == resolvedCount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,uuid,email,username,role,createdAt,displayName,reportsCount,resolvedCount);
+int get hashCode {
+    return Object.hash(runtimeType,uuid,email,username,role,createdAt,displayName,avatarUrl,reportsCount,resolvedCount);
+}
 
 @override
 String toString() {
-  return 'CurrentUser(uuid: $uuid, email: $email, username: $username, role: $role, createdAt: $createdAt, displayName: $displayName, reportsCount: $reportsCount, resolvedCount: $resolvedCount)';
+    return 'CurrentUser(uuid: $uuid, email: $email, username: $username, role: $role, createdAt: $createdAt, displayName: $displayName, avatarUrl: $avatarUrl, reportsCount: $reportsCount, resolvedCount: $resolvedCount)';
 }
 
 
@@ -256,7 +265,7 @@ abstract mixin class _$CurrentUserCopyWith<$Res> implements $CurrentUserCopyWith
   factory _$CurrentUserCopyWith(_CurrentUser value, $Res Function(_CurrentUser) _then) = __$CurrentUserCopyWithImpl;
 @override @useResult
 $Res call({
- String? uuid, String? email, String? username, String? role, DateTime? createdAt, String? displayName, int? reportsCount, int? resolvedCount
+ String? uuid, String? email, String? username, String? role, DateTime? createdAt, String? displayName, String? avatarUrl, int? reportsCount, int? resolvedCount
 });
 
 
@@ -273,7 +282,7 @@ class __$CurrentUserCopyWithImpl<$Res>
 
 /// Create a copy of CurrentUser
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? uuid = freezed,Object? email = freezed,Object? username = freezed,Object? role = freezed,Object? createdAt = freezed,Object? displayName = freezed,Object? reportsCount = freezed,Object? resolvedCount = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? uuid = freezed,Object? email = freezed,Object? username = freezed,Object? role = freezed,Object? createdAt = freezed,Object? displayName = freezed,Object? avatarUrl = freezed,Object? reportsCount = freezed,Object? resolvedCount = freezed,}) {
   return _then(_CurrentUser(
 uuid: freezed == uuid ? _self.uuid : uuid // ignore: cast_nullable_to_non_nullable
 as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
@@ -281,6 +290,7 @@ as String?,username: freezed == username ? _self.username : username // ignore: 
 as String?,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,displayName: freezed == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
+as String?,avatarUrl: freezed == avatarUrl ? _self.avatarUrl : avatarUrl // ignore: cast_nullable_to_non_nullable
 as String?,reportsCount: freezed == reportsCount ? _self.reportsCount : reportsCount // ignore: cast_nullable_to_non_nullable
 as int?,resolvedCount: freezed == resolvedCount ? _self.resolvedCount : resolvedCount // ignore: cast_nullable_to_non_nullable
 as int?,

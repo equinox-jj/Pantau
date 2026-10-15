@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserProfileModel {
 
-@JsonKey(name: "id") String? get id;@JsonKey(name: "display_name") String? get displayName;@JsonKey(name: "joined_at") dynamic get joinedAt;@JsonKey(name: "reports_count") int? get reportsCount;@JsonKey(name: "resolved_count") int? get resolvedCount;
+@JsonKey(name: "id") String? get id;@JsonKey(name: "display_name") String? get displayName;@JsonKey(name: "avatar_url") String? get avatarUrl;@JsonKey(name: "joined_at") dynamic get joinedAt;@JsonKey(name: "reports_count") int? get reportsCount;@JsonKey(name: "resolved_count") int? get resolvedCount;
 /// Create a copy of UserProfileModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $UserProfileModelCopyWith<UserProfileModel> get copyWith => _$UserProfileModelCo
 @override
 bool operator ==(Object other) {
   final _this = this as UserProfileModel;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserProfileModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&const DeepCollectionEquality().equals(other.joinedAt, _this.joinedAt)&&(identical(other.reportsCount, _this.reportsCount) || other.reportsCount == _this.reportsCount)&&(identical(other.resolvedCount, _this.resolvedCount) || other.resolvedCount == _this.resolvedCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserProfileModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&(identical(other.avatarUrl, _this.avatarUrl) || other.avatarUrl == _this.avatarUrl)&&const DeepCollectionEquality().equals(other.joinedAt, _this.joinedAt)&&(identical(other.reportsCount, _this.reportsCount) || other.reportsCount == _this.reportsCount)&&(identical(other.resolvedCount, _this.resolvedCount) || other.resolvedCount == _this.resolvedCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as UserProfileModel;
-  return Object.hash(runtimeType,_this.id,_this.displayName,const DeepCollectionEquality().hash(_this.joinedAt),_this.reportsCount,_this.resolvedCount);
+  return Object.hash(runtimeType,_this.id,_this.displayName,_this.avatarUrl,const DeepCollectionEquality().hash(_this.joinedAt),_this.reportsCount,_this.resolvedCount);
 }
 
 @override
 String toString() {
   final _this = this as UserProfileModel;
-  return 'UserProfileModel(id: ${_this.id}, displayName: ${_this.displayName}, joinedAt: ${_this.joinedAt}, reportsCount: ${_this.reportsCount}, resolvedCount: ${_this.resolvedCount})';
+  return 'UserProfileModel(id: ${_this.id}, displayName: ${_this.displayName}, avatarUrl: ${_this.avatarUrl}, joinedAt: ${_this.joinedAt}, reportsCount: ${_this.reportsCount}, resolvedCount: ${_this.resolvedCount})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $UserProfileModelCopyWith<$Res>  {
   factory $UserProfileModelCopyWith(UserProfileModel value, $Res Function(UserProfileModel) _then) = _$UserProfileModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "id") String? id,@JsonKey(name: "display_name") String? displayName,@JsonKey(name: "joined_at") dynamic joinedAt,@JsonKey(name: "reports_count") int? reportsCount,@JsonKey(name: "resolved_count") int? resolvedCount
+@JsonKey(name: "id") String? id,@JsonKey(name: "display_name") String? displayName,@JsonKey(name: "avatar_url") String? avatarUrl,@JsonKey(name: "joined_at") dynamic joinedAt,@JsonKey(name: "reports_count") int? reportsCount,@JsonKey(name: "resolved_count") int? resolvedCount
 });
 
 
@@ -71,10 +71,11 @@ class _$UserProfileModelCopyWithImpl<$Res>
 
 /// Create a copy of UserProfileModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? displayName = freezed,Object? joinedAt = freezed,Object? reportsCount = freezed,Object? resolvedCount = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? displayName = freezed,Object? avatarUrl = freezed,Object? joinedAt = freezed,Object? reportsCount = freezed,Object? resolvedCount = freezed,}) {
   return _then(UserProfileModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,displayName: freezed == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
+as String?,avatarUrl: freezed == avatarUrl ? _self.avatarUrl : avatarUrl // ignore: cast_nullable_to_non_nullable
 as String?,joinedAt: freezed == joinedAt ? _self.joinedAt : joinedAt // ignore: cast_nullable_to_non_nullable
 as dynamic,reportsCount: freezed == reportsCount ? _self.reportsCount : reportsCount // ignore: cast_nullable_to_non_nullable
 as int?,resolvedCount: freezed == resolvedCount ? _self.resolvedCount : resolvedCount // ignore: cast_nullable_to_non_nullable
@@ -163,10 +164,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "display_name")  String? displayName, @JsonKey(name: "joined_at")  dynamic joinedAt, @JsonKey(name: "reports_count")  int? reportsCount, @JsonKey(name: "resolved_count")  int? resolvedCount)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "display_name")  String? displayName, @JsonKey(name: "avatar_url")  String? avatarUrl, @JsonKey(name: "joined_at")  dynamic joinedAt, @JsonKey(name: "reports_count")  int? reportsCount, @JsonKey(name: "resolved_count")  int? resolvedCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserProfileModel() when $default != null:
-return $default(_that.id,_that.displayName,_that.joinedAt,_that.reportsCount,_that.resolvedCount);case _:
+return $default(_that.id,_that.displayName,_that.avatarUrl,_that.joinedAt,_that.reportsCount,_that.resolvedCount);case _:
   return orElse();
 
 }
@@ -184,10 +185,10 @@ return $default(_that.id,_that.displayName,_that.joinedAt,_that.reportsCount,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "display_name")  String? displayName, @JsonKey(name: "joined_at")  dynamic joinedAt, @JsonKey(name: "reports_count")  int? reportsCount, @JsonKey(name: "resolved_count")  int? resolvedCount)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "display_name")  String? displayName, @JsonKey(name: "avatar_url")  String? avatarUrl, @JsonKey(name: "joined_at")  dynamic joinedAt, @JsonKey(name: "reports_count")  int? reportsCount, @JsonKey(name: "resolved_count")  int? resolvedCount)  $default,) {final _that = this;
 switch (_that) {
 case _UserProfileModel():
-return $default(_that.id,_that.displayName,_that.joinedAt,_that.reportsCount,_that.resolvedCount);case _:
+return $default(_that.id,_that.displayName,_that.avatarUrl,_that.joinedAt,_that.reportsCount,_that.resolvedCount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -204,10 +205,10 @@ return $default(_that.id,_that.displayName,_that.joinedAt,_that.reportsCount,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "display_name")  String? displayName, @JsonKey(name: "joined_at")  dynamic joinedAt, @JsonKey(name: "reports_count")  int? reportsCount, @JsonKey(name: "resolved_count")  int? resolvedCount)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "display_name")  String? displayName, @JsonKey(name: "avatar_url")  String? avatarUrl, @JsonKey(name: "joined_at")  dynamic joinedAt, @JsonKey(name: "reports_count")  int? reportsCount, @JsonKey(name: "resolved_count")  int? resolvedCount)?  $default,) {final _that = this;
 switch (_that) {
 case _UserProfileModel() when $default != null:
-return $default(_that.id,_that.displayName,_that.joinedAt,_that.reportsCount,_that.resolvedCount);case _:
+return $default(_that.id,_that.displayName,_that.avatarUrl,_that.joinedAt,_that.reportsCount,_that.resolvedCount);case _:
   return null;
 
 }
@@ -219,11 +220,12 @@ return $default(_that.id,_that.displayName,_that.joinedAt,_that.reportsCount,_th
 @JsonSerializable()
 
 class _UserProfileModel implements UserProfileModel {
-  const _UserProfileModel({@JsonKey(name: "id") this.id, @JsonKey(name: "display_name") this.displayName, @JsonKey(name: "joined_at") this.joinedAt, @JsonKey(name: "reports_count") this.reportsCount, @JsonKey(name: "resolved_count") this.resolvedCount});
+  const _UserProfileModel({@JsonKey(name: "id") this.id, @JsonKey(name: "display_name") this.displayName, @JsonKey(name: "avatar_url") this.avatarUrl, @JsonKey(name: "joined_at") this.joinedAt, @JsonKey(name: "reports_count") this.reportsCount, @JsonKey(name: "resolved_count") this.resolvedCount});
   factory _UserProfileModel.fromJson(Map<String, dynamic> json) => _$UserProfileModelFromJson(json);
 
 @override@JsonKey(name: "id") final  String? id;
 @override@JsonKey(name: "display_name") final  String? displayName;
+@override@JsonKey(name: "avatar_url") final  String? avatarUrl;
 @override@JsonKey(name: "joined_at") final  dynamic joinedAt;
 @override@JsonKey(name: "reports_count") final  int? reportsCount;
 @override@JsonKey(name: "resolved_count") final  int? resolvedCount;
@@ -241,18 +243,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserProfileModel&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&const DeepCollectionEquality().equals(other.joinedAt, joinedAt)&&(identical(other.reportsCount, reportsCount) || other.reportsCount == reportsCount)&&(identical(other.resolvedCount, resolvedCount) || other.resolvedCount == resolvedCount));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserProfileModel&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&const DeepCollectionEquality().equals(other.joinedAt, joinedAt)&&(identical(other.reportsCount, reportsCount) || other.reportsCount == reportsCount)&&(identical(other.resolvedCount, resolvedCount) || other.resolvedCount == resolvedCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,displayName,const DeepCollectionEquality().hash(joinedAt),reportsCount,resolvedCount);
+    return Object.hash(runtimeType,id,displayName,avatarUrl,const DeepCollectionEquality().hash(joinedAt),reportsCount,resolvedCount);
 }
 
 @override
 String toString() {
-    return 'UserProfileModel(id: $id, displayName: $displayName, joinedAt: $joinedAt, reportsCount: $reportsCount, resolvedCount: $resolvedCount)';
+    return 'UserProfileModel(id: $id, displayName: $displayName, avatarUrl: $avatarUrl, joinedAt: $joinedAt, reportsCount: $reportsCount, resolvedCount: $resolvedCount)';
 }
 
 
@@ -263,7 +265,7 @@ abstract mixin class _$UserProfileModelCopyWith<$Res> implements $UserProfileMod
   factory _$UserProfileModelCopyWith(_UserProfileModel value, $Res Function(_UserProfileModel) _then) = __$UserProfileModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "id") String? id,@JsonKey(name: "display_name") String? displayName,@JsonKey(name: "joined_at") dynamic joinedAt,@JsonKey(name: "reports_count") int? reportsCount,@JsonKey(name: "resolved_count") int? resolvedCount
+@JsonKey(name: "id") String? id,@JsonKey(name: "display_name") String? displayName,@JsonKey(name: "avatar_url") String? avatarUrl,@JsonKey(name: "joined_at") dynamic joinedAt,@JsonKey(name: "reports_count") int? reportsCount,@JsonKey(name: "resolved_count") int? resolvedCount
 });
 
 
@@ -280,10 +282,11 @@ class __$UserProfileModelCopyWithImpl<$Res>
 
 /// Create a copy of UserProfileModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? displayName = freezed,Object? joinedAt = freezed,Object? reportsCount = freezed,Object? resolvedCount = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? displayName = freezed,Object? avatarUrl = freezed,Object? joinedAt = freezed,Object? reportsCount = freezed,Object? resolvedCount = freezed,}) {
   return _then(_UserProfileModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,displayName: freezed == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
+as String?,avatarUrl: freezed == avatarUrl ? _self.avatarUrl : avatarUrl // ignore: cast_nullable_to_non_nullable
 as String?,joinedAt: freezed == joinedAt ? _self.joinedAt : joinedAt // ignore: cast_nullable_to_non_nullable
 as dynamic,reportsCount: freezed == reportsCount ? _self.reportsCount : reportsCount // ignore: cast_nullable_to_non_nullable
 as int?,resolvedCount: freezed == resolvedCount ? _self.resolvedCount : resolvedCount // ignore: cast_nullable_to_non_nullable

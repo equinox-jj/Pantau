@@ -30,6 +30,9 @@ func RegisterRoutes(
 
 	userGroup := api.Group("/users")
 	userGroup.Get("/me", users.GetProfile)
+	userGroup.Patch("/me/password", newAuthLimiter(5), users.ChangePassword)
+	userGroup.Put("/me/avatar", users.UpdateAvatar)
+	userGroup.Delete("/me/avatar", users.RemoveAvatar)
 
 	categoryGroup := api.Group("/categories")
 	categoryGroup.Get("/", categories.GetActiveCategories)

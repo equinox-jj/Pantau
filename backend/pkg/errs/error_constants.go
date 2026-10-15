@@ -24,4 +24,5 @@ var (
 	ErrUploadFailed            error = errors.New("failed to upload image")
 	ErrIDRequired              error = errors.New("ID cannot be empty")
 	ErrDeleteFailed            error = errors.New("failed to delete image")
+	ErrInvalidCurrentPassword  error = errors.New("current password is incorrect")
 )

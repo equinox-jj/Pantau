@@ -14,6 +14,9 @@ abstract final class AppRoutes {
   static const String locationPickerSegment = 'location';
   static const String locationPicker = '$createReport/$locationPickerSegment';
 
+  /// Full-screen change password form, pushed over either dashboard shell.
+  static const String changePassword = '/change-password';
+
   /// Full-screen report detail, pushed over the dashboard shell.
   static const String reportDetail = '/reports/:id';
 
@@ -45,6 +48,7 @@ abstract final class AppRoutes {
     createReport,
     locationPicker,
     reportDetail,
+    changePassword,
     map,
     feed,
     profile,

@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../../../core/base/base.dart';
 import '../../../../../../core/components/dialog/dialog.dart';
+import '../../../../../../core/error/error.dart';
 import '../../../../../../core/router/app_routes.dart';
 import '../../../../../../core/utils/enums/enums.dart';
 import '../../../../di/di.dart';
@@ -40,7 +41,7 @@ class RegisterListener extends ConsumerWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.red,
-              content: Center(child: Text(error.toString())),
+              content: Center(child: Text(displayMessageOf(error))),
             ),
           );
           break;

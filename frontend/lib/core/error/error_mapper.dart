@@ -19,12 +19,14 @@ AppException mapDioException(DioException e) {
     case DioExceptionType.cancel:
       return const RequestCancelledException();
     case DioExceptionType.badCertificate:
-      return const NetworkException('Bad certificate');
+      return const NetworkException(
+        "We couldn't connect securely to the server. Please try again later.",
+      );
     case DioExceptionType.badResponse:
       return _mapResponse(e.response);
     case DioExceptionType.unknown:
       if (e.error is FormatException) {
-        return const UnknownException('Malformed response');
+        return const UnknownException(malformedResponseMessage);
       }
       return const NetworkException();
   }
@@ -51,7 +53,7 @@ Failure mapExceptionToFailure(Object error) {
       CacheException() => Failure.cache(error.message),
     };
   }
-  return Failure.unknown(error.toString());
+  return const Failure.unknown();
 }
 
 AppException _mapResponse(Response<dynamic>? response) {
@@ -60,25 +62,37 @@ AppException _mapResponse(Response<dynamic>? response) {
   final message = _extractMessage(data);
   switch (status) {
     case 400:
-      return BadRequestException(message ?? 'Bad request');
+      return message == null
+          ? const BadRequestException()
+          : BadRequestException(message);
     case 401:
-      return UnauthorizedException(message ?? 'Unauthorized');
+      return message == null
+          ? const UnauthorizedException()
+          : UnauthorizedException(message);
     case 403:
-      return ForbiddenException(message ?? 'Forbidden');
+      return message == null
+          ? const ForbiddenException()
+          : ForbiddenException(message);
     case 404:
-      return NotFoundException(message ?? 'Not found');
+      return message == null
+          ? const NotFoundException()
+          : NotFoundException(message);
     case 422:
-      return ValidationException(
-        _parseFieldErrors(data),
-        message ?? 'Validation failed',
-      );
+      final fieldErrors = _parseFieldErrors(data);
+      return message == null
+          ? ValidationException(fieldErrors)
+          : ValidationException(fieldErrors, message);
     case 429:
       return const TooManyRequestsException();
     default:
       if (status >= 500) {
-        return ServerException(status, message ?? 'Server error');
+        return message == null
+            ? ServerException(status)
+            : ServerException(status, message);
       }
-      return UnknownException(message ?? 'Unexpected error ($status)');
+      return message == null
+          ? const UnknownException()
+          : UnknownException(message);
   }
 }
 

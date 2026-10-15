@@ -27,9 +27,7 @@ class FeedListener extends ConsumerWidget {
       next,
     ) {
       if (next case AsyncError(error: final error)) {
-        final message = error is Failure
-            ? error.displayMessage
-            : error.toString();
+        final message = displayMessageOf(error);
 
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()

@@ -28,7 +28,10 @@ void main() {
   });
 
   test('initial state is AsyncData(false)', () {
-    expect(container.read(changePasswordProvider), const AsyncData<bool>(false));
+    expect(
+      container.read(changePasswordProvider),
+      const AsyncData<bool>(false),
+    );
   });
 
   test('submit emits loading then AsyncData(true)', () async {

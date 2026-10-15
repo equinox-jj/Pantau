@@ -81,7 +81,7 @@ func (sv *reportServiceImpl) CreateReport(
 		return nil, err
 	}
 	if request == nil {
-		err := errs.Validation("Request is required")
+		err := errs.Validation("Please fill in the report details.")
 		slog.Error("[ReportService.CreateReport] Failed to create report", "error", err)
 		return nil, err
 	}
@@ -247,7 +247,7 @@ func (sv *reportServiceImpl) UpdateReportStatus(ctx context.Context, id uuid.UUI
 		return nil, err
 	}
 	if request == nil || request.ToStatus == nil {
-		err := errs.Validation("Target status is required")
+		err := errs.Validation("Please choose a new status for this report.")
 		slog.Error("[ReportService.UpdateReportStatus] Failed to update report status", "report_id", id, "error", err)
 		return nil, err
 	}
@@ -267,7 +267,7 @@ func (sv *reportServiceImpl) UpdateReportStatus(ctx context.Context, id uuid.UUI
 			return errs.ErrIllegalTransition
 		}
 		if to == enums.ReportStatusRejected && (request.Note == nil || strings.TrimSpace(*request.Note) == "") {
-			return errs.Validation("A note is required when rejecting a report")
+			return errs.Validation("Please add a note explaining why this report is being rejected.")
 		}
 
 		rpt.Status = to
@@ -306,7 +306,7 @@ func (sv *reportServiceImpl) UpdateReport(ctx context.Context, id uuid.UUID, req
 		return nil, err
 	}
 	if request == nil {
-		err := errs.Validation("Request is required")
+		err := errs.Validation("Please fill in the report details.")
 		slog.Error("[ReportService.UpdateReport] Failed to update report", "report_id", id, "error", err)
 		return nil, err
 	}
@@ -428,7 +428,7 @@ func (sv *reportServiceImpl) GetQueue(ctx context.Context, tab enums.QueueTab, l
 
 	statuses := tab.Statuses()
 	if len(statuses) == 0 {
-		err := errs.Validation("Invalid queue tab")
+		err := errs.Validation("That queue tab doesn't exist.")
 		slog.Error("[ReportService.GetQueue] Failed to get report queue", "limit", limit, "offset", offset, "tab", tab, "error", err)
 		return nil, err
 	}
@@ -596,10 +596,10 @@ func (sv *reportServiceImpl) assertEditableBy(rpt *entity.Report, requester *ent
 
 func (sv *reportServiceImpl) validateReportFields(categoryID *int64, latitude, longitude *float64) error {
 	if categoryID == nil {
-		return errs.Validation("Category ID is required")
+		return errs.Validation("Please choose a category for this report.")
 	}
 	if latitude == nil || longitude == nil {
-		return errs.Validation("Latitude and longitude are required")
+		return errs.Validation("Please choose a location for this report.")
 	}
 
 	return geo.ValidateCoordinates(*latitude, *longitude)
@@ -607,10 +607,10 @@ func (sv *reportServiceImpl) validateReportFields(categoryID *int64, latitude, l
 
 func (sv *reportServiceImpl) validateRadius(radius int) error {
 	if radius <= 0 {
-		return errs.Validation("Radius must be greater than 0")
+		return errs.Validation("The search radius must be greater than 0 meters.")
 	}
 	if radius > maxRadiusMeters {
-		return errs.Validation(fmt.Sprintf("Radius must not exceed %d meters", maxRadiusMeters))
+		return errs.Validation(fmt.Sprintf("The search radius can't be more than %d meters.", maxRadiusMeters))
 	}
 
 	return nil

@@ -5,7 +5,7 @@ ResponseData<T> decodeApiResponse<T>(
   T Function(Object?) fromJsonT,
 ) {
   if (json is! Map<String, dynamic>) {
-    throw const UnknownException('Malformed response');
+    throw const UnknownException(malformedResponseMessage);
   }
   return ApiResponse<T>.fromJson(json, fromJsonT).response;
 }
@@ -28,13 +28,15 @@ class ApiResponse<T> {
         .toList(growable: false);
     if (json['success'] != true) {
       throw UnknownException(
-        errors.isEmpty ? 'Request failed' : errors.first.message,
+        errors.isEmpty
+            ? const UnknownException().message
+            : errors.first.message,
       );
     }
 
     final body = json['response'];
     if (body is! Map<String, dynamic>) {
-      throw const UnknownException('Malformed response');
+      throw const UnknownException(malformedResponseMessage);
     }
     return ApiResponse<T>(
       success: true,
@@ -69,7 +71,7 @@ class ResponseData<T> {
 
   T requireData() {
     final value = data;
-    if (value == null) throw const UnknownException('Missing response data');
+    if (value == null) throw const UnknownException(malformedResponseMessage);
     return value;
   }
 }
@@ -107,7 +109,7 @@ class ErrorDetail {
   factory ErrorDetail.fromJson(Map<String, dynamic> json) => ErrorDetail(
     code: json['code'] as int?,
     field: json['field'] as String?,
-    message: json['message'] as String? ?? 'Request failed',
+    message: json['message'] as String? ?? const UnknownException().message,
   );
 
   final int? code;

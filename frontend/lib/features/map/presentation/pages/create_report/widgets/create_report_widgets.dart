@@ -41,9 +41,7 @@ class ReportCategorySelector extends StatelessWidget {
             return switch (state) {
               AsyncLoading() => const _CategoriesLoading(),
               AsyncError(error: final error) => _CategoriesError(
-                message: error is Failure
-                    ? error.displayMessage
-                    : error.toString(),
+                message: displayMessageOf(error),
                 onRetry: () => ref.invalidate(reportCategoriesProvider),
               ),
               AsyncValue<List<ReportCategory>>(value: final categories?) =>

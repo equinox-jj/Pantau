@@ -40,11 +40,7 @@ class ChangePasswordListener extends ConsumerWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.red,
-              content: Center(
-                child: Text(
-                  error is Failure ? error.displayMessage : error.toString(),
-                ),
-              ),
+              content: Center(child: Text(displayMessageOf(error))),
             ),
           );
           break;

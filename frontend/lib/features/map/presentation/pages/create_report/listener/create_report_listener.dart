@@ -33,9 +33,7 @@ class CreateReportListener extends ConsumerWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: AppColors.statusRejected,
-              content: Text(
-                error is Failure ? error.displayMessage : error.toString(),
-              ),
+              content: Text(displayMessageOf(error)),
             ),
           );
         case _:

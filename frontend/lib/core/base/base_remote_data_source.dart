@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../error/error_mapper.dart';
 import '../error/exceptions.dart';
@@ -15,8 +16,10 @@ mixin BaseRemoteDataSource {
       throw mapDioException(e);
     } on AppException {
       rethrow;
-    } catch (e) {
-      throw UnknownException(e.toString());
+    } catch (e, stackTrace) {
+      // Raw errors aren't user-facing; keep them in the log only.
+      debugPrint('safeApiCall: $e\n$stackTrace');
+      throw const UnknownException();
     }
   }
 }

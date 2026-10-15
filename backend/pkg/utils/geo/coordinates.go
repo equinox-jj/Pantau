@@ -10,10 +10,10 @@ import (
 // their inclusive degree ranges, returning a wrapped ErrValidation on failure.
 func ValidateCoordinates(latitude, longitude float64) error {
 	if math.IsNaN(latitude) || math.IsInf(latitude, 0) || latitude < -90 || latitude > 90 {
-		return errs.Validation("Latitude must be between -90 and 90")
+		return errs.Validation("That location isn't valid: latitude must be between -90 and 90.")
 	}
 	if math.IsNaN(longitude) || math.IsInf(longitude, 0) || longitude < -180 || longitude > 180 {
-		return errs.Validation("Longitude must be between -180 and 180")
+		return errs.Validation("That location isn't valid: longitude must be between -180 and 180.")
 	}
 	return nil
 }

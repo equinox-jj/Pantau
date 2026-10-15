@@ -17,21 +17,28 @@ class AvatarListener extends ConsumerWidget {
         case AsyncLoading():
           LoadingDialog.show(context);
           break;
+        case AsyncData(value: final change?):
+          LoadingDialog.dismiss(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.green,
+              content: Center(
+                child: Text(switch (change) {
+                  AvatarChange.uploaded => 'Profile picture updated.',
+                  AvatarChange.removed => 'Profile picture removed.',
+                }),
+              ),
+            ),
+          );
+          break;
         case AsyncData():
-          // Only a finished request closes the dialog; the initial state
-          // never follows a loading one.
-          if (previous is AsyncLoading) LoadingDialog.dismiss(context);
           break;
         case AsyncError(error: final error):
           LoadingDialog.dismiss(context);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.red,
-              content: Center(
-                child: Text(
-                  error is Failure ? error.displayMessage : error.toString(),
-                ),
-              ),
+              content: Center(child: Text(displayMessageOf(error))),
             ),
           );
           break;

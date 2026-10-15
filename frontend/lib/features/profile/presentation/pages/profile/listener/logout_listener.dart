@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../../core/components/dialog/dialog.dart';
+import '../../../../../../core/error/error.dart';
 import '../../../../../../core/router/app_routes.dart';
 import '../provider/provider.dart';
 
@@ -29,7 +30,7 @@ class LogoutListener extends ConsumerWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.red,
-              content: Center(child: Text(error.toString())),
+              content: Center(child: Text(displayMessageOf(error))),
             ),
           );
           break;

@@ -19,7 +19,8 @@ void main() {
 
   test('uploadAvatar returns CurrentUser with avatarUrl', () async {
     when(() => dataSource.uploadAvatar('/tmp/a.png')).thenAnswer(
-      (_) async => const UserProfileModel(id: 'u1', avatarUrl: 'http://m/a.png'),
+      (_) async =>
+          const UserProfileModel(id: 'u1', avatarUrl: 'http://m/a.png'),
     );
 
     final result = await repository.uploadAvatar('/tmp/a.png');
@@ -43,9 +44,6 @@ void main() {
       newPassword: 'newpass34',
     );
 
-    result.fold(
-      (l) => expect(l, isA<Failure>()),
-      (_) => fail('expected Left'),
-    );
+    result.fold((l) => expect(l, isA<Failure>()), (_) => fail('expected Left'));
   });
 }

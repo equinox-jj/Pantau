@@ -4,6 +4,7 @@ import (
 	"pantau/internal/controller"
 	"pantau/internal/enums"
 	"pantau/internal/middleware"
+	"pantau/pkg/errs"
 	"pantau/pkg/response"
 	"pantau/pkg/utils"
 	"time"
@@ -57,7 +58,7 @@ func newAuthLimiter(max int) fiber.Handler {
 		Max:        max,
 		Expiration: time.Minute,
 		LimitReached: func(ctx fiber.Ctx) error {
-			return ctx.Status(fiber.StatusTooManyRequests).JSON(response.Error(fiber.StatusTooManyRequests, "Too many requests"))
+			return ctx.Status(fiber.StatusTooManyRequests).JSON(response.Error(fiber.StatusTooManyRequests, errs.MsgTooManyRequests))
 		},
 	})
 }

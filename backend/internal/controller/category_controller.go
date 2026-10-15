@@ -35,7 +35,7 @@ func (controller *categoryControllerImpl) GetActiveCategories(ctx fiber.Ctx) err
 func (controller *categoryControllerImpl) GetCategoryByID(ctx fiber.Ctx) error {
 	id, err := strconv.ParseInt(ctx.Params("id"), 10, 64)
 	if err != nil {
-		return errs.Validation("Invalid category ID")
+		return errs.Validation("That category isn't valid.")
 	}
 
 	result, err := controller.categoryService.GetCategoryByID(ctx.Context(), id)

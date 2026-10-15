@@ -39,7 +39,7 @@ func (controller *reportControllerImpl) CreateReport(ctx fiber.Ctx) error {
 		return errs.ErrUnauthorized
 	}
 	if !reportContentType(ctx, "multipart/form-data") {
-		return ctx.Status(fiber.StatusUnsupportedMediaType).JSON(response.Error(fiber.StatusUnsupportedMediaType, "Expected multipart/form-data"))
+		return ctx.Status(fiber.StatusUnsupportedMediaType).JSON(response.Error(fiber.StatusUnsupportedMediaType, errs.MsgExpectedFormData))
 	}
 	var req report.CreateReportRequest
 	if err := ctx.Bind().Form(&req); err != nil {
@@ -87,7 +87,7 @@ func (controller *reportControllerImpl) GetNearbyReports(ctx fiber.Ctx) error {
 		return err
 	}
 	if query.Latitude == nil || query.Longitude == nil {
-		return errs.Validation("Latitude and longitude are required")
+		return errs.Validation("We need your location to find reports near you.")
 	}
 	result, err := controller.reportService.GetNearbyReports(ctx.Context(), *query.Latitude, *query.Longitude, query.RadiusMeter, query.Limit)
 	if err != nil {
@@ -125,7 +125,7 @@ func (controller *reportControllerImpl) UpdateReport(ctx fiber.Ctx) error {
 		return err
 	}
 	if !reportContentType(ctx, "multipart/form-data") {
-		return ctx.Status(fiber.StatusUnsupportedMediaType).JSON(response.Error(fiber.StatusUnsupportedMediaType, "Expected multipart/form-data"))
+		return ctx.Status(fiber.StatusUnsupportedMediaType).JSON(response.Error(fiber.StatusUnsupportedMediaType, errs.MsgExpectedFormData))
 	}
 	var req report.UpdateReportRequest
 	if err := ctx.Bind().Form(&req); err != nil {
@@ -166,7 +166,7 @@ func (controller *reportControllerImpl) GetQueue(ctx fiber.Ctx) error {
 		return err
 	}
 	if query.Latitude == nil || query.Longitude == nil {
-		return errs.Validation("Latitude and longitude are required")
+		return errs.Validation("We need your location to find reports near you.")
 	}
 	result, err := controller.reportService.GetQueue(ctx.Context(), query.Tab, *query.Latitude, *query.Longitude, query.RadiusMeter, query.Limit, query.Offset)
 	if err != nil {
@@ -185,7 +185,7 @@ func (controller *reportControllerImpl) UpdateReportStatus(ctx fiber.Ctx) error 
 		return err
 	}
 	if !reportContentType(ctx, "application/json") {
-		return ctx.Status(fiber.StatusUnsupportedMediaType).JSON(response.Error(fiber.StatusUnsupportedMediaType, "Expected application/json"))
+		return ctx.Status(fiber.StatusUnsupportedMediaType).JSON(response.Error(fiber.StatusUnsupportedMediaType, errs.MsgExpectedJSON))
 	}
 	var req report.UpdateStatusRequest
 	if err := ctx.Bind().JSON(&req); err != nil {
@@ -201,7 +201,7 @@ func (controller *reportControllerImpl) UpdateReportStatus(ctx fiber.Ctx) error 
 func reportID(ctx fiber.Ctx) (uuid.UUID, error) {
 	id, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
-		return uuid.Nil, errs.Validation("Invalid report ID")
+		return uuid.Nil, errs.Validation("That report link isn't valid.")
 	}
 	return id, nil
 }

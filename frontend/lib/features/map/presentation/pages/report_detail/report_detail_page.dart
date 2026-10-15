@@ -47,9 +47,7 @@ class ReportDetailPage extends StatelessWidget {
 
             return switch (state) {
               AsyncError<ReportDetail>(error: final error) => _DetailError(
-                message: error is Failure
-                    ? error.displayMessage
-                    : error.toString(),
+                message: displayMessageOf(error),
                 onRetry: () =>
                     ref.read(reportDetailProvider(reportId).notifier).refresh(),
               ),

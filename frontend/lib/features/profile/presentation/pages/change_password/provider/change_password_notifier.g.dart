@@ -9,17 +9,17 @@ part of 'change_password_notifier.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// `AsyncData(true)` means the password was changed and the listener may
-/// close the page.
+/// sign the user out so they log in again with the new password.
 
 @ProviderFor(ChangePassword)
 final changePasswordProvider = ChangePasswordProvider._();
 
 /// `AsyncData(true)` means the password was changed and the listener may
-/// close the page.
+/// sign the user out so they log in again with the new password.
 final class ChangePasswordProvider
     extends $NotifierProvider<ChangePassword, AsyncValue<bool>> {
   /// `AsyncData(true)` means the password was changed and the listener may
-  /// close the page.
+  /// sign the user out so they log in again with the new password.
   ChangePasswordProvider._()
     : super(
         from: null,
@@ -50,7 +50,7 @@ final class ChangePasswordProvider
 String _$changePasswordHash() => r'1e9cb397173bfdbd16b4b5b3dd5e47ef061f1738';
 
 /// `AsyncData(true)` means the password was changed and the listener may
-/// close the page.
+/// sign the user out so they log in again with the new password.
 
 abstract class _$ChangePassword extends $Notifier<AsyncValue<bool>> {
   AsyncValue<bool> build();

@@ -87,9 +87,8 @@ void main() {
   });
 
   test('removeAvatar parses avatar_url null', () async {
-    when(
-      () => dioClient.delete<dynamic>(ApiEndpoints.avatar),
-    ).thenAnswer((_) async => _response(_profile()));
+    when(() => dioClient.delete<dynamic>(ApiEndpoints.avatar))
+        .thenAnswer((_) async => _response(_profile()));
 
     final result = await dataSource.removeAvatar();
 

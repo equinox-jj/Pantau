@@ -29,9 +29,8 @@ void main() {
     uploadUsecase = MockUploadAvatarUsecase();
     removeUsecase = MockRemoveAvatarUsecase();
     currentUserUsecase = MockGetCurrentUserUsecase();
-    when(
-      () => currentUserUsecase(any()),
-    ).thenAnswer((_) async => const Right(CurrentUser(uuid: 'u1')));
+    when(() => currentUserUsecase(any()))
+        .thenAnswer((_) async => const Right(CurrentUser(uuid: 'u1')));
     container = ProviderContainer(
       overrides: [
         uploadAvatarUsecaseProvider.overrideWithValue(uploadUsecase),
@@ -69,7 +68,8 @@ void main() {
 
   test('remove failure becomes AsyncError', () async {
     const failure = Failure.server(500, 'boom');
-    when(() => removeUsecase(any())).thenAnswer((_) async => const Left(failure));
+    when(() => removeUsecase(any()))
+        .thenAnswer((_) async => const Left(failure));
 
     await container.read(avatarProvider.notifier).remove();
 

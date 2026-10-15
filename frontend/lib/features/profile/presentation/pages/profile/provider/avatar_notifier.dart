@@ -6,12 +6,15 @@ import '../../../../di/di.dart';
 
 part 'avatar_notifier.g.dart';
 
+/// The change a finished avatar request made, so the UI can confirm it.
+enum AvatarChange { uploaded, removed }
+
 /// Adds, replaces or removes the profile picture. On success the cached
 /// [currentUserProvider] is refreshed so the identity card picks it up.
 @riverpod
 class Avatar extends _$Avatar {
   @override
-  AsyncValue<void> build() => const AsyncData(null);
+  AsyncValue<AvatarChange?> build() => const AsyncData(null);
 
   /// [filePath] is null when the picker was cancelled: nothing happens.
   Future<void> upload(String? filePath) async {
@@ -22,7 +25,7 @@ class Avatar extends _$Avatar {
 
     state = result.fold((l) => AsyncError(l, StackTrace.current), (_) {
       ref.invalidate(currentUserProvider);
-      return const AsyncData(null);
+      return const AsyncData(AvatarChange.uploaded);
     });
   }
 
@@ -34,7 +37,7 @@ class Avatar extends _$Avatar {
 
     state = result.fold((l) => AsyncError(l, StackTrace.current), (_) {
       ref.invalidate(currentUserProvider);
-      return const AsyncData(null);
+      return const AsyncData(AvatarChange.removed);
     });
   }
 }

@@ -43,7 +43,7 @@ void main() {
     test('maps badCertificate to NetworkException with fixed message', () {
       final result = mapDioException(_dioOf(DioExceptionType.badCertificate));
       expect(result, isA<NetworkException>());
-      expect(result.message, 'Bad certificate');
+      expect(result.message, contains('connect securely'));
     });
 
     test('maps unknown with FormatException error to malformed-response UnknownException', () {
@@ -54,7 +54,7 @@ void main() {
       );
       final result = mapDioException(dioException);
       expect(result, isA<UnknownException>());
-      expect(result.message, 'Malformed response');
+      expect(result.message, malformedResponseMessage);
     });
 
     test('maps unknown without FormatException to NetworkException', () {
@@ -78,7 +78,10 @@ void main() {
         final result = mapDioException(
           _dioOf(DioExceptionType.badResponse, response: _response(400, null)),
         );
-        expect((result as BadRequestException).message, 'Bad request');
+        expect(
+          (result as BadRequestException).message,
+          const BadRequestException().message,
+        );
       });
 
       test('401 -> UnauthorizedException, reads "error" field fallback', () {
@@ -172,19 +175,13 @@ void main() {
         expect(result.message, 'down');
       });
 
-      test(
-        'unmapped status -> UnknownException carrying status in message',
-        () {
-          final result = mapDioException(
-            _dioOf(
-              DioExceptionType.badResponse,
-              response: _response(418, null),
-            ),
-          );
-          expect(result, isA<UnknownException>());
-          expect(result.message, contains('418'));
-        },
-      );
+      test('unmapped status -> UnknownException with generic copy', () {
+        final result = mapDioException(
+          _dioOf(DioExceptionType.badResponse, response: _response(418, null)),
+        );
+        expect(result, isA<UnknownException>());
+        expect(result.message, const UnknownException().message);
+      });
 
       test('missing response defaults status to 0 -> UnknownException', () {
         final result = mapDioException(_dioOf(DioExceptionType.badResponse));
@@ -254,13 +251,10 @@ void main() {
     });
 
     test(
-      'maps a non-AppException error to Failure.unknown with its toString',
+      'maps a non-AppException error to Failure.unknown with generic copy',
       () {
         final result = mapExceptionToFailure(StateError('bad state'));
-        expect(
-          result,
-          equals(Failure.unknown(StateError('bad state').toString())),
-        );
+        expect(result, equals(const Failure.unknown()));
       },
     );
   });

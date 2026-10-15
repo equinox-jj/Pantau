@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../error/exceptions.dart';
 
 /// Centralizes cache-error translation for local data sources.
@@ -9,8 +11,10 @@ mixin BaseLocalDataSource {
       return await op();
     } on CacheException {
       rethrow;
-    } catch (e) {
-      throw CacheException(e.toString());
+    } catch (e, stackTrace) {
+      // Raw errors aren't user-facing; keep them in the log only.
+      debugPrint('safeCacheCall: $e\n$stackTrace');
+      throw const CacheException();
     }
   }
 }

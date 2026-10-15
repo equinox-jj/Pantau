@@ -26,16 +26,21 @@ $FailureCopyWith<Failure> get copyWith => _$FailureCopyWithImpl<Failure>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Failure&&(identical(other.message, message) || other.message == message));
+  final _this = this as Failure;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Failure&&(identical(other.message, _this.message) || other.message == _this.message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+  final _this = this as Failure;
+  return Object.hash(runtimeType,_this.message);
+}
 
 @override
 String toString() {
-  return 'Failure(message: $message)';
+  final _this = this as Failure;
+  return 'Failure(message: ${_this.message})';
 }
 
 
@@ -261,7 +266,7 @@ return unknown(_that.message);case _:
 
 
 class NetworkFailure implements Failure {
-  const NetworkFailure([this.message = 'No internet connection']);
+  const NetworkFailure([this.message = 'No internet connection. Please check your connection and try again.']);
   
 
 @override@JsonKey() final  String message;
@@ -276,16 +281,18 @@ $NetworkFailureCopyWith<NetworkFailure> get copyWith => _$NetworkFailureCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NetworkFailure&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is NetworkFailure&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'Failure.network(message: $message)';
+    return 'Failure.network(message: $message)';
 }
 
 
@@ -327,7 +334,7 @@ as String,
 
 
 class TimeoutFailure implements Failure {
-  const TimeoutFailure([this.message = 'Request timed out']);
+  const TimeoutFailure([this.message = 'This is taking longer than usual. Please try again.']);
   
 
 @override@JsonKey() final  String message;
@@ -342,16 +349,18 @@ $TimeoutFailureCopyWith<TimeoutFailure> get copyWith => _$TimeoutFailureCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TimeoutFailure&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is TimeoutFailure&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'Failure.timeout(message: $message)';
+    return 'Failure.timeout(message: $message)';
 }
 
 
@@ -393,7 +402,7 @@ as String,
 
 
 class BadRequestFailure implements Failure {
-  const BadRequestFailure([this.message = 'Bad request']);
+  const BadRequestFailure([this.message = "Something about that request wasn't right. Please check and try again."]);
   
 
 @override@JsonKey() final  String message;
@@ -408,16 +417,18 @@ $BadRequestFailureCopyWith<BadRequestFailure> get copyWith => _$BadRequestFailur
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BadRequestFailure&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is BadRequestFailure&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'Failure.badRequest(message: $message)';
+    return 'Failure.badRequest(message: $message)';
 }
 
 
@@ -459,7 +470,7 @@ as String,
 
 
 class UnauthorizedFailure implements Failure {
-  const UnauthorizedFailure([this.message = 'Unauthorized']);
+  const UnauthorizedFailure([this.message = 'Your session has expired. Please sign in again.']);
   
 
 @override@JsonKey() final  String message;
@@ -474,16 +485,18 @@ $UnauthorizedFailureCopyWith<UnauthorizedFailure> get copyWith => _$Unauthorized
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UnauthorizedFailure&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is UnauthorizedFailure&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'Failure.unauthorized(message: $message)';
+    return 'Failure.unauthorized(message: $message)';
 }
 
 
@@ -525,7 +538,7 @@ as String,
 
 
 class ForbiddenFailure implements Failure {
-  const ForbiddenFailure([this.message = 'Forbidden']);
+  const ForbiddenFailure([this.message = "You don't have permission to do that."]);
   
 
 @override@JsonKey() final  String message;
@@ -540,16 +553,18 @@ $ForbiddenFailureCopyWith<ForbiddenFailure> get copyWith => _$ForbiddenFailureCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ForbiddenFailure&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ForbiddenFailure&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'Failure.forbidden(message: $message)';
+    return 'Failure.forbidden(message: $message)';
 }
 
 
@@ -591,7 +606,7 @@ as String,
 
 
 class NotFoundFailure implements Failure {
-  const NotFoundFailure([this.message = 'Not found']);
+  const NotFoundFailure([this.message = "We couldn't find what you were looking for."]);
   
 
 @override@JsonKey() final  String message;
@@ -606,16 +621,18 @@ $NotFoundFailureCopyWith<NotFoundFailure> get copyWith => _$NotFoundFailureCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotFoundFailure&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is NotFoundFailure&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'Failure.notFound(message: $message)';
+    return 'Failure.notFound(message: $message)';
 }
 
 
@@ -657,7 +674,7 @@ as String,
 
 
 class ValidationFailure implements Failure {
-  const ValidationFailure( Map<String, List<String>> fieldErrors, [this.message = 'Validation failed']): _fieldErrors = fieldErrors;
+  const ValidationFailure( Map<String, List<String>> fieldErrors, [this.message = 'Some details need fixing. Please check and try again.']): _fieldErrors = fieldErrors;
   
 
  final  Map<String, List<String>> _fieldErrors;
@@ -679,16 +696,18 @@ $ValidationFailureCopyWith<ValidationFailure> get copyWith => _$ValidationFailur
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ValidationFailure&&const DeepCollectionEquality().equals(other._fieldErrors, _fieldErrors)&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ValidationFailure&&const DeepCollectionEquality().equals(other.fieldErrors, _fieldErrors)&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_fieldErrors),message);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_fieldErrors),message);
+}
 
 @override
 String toString() {
-  return 'Failure.validation(fieldErrors: $fieldErrors, message: $message)';
+    return 'Failure.validation(fieldErrors: $fieldErrors, message: $message)';
 }
 
 
@@ -731,7 +750,7 @@ as String,
 
 
 class TooManyRequestsFailure implements Failure {
-  const TooManyRequestsFailure([this.message = 'Too many requests']);
+  const TooManyRequestsFailure([this.message = 'Too many attempts. Please wait a moment and try again.']);
   
 
 @override@JsonKey() final  String message;
@@ -746,16 +765,18 @@ $TooManyRequestsFailureCopyWith<TooManyRequestsFailure> get copyWith => _$TooMan
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TooManyRequestsFailure&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is TooManyRequestsFailure&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'Failure.tooManyRequests(message: $message)';
+    return 'Failure.tooManyRequests(message: $message)';
 }
 
 
@@ -797,7 +818,7 @@ as String,
 
 
 class ServerFailure implements Failure {
-  const ServerFailure(this.statusCode, [this.message = 'Server error']);
+  const ServerFailure(this.statusCode, [this.message = 'Something went wrong on our end. Please try again in a moment.']);
   
 
  final  int statusCode;
@@ -813,16 +834,18 @@ $ServerFailureCopyWith<ServerFailure> get copyWith => _$ServerFailureCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ServerFailure&&(identical(other.statusCode, statusCode) || other.statusCode == statusCode)&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ServerFailure&&(identical(other.statusCode, statusCode) || other.statusCode == statusCode)&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,statusCode,message);
+int get hashCode {
+    return Object.hash(runtimeType,statusCode,message);
+}
 
 @override
 String toString() {
-  return 'Failure.server(statusCode: $statusCode, message: $message)';
+    return 'Failure.server(statusCode: $statusCode, message: $message)';
 }
 
 
@@ -865,7 +888,7 @@ as String,
 
 
 class CacheFailure implements Failure {
-  const CacheFailure([this.message = 'Cache error']);
+  const CacheFailure([this.message = "We couldn't read data saved on this device. Please try again."]);
   
 
 @override@JsonKey() final  String message;
@@ -880,16 +903,18 @@ $CacheFailureCopyWith<CacheFailure> get copyWith => _$CacheFailureCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CacheFailure&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CacheFailure&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'Failure.cache(message: $message)';
+    return 'Failure.cache(message: $message)';
 }
 
 
@@ -931,7 +956,7 @@ as String,
 
 
 class UnknownFailure implements Failure {
-  const UnknownFailure([this.message = 'Unexpected error']);
+  const UnknownFailure([this.message = 'Something went wrong. Please try again.']);
   
 
 @override@JsonKey() final  String message;
@@ -946,16 +971,18 @@ $UnknownFailureCopyWith<UnknownFailure> get copyWith => _$UnknownFailureCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UnknownFailure&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is UnknownFailure&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'Failure.unknown(message: $message)';
+    return 'Failure.unknown(message: $message)';
 }
 
 

@@ -26,6 +26,9 @@ type Config struct {
 
 type serverConfig struct {
 	Port int
+	// TrustedProxies are the reverse proxy IPs or CIDRs whose X-Forwarded-For
+	// header is trusted for the client IP. Empty means the connecting IP.
+	TrustedProxies []string
 }
 
 type appConfig struct {
@@ -69,7 +72,10 @@ type jwtConfig struct {
 }
 
 type minioConfig struct {
-	Endpoint  string
+	Endpoint string
+	// AccessKey and SecretKey are the API's own credentials, limited to the
+	// bucket (created by minio-init). Outside production they fall back to
+	// the root credentials when unset.
 	AccessKey string
 	SecretKey string
 	UseSSL    bool
@@ -87,7 +93,10 @@ func NewConfig() (*Config, error) {
 	v.AutomaticEnv()
 
 	cfg := &Config{
-		Server: serverConfig{Port: v.GetInt("APP_PORT")},
+		Server: serverConfig{
+			Port:           v.GetInt("APP_PORT"),
+			TrustedProxies: splitList(v.GetString("TRUSTED_PROXIES")),
+		},
 		App: appConfig{
 			Name: v.GetString("APP_NAME"),
 			Env:  v.GetString("APP_ENV"),
@@ -115,8 +124,8 @@ func NewConfig() (*Config, error) {
 		},
 		MinIO: minioConfig{
 			Endpoint:  v.GetString("MINIO_ENDPOINT"),
-			AccessKey: v.GetString("MINIO_ROOT_USER"),
-			SecretKey: v.GetString("MINIO_ROOT_PASSWORD"),
+			AccessKey: v.GetString("MINIO_ACCESS_KEY"),
+			SecretKey: v.GetString("MINIO_SECRET_KEY"),
 			UseSSL:    v.GetBool("MINIO_USE_SSL"),
 			Bucket:    v.GetString("MINIO_BUCKET"),
 			PublicURL: v.GetString("MINIO_PUBLIC_URL"),
@@ -135,6 +144,13 @@ func NewConfig() (*Config, error) {
 		return nil, errors.New("database connection limits must be positive and max_idle_conns must not exceed max_open_conns")
 	}
 
+	if cfg.MinIO.AccessKey == "" || cfg.MinIO.SecretKey == "" {
+		if cfg.App.Env == "production" {
+			return nil, errors.New("minio access key and secret key are required in production; the api must not use the minio root credentials")
+		}
+		cfg.MinIO.AccessKey = v.GetString("MINIO_ROOT_USER")
+		cfg.MinIO.SecretKey = v.GetString("MINIO_ROOT_PASSWORD")
+	}
 	if cfg.MinIO.Endpoint == "" || cfg.MinIO.AccessKey == "" || cfg.MinIO.SecretKey == "" || cfg.MinIO.Bucket == "" || cfg.MinIO.PublicURL == "" {
 		return nil, errors.New("minio endpoint, credentials, bucket and public url are required")
 	}
@@ -156,6 +172,17 @@ func NewConfig() (*Config, error) {
 	cfg.Upload.MaxRequestBytes = int(maxRequestBytes)
 
 	return cfg, nil
+}
+
+// splitList splits a comma-separated value, dropping blank items.
+func splitList(value string) []string {
+	var out []string
+	for item := range strings.SplitSeq(value, ",") {
+		if item = strings.TrimSpace(item); item != "" {
+			out = append(out, item)
+		}
+	}
+	return out
 }
 
 // parseByteSize converts a positive integer followed by B, KB, MB, or GB

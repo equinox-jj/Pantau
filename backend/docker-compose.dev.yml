@@ -4,16 +4,19 @@ name: pantau-dev
 
 services:
   pantau-db:
-    image: postgis/postgis:18-3.6-alpine
+    image: &db-image postgis/postgis:18-3.6-alpine
     # Official PostGIS images are amd64-only; emulated on Apple Silicon.
     platform: linux/amd64
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME:-pantau}
+      POSTGRES_USER: ${DB_USER:-pantau}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+      TZ: UTC
+    # Bound to localhost: reachable from this machine only. 5433 by default so
+    # it does not clash with a locally installed Postgres.
     ports:
-      # 5433 on the host so it does not clash with a locally installed Postgres.
-      - "5433:5432"
+      - "127.0.0.1:${POSTGRES_PORT:-5433}:5432"
     volumes:
       - pgdata:/var/lib/postgresql
     healthcheck:
@@ -23,14 +26,19 @@ services:
       retries: 10
 
   minio:
-    image: pgsty/minio:RELEASE.2026-08-04T00-00-00Z
-    command: server /data --console-address :9001
+    # The upstream minio/minio image is no longer published; pgsty/minio is a
+    # community build of the same server.
+    image: &minio-image pgsty/minio:RELEASE.2026-08-04T00-00-00Z
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?set MINIO_ROOT_USER in .env}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?set MINIO_ROOT_PASSWORD in .env}
+    # Bound to localhost (the Android emulator reaches it at 10.0.2.2). For a
+    # physical device, see "Image URLs" in README.md.
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "127.0.0.1:${MINIO_API_PORT:-9000}:9000"
+      - "127.0.0.1:${MINIO_CONSOLE_PORT:-9001}:9001"
     volumes:
       - miniodata:/data
     healthcheck:
@@ -39,13 +47,110 @@ services:
       timeout: 5s
       retries: 10
 
+  # One-shot job: creates the bucket, makes its objects readable (not
+  # listable) so stored photo and avatar URLs load directly, and creates the
+  # API's own MinIO user, limited to that bucket. Safe to rerun.
+  minio-init:
+    image: *minio-image
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?set MINIO_ROOT_USER in .env}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?set MINIO_ROOT_PASSWORD in .env}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:?set MINIO_ACCESS_KEY in .env}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:?set MINIO_SECRET_KEY in .env}
+      MINIO_BUCKET: ${MINIO_BUCKET:-pantau}
+    entrypoint: ["sh", "-c"]
+    command:
+      - |
+        set -e
+        mc alias set local http://minio:9000 "$$MINIO_ROOT_USER" "$$MINIO_ROOT_PASSWORD"
+        mc mb --ignore-existing "local/$$MINIO_BUCKET"
+        # Anonymous clients may read objects but not list the bucket.
+        cat > /tmp/pantau-public-read.json <<JSON
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {"AWS": ["*"]},
+              "Action": ["s3:GetObject"],
+              "Resource": ["arn:aws:s3:::$$MINIO_BUCKET/*"]
+            }
+          ]
+        }
+        JSON
+        mc anonymous set-json /tmp/pantau-public-read.json "local/$$MINIO_BUCKET"
+        cat > /tmp/pantau-api-policy.json <<JSON
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": ["s3:GetBucketLocation", "s3:ListBucket"],
+              "Resource": ["arn:aws:s3:::$$MINIO_BUCKET"]
+            },
+            {
+              "Effect": "Allow",
+              "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
+              "Resource": ["arn:aws:s3:::$$MINIO_BUCKET/*"]
+            }
+          ]
+        }
+        JSON
+        mc admin user add local "$$MINIO_ACCESS_KEY" "$$MINIO_SECRET_KEY"
+        mc admin policy create local pantau-api /tmp/pantau-api-policy.json
+        mc admin policy attach local pantau-api --user "$$MINIO_ACCESS_KEY" || true
+    restart: "no"
+
+  # One-shot job: creates the API's own database role, limited to reading and
+  # writing rows (no DDL, not a superuser like DB_USER). Migrations keep using
+  # the owner; default privileges cover the tables they create later.
+  # Safe to rerun; it also resets the role's password to DB_APP_PASSWORD.
+  pantau-db-init:
+    image: *db-image
+    platform: linux/amd64
+    depends_on:
+      pantau-db:
+        condition: service_healthy
+    environment:
+      PGHOST: pantau-db
+      PGUSER: ${DB_USER:-pantau}
+      PGPASSWORD: ${DB_PASSWORD}
+      PGDATABASE: ${DB_NAME:-pantau}
+      DB_APP_USER: ${DB_APP_USER:-pantau-app}
+      DB_APP_PASSWORD: ${DB_APP_PASSWORD:?set DB_APP_PASSWORD in .env}
+    entrypoint: ["sh", "-c"]
+    command:
+      - |
+        set -e
+        psql -v ON_ERROR_STOP=1 -v app_user="$$DB_APP_USER" -v app_password="$$DB_APP_PASSWORD" \
+          -v owner="$$PGUSER" -v db="$$PGDATABASE" <<'SQL'
+        SELECT format('CREATE ROLE %I LOGIN', :'app_user')
+          WHERE NOT EXISTS (SELECT FROM pg_roles WHERE rolname = :'app_user') \gexec
+        SELECT format('ALTER ROLE %I WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE PASSWORD %L',
+          :'app_user', :'app_password') \gexec
+        GRANT CONNECT ON DATABASE :"db" TO :"app_user";
+        GRANT USAGE ON SCHEMA public TO :"app_user";
+        GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO :"app_user";
+        GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO :"app_user";
+        ALTER DEFAULT PRIVILEGES FOR ROLE :"owner" IN SCHEMA public
+          GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO :"app_user";
+        ALTER DEFAULT PRIVILEGES FOR ROLE :"owner" IN SCHEMA public
+          GRANT USAGE, SELECT ON SEQUENCES TO :"app_user";
+        SQL
+    restart: "no"
+
+  # One-shot job: applies pending SQL migrations before the API starts. It
+  # connects as the owner, since migrations change the schema.
   migrate:
     image: migrate/migrate:v4.18.3
     volumes:
       - ./migrations:/migrations:ro
     command:
       - -path=/migrations
-      - -database=postgres://${DB_USER}:${DB_PASSWORD}@pantau-db:5432/${DB_NAME}?sslmode=disable
+      - -database=postgres://${DB_USER:-pantau}:${DB_PASSWORD}@pantau-db:5432/${DB_NAME:-pantau}?sslmode=disable
       - up
     depends_on:
       pantau-db:
@@ -53,33 +158,33 @@ services:
     restart: "no"
 
   api:
-    build:
-      context: .
-      target: dev
+    build: .
+    restart: unless-stopped
     env_file: .env
     environment:
-      APP_ENV: development
-      APP_PORT: 8080
+      APP_ENV: ${APP_ENV:-development}
       DB_HOST: pantau-db
       DB_PORT: 5432
+      # The API's limited role (pantau-db-init). The migrate service and the
+      # API run from your machine use the owner (DB_USER) in .env.
+      DB_USER: ${DB_APP_USER:-pantau-app}
+      DB_PASSWORD: ${DB_APP_PASSWORD}
       MINIO_ENDPOINT: minio:9000
       # The api talks to MinIO inside the compose network over plain HTTP;
       # put TLS on MINIO_PUBLIC_URL instead.
       MINIO_USE_SSL: "false"
     ports:
-      - "${APP_PORT:-8080}:8080"
-    volumes:
-      - .:/app
-      - gomodcache:/go/pkg/mod
-      - gobuildcache:/root/.cache/go-build
+      - "127.0.0.1:${APP_PORT:-8080}:${APP_PORT:-8080}"
     depends_on:
+      pantau-db:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+      pantau-db-init:
+        condition: service_completed_successfully
       migrate:
         condition: service_completed_successfully
-      minio:
-        condition: service_healthy
 
 volumes:
   pgdata:
   miniodata:
-  gomodcache:
-  gobuildcache:

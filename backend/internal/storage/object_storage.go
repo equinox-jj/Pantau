@@ -29,9 +29,10 @@ type minioStorage struct {
 	publicURL string
 }
 
-// NewMinioStorage creates a MinIO client. On application start it creates the
-// bucket if missing and makes its objects publicly readable, so stored URLs
-// can be loaded directly by clients. Start fails when MinIO is unreachable.
+// NewMinioStorage creates a MinIO client. On application start it fails if
+// MinIO is unreachable or the bucket is missing. The bucket and its
+// anonymous-read policy, which lets clients load stored URLs directly, are
+// created by minio-init in docker-compose.dev.yml and docker-compose.prod.yml.
 func NewMinioStorage(lc fx.Lifecycle, cfg *config.Config) (ObjectStorage, error) {
 	client, err := minio.New(cfg.MinIO.Endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(cfg.MinIO.AccessKey, cfg.MinIO.SecretKey, ""),
@@ -52,28 +53,22 @@ func NewMinioStorage(lc fx.Lifecycle, cfg *config.Config) (ObjectStorage, error)
 		OnStart: func(ctx context.Context) error {
 			ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 			defer cancel()
-			return store.ensureBucket(ctx)
+			return store.checkBucket(ctx)
 		},
 	})
 
 	return store, nil
 }
 
-func (s *minioStorage) ensureBucket(ctx context.Context) error {
+func (s *minioStorage) checkBucket(ctx context.Context) error {
 	exists, err := s.client.BucketExists(ctx, s.bucket)
 	if err != nil {
 		slog.Error("[MinIO] Failed to check bucket", "bucket", s.bucket, "error", err)
 		return fmt.Errorf("check bucket %q: %w", s.bucket, err)
 	}
 	if !exists {
-		if err := s.client.MakeBucket(ctx, s.bucket, minio.MakeBucketOptions{}); err != nil {
-			slog.Error("[MinIO] Failed to create bucket", "bucket", s.bucket, "error", err)
-			return fmt.Errorf("create bucket %q: %w", s.bucket, err)
-		}
-	}
-	if err := s.client.SetBucketPolicy(ctx, s.bucket, publicReadPolicy(s.bucket)); err != nil {
-		slog.Error("[MinIO] Failed to set bucket policy", "bucket", s.bucket, "error", err)
-		return fmt.Errorf("set bucket policy %q: %w", s.bucket, err)
+		slog.Error("[MinIO] Bucket does not exist; run minio-init", "bucket", s.bucket)
+		return fmt.Errorf("bucket %q does not exist", s.bucket)
 	}
 
 	return nil
@@ -95,9 +90,4 @@ func (s *minioStorage) PublicURL(key string) string {
 
 func buildPublicURL(publicBase, bucket, key string) string {
 	return strings.TrimRight(publicBase, "/") + "/" + bucket + "/" + key
-}
-
-// publicReadPolicy allows anonymous GetObject on every object in bucket.
-func publicReadPolicy(bucket string) string {
-	return fmt.Sprintf(`{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"AWS":["*"]},"Action":["s3:GetObject"],"Resource":["arn:aws:s3:::%s/*"]}]}`, bucket)
 }

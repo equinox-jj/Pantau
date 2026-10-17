@@ -32,7 +32,9 @@ Pantau is a Go API for reporting local issues. Citizens can submit reports with 
 
    The sample `.env` listens on port `8080`. Set `APP_PORT` to change the port.
 
-   The API needs a running MinIO at `MINIO_ENDPOINT`. On startup it creates `MINIO_BUCKET` if missing and makes its objects publicly readable. The quickest way to get one is `docker compose -f docker-compose.dev.yml up -d minio`.
+   The API needs a running MinIO at `MINIO_ENDPOINT` with `MINIO_BUCKET` already created; on startup it only checks that the bucket exists. The quickest way to get one is `docker compose -f docker-compose.dev.yml up -d minio-init`, which starts MinIO, creates the bucket with a public-read (not listable) policy, and creates the API's own MinIO user (`MINIO_ACCESS_KEY`/`MINIO_SECRET_KEY`). Outside production, the API falls back to `MINIO_ROOT_USER`/`MINIO_ROOT_PASSWORD` when those are unset.
+
+   To use the compose database instead of a local Postgres, run `docker compose -f docker-compose.dev.yml up -d migrate` and set `DB_PORT` to `POSTGRES_PORT` (`5433`).
 
 ### Image URLs (`MINIO_PUBLIC_URL`)
 
@@ -40,33 +42,37 @@ Stored photo URLs are `MINIO_PUBLIC_URL/<bucket>/<key>`, so this must be an addr
 
 - iOS simulator / desktop: `http://localhost:9000`
 - Android emulator: `http://10.0.2.2:9000`
-- Physical device: your machine's LAN IP, e.g. `http://192.168.1.20:9000`
-- Production: the public host that serves MinIO port 9000
+- Physical device: the dev compose binds its ports to `127.0.0.1`, so your LAN IP does not reach them. On Android, run `adb reverse tcp:9000 tcp:9000` (and `tcp:8080 tcp:8080` for the API) and use `http://localhost:9000`; otherwise put a tunnel or reverse proxy in front.
+- Production: the public files domain that routes to MinIO port 9000
 
 URLs are stored when a photo is uploaded, so changing this value does not rewrite existing photos.
 
 ## Run with Docker
 
-Both compose files read variables from `backend/.env`. Inside the API container, `DB_HOST`, `MINIO_ENDPOINT` and `MINIO_USE_SSL=false` are overridden to point at the compose services; serve HTTPS through `MINIO_PUBLIC_URL` (e.g. a reverse proxy), not through `MINIO_USE_SSL`.
+Both compose files read variables from `backend/.env`; required ones (passwords, MinIO keys) stop compose with a message when unset. Before the API starts, three one-shot jobs run, each safe to rerun:
 
-Development (Postgres on host port `5433`, MinIO on `9000`, MinIO console on `9001`, API on `APP_PORT`):
+- `migrate` applies `migrations/*.up.sql` with [golang-migrate](https://github.com/golang-migrate/migrate), as the database owner (`DB_USER`).
+- `pantau-db-init` creates the API's own role (`DB_APP_USER`/`DB_APP_PASSWORD`), which can read and write rows but not change the schema; default privileges cover tables later migrations add.
+- `minio-init` creates `MINIO_BUCKET` with an anonymous read-only policy (objects, not listing), and the API's own MinIO user, limited to that bucket.
+
+The API container connects as `DB_APP_USER` and `MINIO_ACCESS_KEY`, never as the database owner or the MinIO root user. It talks to `pantau-db` and `minio` inside the compose network with `MINIO_USE_SSL=false`; serve HTTPS through `MINIO_PUBLIC_URL` (e.g. a reverse proxy), not through `MINIO_USE_SSL`.
+
+Development binds every port to `127.0.0.1`: Postgres on `POSTGRES_PORT` (`5433`), MinIO on `MINIO_API_PORT` (`9000`), MinIO console on `MINIO_CONSOLE_PORT` (`9001`), API on `APP_PORT`.
 
 ```sh
 docker compose -f docker-compose.dev.yml up -d --build
-docker compose -f docker-compose.dev.yml restart api   # pick up code changes
+docker compose -f docker-compose.dev.yml up -d --build api   # pick up code changes
 ```
 
-Production (only the API and MinIO port `9000` are published):
+Production (`docker-compose.prod.yml`) is the Dokploy stack (Compose Path `./backend/docker-compose.prod.yml`). It publishes no host ports: Traefik routes the API (`8080`) and MinIO (`9000`) domains, and Dokploy writes the Environment tab to `.env` next to the file. It defaults `APP_ENV=production`, and requires `TRUSTED_PROXIES` (Traefik's network CIDR, so the per-IP rate limits see real client IPs), `MINIO_PUBLIC_URL` (the public files domain), `MINIO_ACCESS_KEY`/`MINIO_SECRET_KEY` and `DB_APP_PASSWORD`. The API gets its settings from the explicit `environment` list in that file, not `env_file`, so `MINIO_ROOT_*` and the owner password never reach it; add any new config variable there.
 
-```sh
-docker compose -f docker-compose.prod.yml up -d --build
-```
+The image is distroless (no shell) and ships only `/api`. Run migrations through the `migrate` service, not inside the api container.
 
-The `migrate` service applies `migrations/*.up.sql` with [golang-migrate](https://github.com/golang-migrate/migrate) before the API starts. If you point it at a database that was already migrated by hand with `psql`, mark the existing version once so it is not re-applied (replace the version with the last migration you applied):
+If you point `migrate` at a database that was already migrated by hand with `psql`, mark the existing version once so it is not re-applied (replace the version with the last migration you applied):
 
 ```sh
 docker compose -f docker-compose.dev.yml run --rm migrate \
-  -path=/migrations -database "postgres://$DB_USER:$DB_PASSWORD@postgres:5432/$DB_NAME?sslmode=disable" force 9
+  -path=/migrations -database "postgres://$DB_USER:$DB_PASSWORD@pantau-db:5432/$DB_NAME?sslmode=disable" force 9
 ```
 
 The upstream `minio/minio` image is no longer published on Docker Hub, so both compose files use `pgsty/minio`, a community-maintained build of the same MinIO server (pinned to `RELEASE.2026-08-04T00-00-00Z`). Any S3-compatible MinIO image with the same `server` command works as a replacement.

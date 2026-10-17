@@ -1,5 +1,9 @@
 .env
+.env.*
+!.env.example
 .git
+.idea
+.DS_Store
 docs/
 *.md
-.DS_Store
+*.test

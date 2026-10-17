@@ -14,12 +14,22 @@ import (
 )
 
 func NewFiber(cfg *config.Config) *fiber.App {
-	return fiber.New(fiber.Config{
+	fc := fiber.Config{
 		AppName:         "Pantau API",
 		ErrorHandler:    errs.ErrorHandler,
 		StructValidator: validator.NewStructValidator(),
 		BodyLimit:       cfg.Upload.MaxRequestBytes,
-	})
+	}
+	// c.IP() (and so the auth rate limits) reads X-Forwarded-For only from
+	// trusted proxies; otherwise any client could pick its own rate-limit key.
+	if len(cfg.Server.TrustedProxies) > 0 {
+		fc.TrustProxy = true
+		fc.TrustProxyConfig = fiber.TrustProxyConfig{Proxies: cfg.Server.TrustedProxies}
+		fc.ProxyHeader = fiber.HeaderXForwardedFor
+		fc.EnableIPValidation = true
+	}
+
+	return fiber.New(fc)
 }
 
 func StartServer(

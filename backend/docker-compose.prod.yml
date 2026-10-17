@@ -1,51 +1,150 @@
-# Production stack. Postgres and the MinIO console are not published;
-# only the API and the MinIO object port (public image URLs) are.
-# Set MINIO_PUBLIC_URL in .env to the public host serving port 9000.
-# Usage: docker compose -f docker-compose.prod.yml up -d --build
+# Production stack for Dokploy (Compose Path: ./backend/docker-compose.prod.yml).
+# No host ports: Dokploy's Traefik routes the api (8080) and minio (9000)
+# domains, and Dokploy writes the Environment tab to .env next to this file,
+# which compose reads for the ${...} values below.
 name: pantau-prod
 
 services:
   pantau-db:
-    image: postgis/postgis:18-3.6-alpine
+    image: &db-image postgis/postgis:18-3.6-alpine
     # Official PostGIS images are amd64-only; emulated on Apple Silicon.
     platform: linux/amd64
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME:-pantau}
+      POSTGRES_USER: ${DB_USER:-pantau}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD}
+      TZ: UTC
     volumes:
       - pgdata:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 10
 
   minio:
-    image: pgsty/minio:RELEASE.2026-08-04T00-00-00Z
+    # The upstream minio/minio image is no longer published; pgsty/minio is a
+    # community build of the same server.
+    image: &minio-image pgsty/minio:RELEASE.2026-08-04T00-00-00Z
     restart: unless-stopped
-    command: server /data
+    command: server /data --console-address ":9001"
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-    ports:
-      - "9000:9000"
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?set MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?set MINIO_ROOT_PASSWORD}
+    # Public files domain points here. The console (9001) stays internal.
+    expose:
+      - "9000"
     volumes:
       - miniodata:/data
     healthcheck:
       test: ["CMD", "mc", "ready", "local"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 10
 
+  # One-shot job: same as in docker-compose.dev.yml. Safe to rerun.
+  minio-init:
+    image: *minio-image
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?set MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?set MINIO_ROOT_PASSWORD}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:?set MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:?set MINIO_SECRET_KEY}
+      MINIO_BUCKET: ${MINIO_BUCKET:-pantau}
+    entrypoint: ["sh", "-c"]
+    command:
+      - |
+        set -e
+        mc alias set local http://minio:9000 "$$MINIO_ROOT_USER" "$$MINIO_ROOT_PASSWORD"
+        mc mb --ignore-existing "local/$$MINIO_BUCKET"
+        # Anonymous clients may read objects but not list the bucket.
+        cat > /tmp/pantau-public-read.json <<JSON
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {"AWS": ["*"]},
+              "Action": ["s3:GetObject"],
+              "Resource": ["arn:aws:s3:::$$MINIO_BUCKET/*"]
+            }
+          ]
+        }
+        JSON
+        mc anonymous set-json /tmp/pantau-public-read.json "local/$$MINIO_BUCKET"
+        cat > /tmp/pantau-api-policy.json <<JSON
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": ["s3:GetBucketLocation", "s3:ListBucket"],
+              "Resource": ["arn:aws:s3:::$$MINIO_BUCKET"]
+            },
+            {
+              "Effect": "Allow",
+              "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
+              "Resource": ["arn:aws:s3:::$$MINIO_BUCKET/*"]
+            }
+          ]
+        }
+        JSON
+        mc admin user add local "$$MINIO_ACCESS_KEY" "$$MINIO_SECRET_KEY"
+        mc admin policy create local pantau-api /tmp/pantau-api-policy.json
+        mc admin policy attach local pantau-api --user "$$MINIO_ACCESS_KEY" || true
+    restart: "no"
+
+  # One-shot job: creates the API's own database role, limited to reading and
+  # writing rows (no DDL, not a superuser like DB_USER). Migrations keep using
+  # the owner; default privileges cover the tables they create later.
+  # Safe to rerun; it also resets the role's password to DB_APP_PASSWORD.
+  pantau-db-init:
+    image: *db-image
+    platform: linux/amd64
+    depends_on:
+      pantau-db:
+        condition: service_healthy
+    environment:
+      PGHOST: pantau-db
+      PGUSER: ${DB_USER:-pantau}
+      PGPASSWORD: ${DB_PASSWORD}
+      PGDATABASE: ${DB_NAME:-pantau}
+      DB_APP_USER: ${DB_APP_USER:-pantau-app}
+      DB_APP_PASSWORD: ${DB_APP_PASSWORD:?set DB_APP_PASSWORD}
+    entrypoint: ["sh", "-c"]
+    command:
+      - |
+        set -e
+        psql -v ON_ERROR_STOP=1 -v app_user="$$DB_APP_USER" -v app_password="$$DB_APP_PASSWORD" \
+          -v owner="$$PGUSER" -v db="$$PGDATABASE" <<'SQL'
+        SELECT format('CREATE ROLE %I LOGIN', :'app_user')
+          WHERE NOT EXISTS (SELECT FROM pg_roles WHERE rolname = :'app_user') \gexec
+        SELECT format('ALTER ROLE %I WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE PASSWORD %L',
+          :'app_user', :'app_password') \gexec
+        GRANT CONNECT ON DATABASE :"db" TO :"app_user";
+        GRANT USAGE ON SCHEMA public TO :"app_user";
+        GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO :"app_user";
+        GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO :"app_user";
+        ALTER DEFAULT PRIVILEGES FOR ROLE :"owner" IN SCHEMA public
+          GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO :"app_user";
+        ALTER DEFAULT PRIVILEGES FOR ROLE :"owner" IN SCHEMA public
+          GRANT USAGE, SELECT ON SEQUENCES TO :"app_user";
+        SQL
+    restart: "no"
+
+  # One-shot job: applies pending SQL migrations before the API starts. It
+  # connects as the owner, since migrations change the schema.
   migrate:
     image: migrate/migrate:v4.18.3
     volumes:
       - ./migrations:/migrations:ro
     command:
       - -path=/migrations
-      - -database=postgres://${DB_USER}:${DB_PASSWORD}@pantau-db:5432/${DB_NAME}?sslmode=disable
+      - -database=postgres://${DB_USER:-pantau}:${DB_PASSWORD}@pantau-db:5432/${DB_NAME:-pantau}?sslmode=disable
       - up
     depends_on:
       pantau-db:
@@ -53,28 +152,53 @@ services:
     restart: "no"
 
   api:
-    build:
-      context: .
-      target: prod
+    build: .
     restart: unless-stopped
-    env_file: .env
+    # Every setting the API loads (internal/config); see .env.example. They are
+    # listed one by one instead of env_file, so MINIO_ROOT_* and the database
+    # owner's password never reach the API. Add any new config variable here.
     environment:
-      APP_ENV: production
-      APP_PORT: 8080
-      GORM_SHOW_SQL: "false"
+      APP_NAME: ${APP_NAME:-pantau}
+      APP_ENV: ${APP_ENV:-production}
+      APP_PORT: ${APP_PORT:-8080}
+      # Traefik's IPs or network CIDR. Without it every client shares Traefik's
+      # IP, so the per-IP rate limits (register, login, change password) would
+      # apply to everyone at once.
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:?set TRUSTED_PROXIES to the reverse proxy's IPs or network CIDR}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
       DB_HOST: pantau-db
       DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-pantau}
+      # The limited role from pantau-db-init.
+      DB_USER: ${DB_APP_USER:-pantau-app}
+      DB_PASSWORD: ${DB_APP_PASSWORD:?set DB_APP_PASSWORD}
+      DB_MAX_OPEN_CONNS: ${DB_MAX_OPEN_CONNS:-25}
+      DB_MAX_IDLE_CONNS: ${DB_MAX_IDLE_CONNS:-10}
+      GORM_SHOW_SQL: "false"
+      UPLOAD_ENABLED: ${UPLOAD_ENABLED:-true}
+      UPLOAD_MAX_FILE_SIZE: ${UPLOAD_MAX_FILE_SIZE:-5MB}
+      UPLOAD_MAX_REQUEST_SIZE: ${UPLOAD_MAX_REQUEST_SIZE:-21MB}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?set JWT_SECRET_KEY}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-168h}
       MINIO_ENDPOINT: minio:9000
       # The api talks to MinIO inside the compose network over plain HTTP;
       # put TLS on MINIO_PUBLIC_URL instead.
       MINIO_USE_SSL: "false"
-    ports:
-      - "${APP_PORT:-8080}:8080"
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:?set MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:?set MINIO_SECRET_KEY}
+      MINIO_BUCKET: ${MINIO_BUCKET:-pantau}
+      MINIO_PUBLIC_URL: ${MINIO_PUBLIC_URL:?set MINIO_PUBLIC_URL to the public files domain}
+    expose:
+      - "${APP_PORT:-8080}"
     depends_on:
+      pantau-db:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+      pantau-db-init:
+        condition: service_completed_successfully
       migrate:
         condition: service_completed_successfully
-      minio:
-        condition: service_healthy
 
 volumes:
   pgdata:

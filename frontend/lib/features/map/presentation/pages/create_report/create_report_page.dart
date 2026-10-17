@@ -197,6 +197,29 @@ class _CreateReportPageState extends ConsumerState<CreateReportPage> {
       return;
     }
 
+    final isResubmit = widget.initialReport != null;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(isResubmit ? 'Resubmit report?' : 'Submit report?'),
+        content: const Text(
+          'Check the photos, pin and category before sending. The report '
+          "can't be edited once it's submitted.",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(isResubmit ? 'Resubmit' : 'Submit'),
+          ),
+        ],
+      ),
+    );
+    if (!(confirmed ?? false) || !mounted) return;
+
     await ref
         .read(createReportProvider.notifier)
         .submit(

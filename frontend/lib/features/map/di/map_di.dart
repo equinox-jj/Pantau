@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:pantau/core/di/core_di.dart';
 import 'package:pantau/features/map/data/datasources/map_remote_datasource.dart';
+import 'package:pantau/features/map/data/datasources/map_remote_datasource_impl.dart';
 import 'package:pantau/features/map/data/repository/map_repository_impl.dart';
 import 'package:pantau/features/map/domain/repository/repository.dart';
 import 'package:pantau/features/map/domain/usecase/usecase.dart';

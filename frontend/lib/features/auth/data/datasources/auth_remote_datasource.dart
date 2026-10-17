@@ -1,8 +1,5 @@
-import 'package:dio/dio.dart';
-import 'package:pantau/features/auth/data/model/model.dart';
-
 import 'package:pantau/core/base/base.dart';
-import 'package:pantau/core/network/network.dart';
+import 'package:pantau/features/auth/data/model/model.dart';
 
 abstract class AuthRemoteDataSource with BaseRemoteDataSource {
   Future<RegisterModel> register({
@@ -13,53 +10,4 @@ abstract class AuthRemoteDataSource with BaseRemoteDataSource {
   Future<LoginModel> login({required String email, required String password});
 
   Future<UserProfileModel> getMe();
-}
-
-class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
-  AuthRemoteDataSourceImpl({required this._dioClient});
-
-  final DioClient _dioClient;
-
-  @override
-  Future<LoginModel> login({required String email, required String password}) =>
-      safeApiCall(() async {
-        final response = await _dioClient.post(
-          ApiEndpoints.login,
-          data: {'email': email, 'password': password},
-          options: Options(extra: {ApiEndpoints.kNoAuth: true}),
-        );
-
-        return decodeApiResponse(
-          response.data,
-          (json) => LoginModel.fromJson(json as Map<String, dynamic>),
-        ).requireData();
-      });
-
-  @override
-  Future<RegisterModel> register({
-    required String email,
-    required String password,
-    required String displayName,
-  }) => safeApiCall(() async {
-    final response = await _dioClient.post(
-      ApiEndpoints.register,
-      data: {'email': email, 'password': password, 'display_name': displayName},
-      options: Options(extra: {ApiEndpoints.kNoAuth: true}),
-    );
-
-    return decodeApiResponse(
-      response.data,
-      (json) => RegisterModel.fromJson(json as Map<String, dynamic>),
-    ).requireData();
-  });
-
-  @override
-  Future<UserProfileModel> getMe() => safeApiCall(() async {
-    final response = await _dioClient.get(ApiEndpoints.me);
-
-    return decodeApiResponse(
-      response.data,
-      (json) => UserProfileModel.fromJson(json as Map<String, dynamic>),
-    ).requireData();
-  });
 }

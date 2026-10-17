@@ -4,7 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:pantau/core/error/exceptions.dart';
 import 'package:pantau/core/network/network.dart';
 import 'package:pantau/core/utils/enums/enums.dart';
-import 'package:pantau/features/resolver/data/datasources/resolver_remote_datasource.dart';
+import 'package:pantau/features/resolver/data/datasources/resolver_remote_datasource_impl.dart';
 
 class MockDioClient extends Mock implements DioClient {}
 

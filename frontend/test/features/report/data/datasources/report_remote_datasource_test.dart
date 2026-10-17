@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pantau/core/error/exceptions.dart';
 import 'package:pantau/core/network/network.dart';
-import 'package:pantau/features/report/data/datasources/report_remote_datasource.dart';
+import 'package:pantau/features/report/data/datasources/report_remote_datasource_impl.dart';
 
 class MockDioClient extends Mock implements DioClient {}
 

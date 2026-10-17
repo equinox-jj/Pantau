@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:pantau/core/base/base.dart';
 import 'package:pantau/core/di/core_di.dart';
 import 'package:pantau/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:pantau/features/auth/data/datasources/auth_remote_datasource_impl.dart';
 import 'package:pantau/features/auth/data/repository/auth_repository_impl.dart';
 import 'package:pantau/features/auth/domain/entity/entity.dart';
 import 'package:pantau/features/auth/domain/repository/auth_repository.dart';

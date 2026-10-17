@@ -1,13 +1,13 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../../../core/utils/enums/enums.dart';
-import '../../../../../map/di/map_di.dart';
-import '../../../../../map/domain/entity/entity.dart';
-import '../../../../../map/domain/usecase/search_places_usecase.dart';
-import '../../../../di/resolver_di.dart';
-import '../../../../domain/entity/resolver_entity.dart';
-import '../../../../domain/usecase/resolver_usecase.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/features/map/di/map_di.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
+import 'package:pantau/features/map/domain/usecase/search_places_usecase.dart';
+import 'package:pantau/features/resolver/di/resolver_di.dart';
+import 'package:pantau/features/resolver/domain/entity/resolver_entity.dart';
+import 'package:pantau/features/resolver/domain/usecase/resolver_usecase.dart';
 
 part 'resolver_map_notifier.freezed.dart';
 part 'resolver_map_notifier.g.dart';

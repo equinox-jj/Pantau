@@ -2,7 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../provider/provider.dart';
+import 'package:pantau/features/onboarding/presentation/pages/splash/provider/splash_notifier.dart';
 
 class SplashListener extends ConsumerWidget {
   const SplashListener({super.key, required this.child});

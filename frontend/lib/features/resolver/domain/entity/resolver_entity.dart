@@ -1,4 +1,4 @@
-import '../../../../core/utils/enums/enums.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
 
 /// One report waiting in a resolver's queue.
 ///

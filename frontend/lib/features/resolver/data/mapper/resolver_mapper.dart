@@ -1,7 +1,7 @@
-import '../../../../core/utils/enums/enums.dart';
-import '../../../../core/utils/helpers/helpers.dart';
-import '../../domain/entity/resolver_entity.dart';
-import '../model/resolver_model.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/core/utils/helpers/helpers.dart';
+import 'package:pantau/features/resolver/domain/entity/resolver_entity.dart';
+import 'package:pantau/features/resolver/data/model/resolver_model.dart';
 
 extension QueueModelMapper on QueueModel {
   QueueResult toEntity({required bool hasNext}) {

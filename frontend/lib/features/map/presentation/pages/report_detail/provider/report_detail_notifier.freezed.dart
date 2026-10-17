@@ -37,16 +37,21 @@ $ReportDetailPageStateCopyWith<ReportDetailPageState> get copyWith => _$ReportDe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReportDetailPageState&&(identical(other.detail, detail) || other.detail == detail)&&(identical(other.history, history) || other.history == history)&&(identical(other.timeline, timeline) || other.timeline == timeline)&&(identical(other.isResolver, isResolver) || other.isResolver == isResolver)&&(identical(other.updateStatus, updateStatus) || other.updateStatus == updateStatus));
+  final _this = this as ReportDetailPageState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReportDetailPageState&&(identical(other.detail, _this.detail) || other.detail == _this.detail)&&(identical(other.history, _this.history) || other.history == _this.history)&&(identical(other.timeline, _this.timeline) || other.timeline == _this.timeline)&&(identical(other.isResolver, _this.isResolver) || other.isResolver == _this.isResolver)&&(identical(other.updateStatus, _this.updateStatus) || other.updateStatus == _this.updateStatus));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,detail,history,timeline,isResolver,updateStatus);
+int get hashCode {
+  final _this = this as ReportDetailPageState;
+  return Object.hash(runtimeType,_this.detail,_this.history,_this.timeline,_this.isResolver,_this.updateStatus);
+}
 
 @override
 String toString() {
-  return 'ReportDetailPageState(detail: $detail, history: $history, timeline: $timeline, isResolver: $isResolver, updateStatus: $updateStatus)';
+  final _this = this as ReportDetailPageState;
+  return 'ReportDetailPageState(detail: ${_this.detail}, history: ${_this.history}, timeline: ${_this.timeline}, isResolver: ${_this.isResolver}, updateStatus: ${_this.updateStatus})';
 }
 
 
@@ -252,16 +257,18 @@ _$ReportDetailPageStateCopyWith<_ReportDetailPageState> get copyWith => __$Repor
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReportDetailPageState&&(identical(other.detail, detail) || other.detail == detail)&&(identical(other.history, history) || other.history == history)&&(identical(other.timeline, timeline) || other.timeline == timeline)&&(identical(other.isResolver, isResolver) || other.isResolver == isResolver)&&(identical(other.updateStatus, updateStatus) || other.updateStatus == updateStatus));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReportDetailPageState&&(identical(other.detail, detail) || other.detail == detail)&&(identical(other.history, history) || other.history == history)&&(identical(other.timeline, timeline) || other.timeline == timeline)&&(identical(other.isResolver, isResolver) || other.isResolver == isResolver)&&(identical(other.updateStatus, updateStatus) || other.updateStatus == updateStatus));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,detail,history,timeline,isResolver,updateStatus);
+int get hashCode {
+    return Object.hash(runtimeType,detail,history,timeline,isResolver,updateStatus);
+}
 
 @override
 String toString() {
-  return 'ReportDetailPageState(detail: $detail, history: $history, timeline: $timeline, isResolver: $isResolver, updateStatus: $updateStatus)';
+    return 'ReportDetailPageState(detail: $detail, history: $history, timeline: $timeline, isResolver: $isResolver, updateStatus: $updateStatus)';
 }
 
 

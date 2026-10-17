@@ -1,10 +1,10 @@
 import 'package:fpdart/fpdart.dart';
 
-import '../../../../core/error/error.dart';
-import '../../../auth/data/mapper/mapper.dart';
-import '../../../auth/domain/entity/entity.dart';
-import '../../domain/repository/repository.dart';
-import '../datasources/datasources.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/features/auth/data/mapper/mapper.dart';
+import 'package:pantau/features/auth/domain/entity/entity.dart';
+import 'package:pantau/features/profile/domain/repository/profile_repository.dart';
+import 'package:pantau/features/profile/data/datasources/profile_remote_datasource.dart';
 
 class ProfileRepositoryImpl extends ProfileRepository {
   ProfileRepositoryImpl({required this._profileRemoteDataSource});

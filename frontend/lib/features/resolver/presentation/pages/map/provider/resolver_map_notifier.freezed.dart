@@ -43,16 +43,21 @@ $ResolverMapPageStateCopyWith<ResolverMapPageState> get copyWith => _$ResolverMa
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ResolverMapPageState&&(identical(other.tab, tab) || other.tab == tab)&&(identical(other.reports, reports) || other.reports == reports)&&(identical(other.selectedReport, selectedReport) || other.selectedReport == selectedReport)&&(identical(other.placeSearch, placeSearch) || other.placeSearch == placeSearch)&&(identical(other.searchedPlace, searchedPlace) || other.searchedPlace == searchedPlace));
+  final _this = this as ResolverMapPageState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ResolverMapPageState&&(identical(other.tab, _this.tab) || other.tab == _this.tab)&&(identical(other.reports, _this.reports) || other.reports == _this.reports)&&(identical(other.selectedReport, _this.selectedReport) || other.selectedReport == _this.selectedReport)&&(identical(other.placeSearch, _this.placeSearch) || other.placeSearch == _this.placeSearch)&&(identical(other.searchedPlace, _this.searchedPlace) || other.searchedPlace == _this.searchedPlace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,tab,reports,selectedReport,placeSearch,searchedPlace);
+int get hashCode {
+  final _this = this as ResolverMapPageState;
+  return Object.hash(runtimeType,_this.tab,_this.reports,_this.selectedReport,_this.placeSearch,_this.searchedPlace);
+}
 
 @override
 String toString() {
-  return 'ResolverMapPageState(tab: $tab, reports: $reports, selectedReport: $selectedReport, placeSearch: $placeSearch, searchedPlace: $searchedPlace)';
+  final _this = this as ResolverMapPageState;
+  return 'ResolverMapPageState(tab: ${_this.tab}, reports: ${_this.reports}, selectedReport: ${_this.selectedReport}, placeSearch: ${_this.placeSearch}, searchedPlace: ${_this.searchedPlace})';
 }
 
 
@@ -276,16 +281,18 @@ _$ResolverMapPageStateCopyWith<_ResolverMapPageState> get copyWith => __$Resolve
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ResolverMapPageState&&(identical(other.tab, tab) || other.tab == tab)&&(identical(other.reports, reports) || other.reports == reports)&&(identical(other.selectedReport, selectedReport) || other.selectedReport == selectedReport)&&(identical(other.placeSearch, placeSearch) || other.placeSearch == placeSearch)&&(identical(other.searchedPlace, searchedPlace) || other.searchedPlace == searchedPlace));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ResolverMapPageState&&(identical(other.tab, tab) || other.tab == tab)&&(identical(other.reports, reports) || other.reports == reports)&&(identical(other.selectedReport, selectedReport) || other.selectedReport == selectedReport)&&(identical(other.placeSearch, placeSearch) || other.placeSearch == placeSearch)&&(identical(other.searchedPlace, searchedPlace) || other.searchedPlace == searchedPlace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,tab,reports,selectedReport,placeSearch,searchedPlace);
+int get hashCode {
+    return Object.hash(runtimeType,tab,reports,selectedReport,placeSearch,searchedPlace);
+}
 
 @override
 String toString() {
-  return 'ResolverMapPageState(tab: $tab, reports: $reports, selectedReport: $selectedReport, placeSearch: $placeSearch, searchedPlace: $searchedPlace)';
+    return 'ResolverMapPageState(tab: $tab, reports: $reports, selectedReport: $selectedReport, placeSearch: $placeSearch, searchedPlace: $searchedPlace)';
 }
 
 

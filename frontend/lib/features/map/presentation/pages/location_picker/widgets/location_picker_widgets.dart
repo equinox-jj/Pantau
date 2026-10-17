@@ -5,13 +5,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../../../../../../core/components/button/button.dart';
-import '../../../../../../core/error/error.dart';
-import '../../../../../../core/theme/theme.dart';
-import '../../../../../../core/utils/helpers/helpers.dart';
-import '../../../../domain/entity/entity.dart';
-import '../picked_location.dart';
-import '../provider/provider.dart';
+import 'package:pantau/core/components/button/button.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/core/utils/helpers/helpers.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
+import 'package:pantau/features/map/presentation/pages/location_picker/picked_location.dart';
+import 'package:pantau/features/map/presentation/pages/location_picker/provider/provider.dart';
 
 /// Full-bleed map whose fixed centre marker is the pin: the user pans the map
 /// under it rather than dragging the marker itself.

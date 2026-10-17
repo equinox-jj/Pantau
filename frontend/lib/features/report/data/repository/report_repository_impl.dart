@@ -1,10 +1,10 @@
 import 'package:fpdart/fpdart.dart';
 
-import '../../../../core/error/error.dart';
-import '../../domain/entity/entity.dart';
-import '../../domain/repository/repository.dart';
-import '../datasources/datasources.dart';
-import '../mapper/mapper.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/features/report/domain/entity/feed_report.dart';
+import 'package:pantau/features/report/domain/repository/report_repository.dart';
+import 'package:pantau/features/report/data/datasources/report_remote_datasource.dart';
+import 'package:pantau/features/report/data/mapper/feed_reports_mapper.dart';
 
 class ReportRepositoryImpl extends ReportRepository {
   ReportRepositoryImpl({required this._reportRemoteDataSource});

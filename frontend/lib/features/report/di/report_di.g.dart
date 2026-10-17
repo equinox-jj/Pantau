@@ -149,7 +149,7 @@ final class GetFeedReportsUsecaseProvider
 }
 
 String _$getFeedReportsUsecaseHash() =>
-    r'24835f6e2dade484c6867b55d8fbe83ad4506b98';
+    r'e99cce0674253d3b618e71253ec1a24d6e7a8f05';
 
 @ProviderFor(getMyReportsUsecase)
 final getMyReportsUsecaseProvider = GetMyReportsUsecaseProvider._();
@@ -197,4 +197,4 @@ final class GetMyReportsUsecaseProvider
 }
 
 String _$getMyReportsUsecaseHash() =>
-    r'57cdfc6ee067f60a5625e53dfc2a8840321ef1ab';
+    r'86bae027872b3d6534af7ed391a231c494e7d3ee';

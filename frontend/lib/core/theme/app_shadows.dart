@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 
-import 'app_colors.dart';
+import 'package:pantau/core/theme/app_colors.dart';
 
 /// Elevation shadows from the Pantau design system.
 abstract final class AppShadows {

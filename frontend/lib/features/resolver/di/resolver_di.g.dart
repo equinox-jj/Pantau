@@ -145,4 +145,4 @@ final class GetQueueUsecaseProvider
   }
 }
 
-String _$getQueueUsecaseHash() => r'6a9a475f6f966af3ecf9e828a03cfb11fee71666';
+String _$getQueueUsecaseHash() => r'fc98abacba0e2a5a345b7c5a69855f503f4a3bba';

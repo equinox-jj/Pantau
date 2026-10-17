@@ -81,7 +81,7 @@ final class PinAddressProvider
   }
 }
 
-String _$pinAddressHash() => r'703268b1eb1c75013a194c61b4d6a95d0e5f8f1a';
+String _$pinAddressHash() => r'fb77cd4fde0bfbad943b5d7406bc9c5841393331';
 
 /// Street address of a pinned coordinate, or `null` when the point has no
 /// addressable feature.

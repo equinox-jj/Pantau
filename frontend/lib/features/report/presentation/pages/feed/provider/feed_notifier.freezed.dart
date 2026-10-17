@@ -29,16 +29,21 @@ $FeedPageStateCopyWith<FeedPageState> get copyWith => _$FeedPageStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedPageState&&(identical(other.tab, tab) || other.tab == tab)&&(identical(other.location, location) || other.location == location)&&(identical(other.nearbyReports, nearbyReports) || other.nearbyReports == nearbyReports));
+  final _this = this as FeedPageState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedPageState&&(identical(other.tab, _this.tab) || other.tab == _this.tab)&&(identical(other.location, _this.location) || other.location == _this.location)&&(identical(other.nearbyReports, _this.nearbyReports) || other.nearbyReports == _this.nearbyReports));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,tab,location,nearbyReports);
+int get hashCode {
+  final _this = this as FeedPageState;
+  return Object.hash(runtimeType,_this.tab,_this.location,_this.nearbyReports);
+}
 
 @override
 String toString() {
-  return 'FeedPageState(tab: $tab, location: $location, nearbyReports: $nearbyReports)';
+  final _this = this as FeedPageState;
+  return 'FeedPageState(tab: ${_this.tab}, location: ${_this.location}, nearbyReports: ${_this.nearbyReports})';
 }
 
 
@@ -232,16 +237,18 @@ _$FeedPageStateCopyWith<_FeedPageState> get copyWith => __$FeedPageStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FeedPageState&&(identical(other.tab, tab) || other.tab == tab)&&(identical(other.location, location) || other.location == location)&&(identical(other.nearbyReports, nearbyReports) || other.nearbyReports == nearbyReports));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _FeedPageState&&(identical(other.tab, tab) || other.tab == tab)&&(identical(other.location, location) || other.location == location)&&(identical(other.nearbyReports, nearbyReports) || other.nearbyReports == nearbyReports));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,tab,location,nearbyReports);
+int get hashCode {
+    return Object.hash(runtimeType,tab,location,nearbyReports);
+}
 
 @override
 String toString() {
-  return 'FeedPageState(tab: $tab, location: $location, nearbyReports: $nearbyReports)';
+    return 'FeedPageState(tab: $tab, location: $location, nearbyReports: $nearbyReports)';
 }
 
 

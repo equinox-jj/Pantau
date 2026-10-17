@@ -26,16 +26,21 @@ $ReportDetailCopyWith<ReportDetail> get copyWith => _$ReportDetailCopyWithImpl<R
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReportDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.photoUrls, photoUrls)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  final _this = this as ReportDetail;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReportDetail&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.category, _this.category) || other.category == _this.category)&&(identical(other.description, _this.description) || other.description == _this.description)&&const DeepCollectionEquality().equals(other.photoUrls, _this.photoUrls)&&(identical(other.latitude, _this.latitude) || other.latitude == _this.latitude)&&(identical(other.longitude, _this.longitude) || other.longitude == _this.longitude)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,category,description,const DeepCollectionEquality().hash(photoUrls),latitude,longitude,status,createdAt,updatedAt);
+int get hashCode {
+  final _this = this as ReportDetail;
+  return Object.hash(runtimeType,_this.id,_this.category,_this.description,const DeepCollectionEquality().hash(_this.photoUrls),_this.latitude,_this.longitude,_this.status,_this.createdAt,_this.updatedAt);
+}
 
 @override
 String toString() {
-  return 'ReportDetail(id: $id, category: $category, description: $description, photoUrls: $photoUrls, latitude: $latitude, longitude: $longitude, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
+  final _this = this as ReportDetail;
+  return 'ReportDetail(id: ${_this.id}, category: ${_this.category}, description: ${_this.description}, photoUrls: ${_this.photoUrls}, latitude: ${_this.latitude}, longitude: ${_this.longitude}, status: ${_this.status}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -256,16 +261,18 @@ _$ReportDetailCopyWith<_ReportDetail> get copyWith => __$ReportDetailCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReportDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._photoUrls, _photoUrls)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReportDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.photoUrls, _photoUrls)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,category,description,const DeepCollectionEquality().hash(_photoUrls),latitude,longitude,status,createdAt,updatedAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,category,description,const DeepCollectionEquality().hash(_photoUrls),latitude,longitude,status,createdAt,updatedAt);
+}
 
 @override
 String toString() {
-  return 'ReportDetail(id: $id, category: $category, description: $description, photoUrls: $photoUrls, latitude: $latitude, longitude: $longitude, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'ReportDetail(id: $id, category: $category, description: $description, photoUrls: $photoUrls, latitude: $latitude, longitude: $longitude, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 

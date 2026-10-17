@@ -2,12 +2,12 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../../../core/components/button/button.dart';
-import '../../../../../../core/theme/theme.dart';
-import '../../../../../../core/utils/extensions/extensions.dart';
-import '../../../../../../core/utils/helpers/helpers.dart';
-import '../../../../domain/entity/resolver_entity.dart';
-import '../provider/provider.dart';
+import 'package:pantau/core/components/button/button.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/core/utils/extensions/extensions.dart';
+import 'package:pantau/core/utils/helpers/helpers.dart';
+import 'package:pantau/features/resolver/domain/entity/resolver_entity.dart';
+import 'package:pantau/features/resolver/presentation/pages/map/provider/resolver_map_notifier.dart';
 
 /// Floating card shown when a marker is selected: status/meta, title, and
 /// two actions. Renders nothing when nothing is selected.

@@ -1,7 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../widgets/widgets.dart';
+import 'package:pantau/features/dashboard/presentation/widgets/widgets.dart';
 
 /// Authenticated shell: keeps one navigation stack per tab and hosts the
 /// bottom tab bar shared by every tab.

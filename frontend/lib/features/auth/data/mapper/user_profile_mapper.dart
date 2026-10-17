@@ -1,5 +1,5 @@
-import '../../domain/entity/entity.dart';
-import '../model/model.dart';
+import 'package:pantau/features/auth/domain/entity/entity.dart';
+import 'package:pantau/features/auth/data/model/model.dart';
 
 extension UserProfileModelMapper on UserProfileModel {
   CurrentUser toEntity() {

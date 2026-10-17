@@ -1,4 +1,4 @@
-import 'failure.dart';
+import 'package:pantau/core/error/failure.dart';
 
 /// Human-readable message for any [Failure] variant.
 extension FailureMessage on Failure {

@@ -1,8 +1,8 @@
 import 'package:material_ui/material_ui.dart';
 
-import '../../../../../../core/theme/theme.dart';
-import '../../../../../../core/utils/extensions/extensions.dart';
-import '../../../../domain/entity/resolver_entity.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/core/utils/extensions/extensions.dart';
+import 'package:pantau/features/resolver/domain/entity/resolver_entity.dart';
 
 /// Status-coloured dot for one queue report on the map. No pulse animation
 /// — that effect lives in the citizen map's private marker widget and is

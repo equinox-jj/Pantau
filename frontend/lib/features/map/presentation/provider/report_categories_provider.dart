@@ -1,8 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../core/base/base.dart';
-import '../../di/di.dart';
-import '../../domain/entity/entity.dart';
+import 'package:pantau/core/base/base.dart';
+import 'package:pantau/features/map/di/map_di.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
 
 part 'report_categories_provider.g.dart';
 

@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pantau/core/di/core_di.dart';
-import 'package:pantau/core/service/service.dart';
+import 'package:pantau/core/service/location_service.dart';
 import 'package:pantau/features/map/presentation/pages/location_picker/provider/location_picker_location_notifier.dart';
 
 class MockLocationService extends Mock implements LocationService {}

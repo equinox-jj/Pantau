@@ -4,18 +4,18 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../../../core/components/button/button.dart';
-import '../../../../../core/components/empty_state/empty_state.dart';
-import '../../../../../core/error/error.dart';
-import '../../../../../core/router/app_routes.dart';
-import '../../../../../core/service/service.dart';
-import '../../../../../core/theme/theme.dart';
-import '../../../../../core/utils/enums/enums.dart';
-import '../../../domain/entity/resolver_entity.dart';
-import '../../provider/provider.dart';
-import 'listener/listener.dart';
-import 'provider/provider.dart';
-import 'widgets/queue_widgets.dart';
+import 'package:pantau/core/components/button/button.dart';
+import 'package:pantau/core/components/empty_state/app_empty_state.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/core/router/app_routes.dart';
+import 'package:pantau/core/service/location_service.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/features/resolver/domain/entity/resolver_entity.dart';
+import 'package:pantau/features/resolver/presentation/provider/resolver_location_notifier.dart';
+import 'package:pantau/features/resolver/presentation/pages/queue/listener/queue_listener.dart';
+import 'package:pantau/features/resolver/presentation/pages/queue/provider/queue_notifier.dart';
+import 'package:pantau/features/resolver/presentation/pages/queue/widgets/queue_widgets.dart';
 
 /// How close to the bottom of the list (in pixels) triggers the next page.
 const double _kLoadMoreThreshold = 240;

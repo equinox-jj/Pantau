@@ -1,9 +1,9 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:pantau/features/auth/domain/entity/entity.dart';
 
-import '../../../../core/base/base.dart';
-import '../../../../core/error/error.dart';
-import '../../../../core/utils/enums/enums.dart';
+import 'package:pantau/core/base/base.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
 
 abstract class AuthRepository with BaseRepository {
   Future<Either<Failure, Register>> register({

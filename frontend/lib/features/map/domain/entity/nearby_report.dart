@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../../core/utils/enums/enums.dart';
-import 'report_category.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/features/map/domain/entity/report_category.dart';
 
 part 'nearby_report.freezed.dart';
 

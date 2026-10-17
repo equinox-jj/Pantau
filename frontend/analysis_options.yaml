@@ -23,6 +23,7 @@ formatter:
 
 linter:
   rules:
+    - always_use_package_imports
     - use_named_constants
     - prefer_const_declarations
     - prefer_const_constructors

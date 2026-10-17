@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:path/path.dart' as p;
 
-import '../../../../core/base/base.dart';
-import '../../../../core/network/network.dart';
-import '../../../auth/data/model/model.dart';
+import 'package:pantau/core/base/base.dart';
+import 'package:pantau/core/network/network.dart';
+import 'package:pantau/features/auth/data/model/model.dart';
 
 abstract class ProfileRemoteDataSource with BaseRemoteDataSource {
   /// Succeeds with no body (204). A wrong [currentPassword] is a 400.

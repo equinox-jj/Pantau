@@ -1,9 +1,9 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../../core/error/error.dart';
-import '../../../../../../core/theme/theme.dart';
-import '../provider/provider.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/features/map/presentation/pages/report_detail/provider/report_detail_notifier.dart';
 
 /// Side effects of a resolver's status change: success/error snackbar, plus
 /// a refetch of the detail and history providers so the read-only timeline

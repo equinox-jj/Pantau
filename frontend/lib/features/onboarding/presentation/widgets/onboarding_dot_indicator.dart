@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 
-import '../../../../core/theme/theme.dart';
+import 'package:pantau/core/theme/theme.dart';
 
 /// Tap-able progress dots for the onboarding carousel.
 class OnboardingDotIndicator extends StatelessWidget {

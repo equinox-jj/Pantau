@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 
-import '../../../../../../core/theme/theme.dart';
+import 'package:pantau/core/theme/theme.dart';
 
 /// Primary action of the map tab: start a new report.
 class MapReportFab extends StatelessWidget {

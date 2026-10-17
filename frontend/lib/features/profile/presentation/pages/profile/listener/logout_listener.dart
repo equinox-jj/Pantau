@@ -2,10 +2,10 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../../../core/components/dialog/dialog.dart';
-import '../../../../../../core/error/error.dart';
-import '../../../../../../core/router/app_routes.dart';
-import '../provider/provider.dart';
+import 'package:pantau/core/components/dialog/loading_dialog.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/core/router/app_routes.dart';
+import 'package:pantau/features/profile/presentation/pages/profile/provider/provider.dart';
 
 class LogoutListener extends ConsumerWidget {
   const LogoutListener({super.key, required this.child});

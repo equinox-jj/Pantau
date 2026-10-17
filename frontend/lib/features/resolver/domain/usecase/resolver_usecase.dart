@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
 
-import '../../../../core/base/base.dart';
-import '../../../../core/error/error.dart';
-import '../../../../core/utils/enums/enums.dart';
-import '../entity/resolver_entity.dart';
-import '../repository/resolver_repository.dart';
+import 'package:pantau/core/base/base.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/features/resolver/domain/entity/resolver_entity.dart';
+import 'package:pantau/features/resolver/domain/repository/resolver_repository.dart';
 
 class GetQueueParams extends Equatable {
   const GetQueueParams({

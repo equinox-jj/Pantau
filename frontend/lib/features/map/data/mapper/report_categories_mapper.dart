@@ -1,5 +1,5 @@
-import '../../domain/entity/entity.dart';
-import '../model/model.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
+import 'package:pantau/features/map/data/model/model.dart';
 
 extension ReportCategoriesModelMapper on List<ReportCategoriesDataModel> {
   List<ReportCategory> toEntities() =>

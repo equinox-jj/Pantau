@@ -28,16 +28,21 @@ $OnboardingPageStateCopyWith<OnboardingPageState> get copyWith => _$OnboardingPa
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is OnboardingPageState&&(identical(other.index, index) || other.index == index)&&(identical(other.completion, completion) || other.completion == completion));
+  final _this = this as OnboardingPageState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is OnboardingPageState&&(identical(other.index, _this.index) || other.index == _this.index)&&(identical(other.completion, _this.completion) || other.completion == _this.completion));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,index,completion);
+int get hashCode {
+  final _this = this as OnboardingPageState;
+  return Object.hash(runtimeType,_this.index,_this.completion);
+}
 
 @override
 String toString() {
-  return 'OnboardingPageState(index: $index, completion: $completion)';
+  final _this = this as OnboardingPageState;
+  return 'OnboardingPageState(index: ${_this.index}, completion: ${_this.completion})';
 }
 
 
@@ -228,16 +233,18 @@ _$OnboardingPageStateCopyWith<_OnboardingPageState> get copyWith => __$Onboardin
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _OnboardingPageState&&(identical(other.index, index) || other.index == index)&&(identical(other.completion, completion) || other.completion == completion));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _OnboardingPageState&&(identical(other.index, index) || other.index == index)&&(identical(other.completion, completion) || other.completion == completion));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,index,completion);
+int get hashCode {
+    return Object.hash(runtimeType,index,completion);
+}
 
 @override
 String toString() {
-  return 'OnboardingPageState(index: $index, completion: $completion)';
+    return 'OnboardingPageState(index: $index, completion: $completion)';
 }
 
 

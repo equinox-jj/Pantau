@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 
-import '../../../../core/utils/extensions/extensions.dart';
+import 'package:pantau/core/utils/extensions/extensions.dart';
 
 /// "Don't have an account? Sign up" style row linking between auth pages.
 class AuthFooterPrompt extends StatelessWidget {

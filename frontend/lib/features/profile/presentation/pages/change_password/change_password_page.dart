@@ -2,12 +2,12 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../../core/components/button/button.dart';
-import '../../../../../core/components/textfield/textfield.dart';
-import '../../../../../core/theme/theme.dart';
-import '../../../../../core/utils/validators/validators.dart';
-import 'listener/listener.dart';
-import 'provider/provider.dart';
+import 'package:pantau/core/components/button/button.dart';
+import 'package:pantau/core/components/textfield/app_text_field.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/core/utils/validators/app_validators.dart';
+import 'package:pantau/features/profile/presentation/pages/change_password/listener/change_password_listener.dart';
+import 'package:pantau/features/profile/presentation/pages/change_password/provider/change_password_notifier.dart';
 
 /// Matches the backend's password length cap.
 const _maxPasswordLength = 50;

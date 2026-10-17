@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 
-import '../../../../core/theme/theme.dart';
+import 'package:pantau/core/theme/theme.dart';
 
 /// Decorative radar-sweep animation shown on the splash screen. Purely
 /// cosmetic — does not request location permissions or read GPS.

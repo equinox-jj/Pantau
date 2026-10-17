@@ -4,10 +4,10 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pantau/core/base/base.dart';
 import 'package:pantau/core/error/error.dart';
-import 'package:pantau/features/auth/di/di.dart';
+import 'package:pantau/features/auth/di/auth_di.dart';
 import 'package:pantau/features/auth/domain/entity/entity.dart';
 import 'package:pantau/features/auth/domain/usecase/usecase.dart';
-import 'package:pantau/features/profile/di/di.dart';
+import 'package:pantau/features/profile/di/profile_di.dart';
 import 'package:pantau/features/profile/domain/usecase/usecase.dart';
 import 'package:pantau/features/profile/presentation/pages/profile/provider/provider.dart';
 

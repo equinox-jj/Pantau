@@ -1,8 +1,8 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../core/components/button/button.dart';
-import '../../../../core/theme/theme.dart';
+import 'package:pantau/core/components/button/button.dart';
+import 'package:pantau/core/theme/theme.dart';
 
 /// Prev/Next (or Get started) controls at the bottom of the onboarding page.
 class OnboardingNavControls extends StatelessWidget {

@@ -2,13 +2,13 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../../core/components/button/button.dart';
-import '../../../../../core/theme/theme.dart';
-import '../../../../auth/di/di.dart';
-import '../../../../report/presentation/pages/feed/provider/provider.dart';
-import '../../widgets/profile_widgets.dart';
-import 'listener/listener.dart';
-import 'provider/provider.dart';
+import 'package:pantau/core/components/button/button.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/features/auth/di/auth_di.dart';
+import 'package:pantau/features/report/presentation/pages/feed/provider/provider.dart';
+import 'package:pantau/features/profile/presentation/widgets/profile_widgets.dart';
+import 'package:pantau/features/profile/presentation/pages/profile/listener/listener.dart';
+import 'package:pantau/features/profile/presentation/pages/profile/provider/provider.dart';
 
 /// Profile tab — identity, report stats, help and sign-out.
 class ProfilePage extends ConsumerWidget {

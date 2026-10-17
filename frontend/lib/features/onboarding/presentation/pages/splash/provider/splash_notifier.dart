@@ -1,11 +1,11 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../../../core/base/base.dart';
-import '../../../../../../core/di/core_di.dart';
-import '../../../../../../core/router/app_routes.dart';
-import '../../../../../../core/utils/enums/enums.dart';
-import '../../../../../auth/di/di.dart';
-import '../../../../di/di.dart';
+import 'package:pantau/core/base/base.dart';
+import 'package:pantau/core/di/core_di.dart';
+import 'package:pantau/core/router/app_routes.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/features/auth/di/auth_di.dart';
+import 'package:pantau/features/onboarding/di/onboarding_di.dart';
 
 part 'splash_notifier.g.dart';
 
@@ -16,8 +16,10 @@ const kSplashMinDuration = Duration(milliseconds: 1600);
 class Splash extends _$Splash {
   @override
   Future<String> build() async {
-    final usecase = ref.read(getOnboardingSeenUsecaseProvider);
-    final tokenStorage = ref.read(tokenStorageProvider);
+    // Watched up front: dependencies belong before the first await.
+    final usecase = ref.watch(getOnboardingSeenUsecaseProvider);
+    final tokenStorage = ref.watch(tokenStorageProvider);
+    final roleUsecase = ref.watch(getCachedRoleUsecaseProvider);
 
     final resultFuture = usecase(const NoParams());
     final tokenFuture = tokenStorage.readAccessToken();
@@ -31,7 +33,6 @@ class Splash extends _$Splash {
     // onboarding, which an authenticated user has already passed. Which
     // shell it lands in depends on the cached role.
     if (token != null && token.isNotEmpty) {
-      final roleUsecase = ref.read(getCachedRoleUsecaseProvider);
       final roleResult = await roleUsecase(const NoParams());
       final role = roleResult.fold((_) => UserRole.unknown, (role) => role);
 

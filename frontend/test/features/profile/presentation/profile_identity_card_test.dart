@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pantau/features/auth/di/di.dart';
+import 'package:pantau/features/auth/di/auth_di.dart';
 import 'package:pantau/features/auth/domain/entity/entity.dart';
 import 'package:pantau/features/profile/presentation/widgets/profile_widgets.dart';
 

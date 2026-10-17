@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
-import 'exceptions.dart';
-import 'failure.dart';
+import 'package:pantau/core/error/exceptions.dart';
+import 'package:pantau/core/error/failure.dart';
 
 // So callers importing only error_mapper.dart also get the Failure subtypes.
 export 'failure.dart';

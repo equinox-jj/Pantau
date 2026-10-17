@@ -2,9 +2,9 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../../../core/components/button/button.dart';
-import '../../../../../../core/theme/theme.dart';
-import '../provider/provider.dart';
+import 'package:pantau/core/components/button/button.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/features/map/presentation/pages/map/provider/map_notifier.dart';
 
 /// Copy and optional recovery action for one map status.
 typedef _SheetStatus = ({

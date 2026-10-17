@@ -2,12 +2,12 @@ import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../../../../core/theme/theme.dart';
-import '../../../../../../core/utils/enums/enums.dart';
-import '../../../../../../core/utils/extensions/extensions.dart';
-import '../../../../../../core/utils/helpers/helpers.dart';
-import '../provider/provider.dart';
-import 'feed_photo.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/core/utils/extensions/extensions.dart';
+import 'package:pantau/core/utils/helpers/helpers.dart';
+import 'package:pantau/features/report/presentation/pages/feed/provider/provider.dart';
+import 'package:pantau/features/report/presentation/pages/feed/widgets/feed_photo.dart';
 
 /// Segmented control switching the feed between nearby reports and the
 /// caller's own.

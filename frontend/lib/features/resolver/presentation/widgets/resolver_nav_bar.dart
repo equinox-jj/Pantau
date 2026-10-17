@@ -1,8 +1,8 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../core/theme/theme.dart';
-import 'resolver_tab.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/features/resolver/presentation/widgets/resolver_tab.dart';
 
 /// Bottom tab bar of the resolver shell. Same visual spec as the citizen
 /// dashboard's `DashboardNavBar`, just over `ResolverTab` and with no badge

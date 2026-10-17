@@ -1,5 +1,5 @@
-import '../../../../core/base/base.dart';
-import '../../../../core/local_storage/local_storage.dart';
+import 'package:pantau/core/base/base.dart';
+import 'package:pantau/core/local_storage/local_storage.dart';
 
 abstract class OnboardingLocalDataSource with BaseLocalDataSource {
   Future<bool> hasSeenOnboarding();

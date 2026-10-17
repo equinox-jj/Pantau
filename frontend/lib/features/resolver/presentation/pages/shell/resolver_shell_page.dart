@@ -1,7 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../widgets/resolver_nav_bar.dart';
+import 'package:pantau/features/resolver/presentation/widgets/resolver_nav_bar.dart';
 
 /// Authenticated shell for the resolver role: keeps one navigation stack per
 /// tab and hosts the bottom tab bar shared by Queue and Profile.

@@ -1,8 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../../../core/base/base.dart';
-import '../../../../../auth/di/di.dart';
-import '../../../../../report/presentation/pages/feed/provider/provider.dart';
+import 'package:pantau/core/base/base.dart';
+import 'package:pantau/features/auth/di/auth_di.dart';
+import 'package:pantau/features/report/presentation/pages/feed/provider/provider.dart';
 
 part 'logout_notifier.g.dart';
 

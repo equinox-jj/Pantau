@@ -26,16 +26,21 @@ $FeedReportCopyWith<FeedReport> get copyWith => _$FeedReportCopyWithImpl<FeedRep
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedReport&&(identical(other.id, id) || other.id == id)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.categoryName, categoryName) || other.categoryName == categoryName)&&(identical(other.status, status) || other.status == status)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.photoUrls, photoUrls)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  final _this = this as FeedReport;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedReport&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.categoryId, _this.categoryId) || other.categoryId == _this.categoryId)&&(identical(other.categoryName, _this.categoryName) || other.categoryName == _this.categoryName)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.description, _this.description) || other.description == _this.description)&&const DeepCollectionEquality().equals(other.photoUrls, _this.photoUrls)&&(identical(other.latitude, _this.latitude) || other.latitude == _this.latitude)&&(identical(other.longitude, _this.longitude) || other.longitude == _this.longitude)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,categoryId,categoryName,status,description,const DeepCollectionEquality().hash(photoUrls),latitude,longitude,createdAt);
+int get hashCode {
+  final _this = this as FeedReport;
+  return Object.hash(runtimeType,_this.id,_this.categoryId,_this.categoryName,_this.status,_this.description,const DeepCollectionEquality().hash(_this.photoUrls),_this.latitude,_this.longitude,_this.createdAt);
+}
 
 @override
 String toString() {
-  return 'FeedReport(id: $id, categoryId: $categoryId, categoryName: $categoryName, status: $status, description: $description, photoUrls: $photoUrls, latitude: $latitude, longitude: $longitude, createdAt: $createdAt)';
+  final _this = this as FeedReport;
+  return 'FeedReport(id: ${_this.id}, categoryId: ${_this.categoryId}, categoryName: ${_this.categoryName}, status: ${_this.status}, description: ${_this.description}, photoUrls: ${_this.photoUrls}, latitude: ${_this.latitude}, longitude: ${_this.longitude}, createdAt: ${_this.createdAt})';
 }
 
 
@@ -244,16 +249,18 @@ _$FeedReportCopyWith<_FeedReport> get copyWith => __$FeedReportCopyWithImpl<_Fee
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FeedReport&&(identical(other.id, id) || other.id == id)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.categoryName, categoryName) || other.categoryName == categoryName)&&(identical(other.status, status) || other.status == status)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._photoUrls, _photoUrls)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _FeedReport&&(identical(other.id, id) || other.id == id)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.categoryName, categoryName) || other.categoryName == categoryName)&&(identical(other.status, status) || other.status == status)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.photoUrls, _photoUrls)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,categoryId,categoryName,status,description,const DeepCollectionEquality().hash(_photoUrls),latitude,longitude,createdAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,categoryId,categoryName,status,description,const DeepCollectionEquality().hash(_photoUrls),latitude,longitude,createdAt);
+}
 
 @override
 String toString() {
-  return 'FeedReport(id: $id, categoryId: $categoryId, categoryName: $categoryName, status: $status, description: $description, photoUrls: $photoUrls, latitude: $latitude, longitude: $longitude, createdAt: $createdAt)';
+    return 'FeedReport(id: $id, categoryId: $categoryId, categoryName: $categoryName, status: $status, description: $description, photoUrls: $photoUrls, latitude: $latitude, longitude: $longitude, createdAt: $createdAt)';
 }
 
 

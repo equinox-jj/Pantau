@@ -27,16 +27,21 @@ $StatusHistoryEntryCopyWith<StatusHistoryEntry> get copyWith => _$StatusHistoryE
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatusHistoryEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.fromStatus, fromStatus) || other.fromStatus == fromStatus)&&(identical(other.toStatus, toStatus) || other.toStatus == toStatus)&&(identical(other.note, note) || other.note == note)&&(identical(other.actorRole, actorRole) || other.actorRole == actorRole)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  final _this = this as StatusHistoryEntry;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatusHistoryEntry&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.fromStatus, _this.fromStatus) || other.fromStatus == _this.fromStatus)&&(identical(other.toStatus, _this.toStatus) || other.toStatus == _this.toStatus)&&(identical(other.note, _this.note) || other.note == _this.note)&&(identical(other.actorRole, _this.actorRole) || other.actorRole == _this.actorRole)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,fromStatus,toStatus,note,actorRole,createdAt);
+int get hashCode {
+  final _this = this as StatusHistoryEntry;
+  return Object.hash(runtimeType,_this.id,_this.fromStatus,_this.toStatus,_this.note,_this.actorRole,_this.createdAt);
+}
 
 @override
 String toString() {
-  return 'StatusHistoryEntry(id: $id, fromStatus: $fromStatus, toStatus: $toStatus, note: $note, actorRole: $actorRole, createdAt: $createdAt)';
+  final _this = this as StatusHistoryEntry;
+  return 'StatusHistoryEntry(id: ${_this.id}, fromStatus: ${_this.fromStatus}, toStatus: ${_this.toStatus}, note: ${_this.note}, actorRole: ${_this.actorRole}, createdAt: ${_this.createdAt})';
 }
 
 
@@ -234,16 +239,18 @@ _$StatusHistoryEntryCopyWith<_StatusHistoryEntry> get copyWith => __$StatusHisto
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatusHistoryEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.fromStatus, fromStatus) || other.fromStatus == fromStatus)&&(identical(other.toStatus, toStatus) || other.toStatus == toStatus)&&(identical(other.note, note) || other.note == note)&&(identical(other.actorRole, actorRole) || other.actorRole == actorRole)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatusHistoryEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.fromStatus, fromStatus) || other.fromStatus == fromStatus)&&(identical(other.toStatus, toStatus) || other.toStatus == toStatus)&&(identical(other.note, note) || other.note == note)&&(identical(other.actorRole, actorRole) || other.actorRole == actorRole)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,fromStatus,toStatus,note,actorRole,createdAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,fromStatus,toStatus,note,actorRole,createdAt);
+}
 
 @override
 String toString() {
-  return 'StatusHistoryEntry(id: $id, fromStatus: $fromStatus, toStatus: $toStatus, note: $note, actorRole: $actorRole, createdAt: $createdAt)';
+    return 'StatusHistoryEntry(id: $id, fromStatus: $fromStatus, toStatus: $toStatus, note: $note, actorRole: $actorRole, createdAt: $createdAt)';
 }
 
 

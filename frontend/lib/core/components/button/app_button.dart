@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 
-import '../../theme/theme.dart';
+import 'package:pantau/core/theme/theme.dart';
 
 enum AppButtonVariant { primary, secondary, ghost }
 

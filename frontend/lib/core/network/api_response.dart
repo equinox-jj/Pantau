@@ -1,4 +1,4 @@
-import '../error/exceptions.dart';
+import 'package:pantau/core/error/exceptions.dart';
 
 ResponseData<T> decodeApiResponse<T>(
   Object? json,

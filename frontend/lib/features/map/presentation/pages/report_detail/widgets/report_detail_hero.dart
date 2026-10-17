@@ -4,11 +4,11 @@ import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../../../core/router/app_routes.dart';
-import '../../../../../../core/theme/theme.dart';
-import '../../../../../../core/utils/enums/enums.dart';
-import '../../../../../../core/utils/extensions/extensions.dart';
-import 'report_detail_widgets.dart';
+import 'package:pantau/core/router/app_routes.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/core/utils/extensions/extensions.dart';
+import 'package:pantau/features/map/presentation/pages/report_detail/widgets/report_detail_widgets.dart';
 
 /// Photo hero for the report detail screen: the report's photo under a scrim,
 /// with the back/share chrome and the status pill floating over it.

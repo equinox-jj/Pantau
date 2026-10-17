@@ -4,9 +4,9 @@ import 'package:mocktail/mocktail.dart';
 import 'package:pantau/core/error/error.dart';
 import 'package:pantau/core/local_storage/local_storage.dart';
 import 'package:pantau/core/utils/enums/enums.dart';
-import 'package:pantau/features/auth/data/datasources/datasources.dart';
+import 'package:pantau/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:pantau/features/auth/data/model/model.dart';
-import 'package:pantau/features/auth/data/repository/repository.dart';
+import 'package:pantau/features/auth/data/repository/auth_repository_impl.dart';
 
 class MockAuthRemoteDataSource extends Mock implements AuthRemoteDataSource {}
 

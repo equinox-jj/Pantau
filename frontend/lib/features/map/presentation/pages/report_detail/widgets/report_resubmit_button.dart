@@ -2,11 +2,11 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../../../core/components/button/button.dart';
-import '../../../../../../core/router/app_routes.dart';
-import '../../../../../../core/utils/enums/enums.dart';
-import '../../../../domain/entity/entity.dart';
-import '../provider/provider.dart';
+import 'package:pantau/core/components/button/button.dart';
+import 'package:pantau/core/router/app_routes.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
+import 'package:pantau/features/map/presentation/pages/report_detail/provider/report_detail_notifier.dart';
 
 /// Bottom action on a rejected report (design 21): reopens the compose flow
 /// pre-filled with this report's details.

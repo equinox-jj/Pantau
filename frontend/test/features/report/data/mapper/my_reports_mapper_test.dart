@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pantau/features/report/data/mapper/mapper.dart';
-import 'package:pantau/features/report/data/model/model.dart';
+import 'package:pantau/features/report/data/mapper/feed_reports_mapper.dart';
+import 'package:pantau/features/report/data/model/feed_reports_model.dart';
 
 void main() {
   group('FeedReportsModelMapper.toEntities for my reports', () {

@@ -8,11 +8,11 @@ import 'package:pantau/core/error/error.dart';
 import 'package:pantau/core/local_storage/local_storage.dart';
 import 'package:pantau/core/router/app_routes.dart';
 import 'package:pantau/core/utils/enums/enums.dart';
-import 'package:pantau/features/auth/di/di.dart';
+import 'package:pantau/features/auth/di/auth_di.dart';
 import 'package:pantau/features/auth/domain/usecase/get_cached_role_usecase.dart';
-import 'package:pantau/features/onboarding/di/di.dart';
+import 'package:pantau/features/onboarding/di/onboarding_di.dart';
 import 'package:pantau/features/onboarding/domain/usecase/usecase.dart';
-import 'package:pantau/features/onboarding/presentation/pages/splash/provider/provider.dart';
+import 'package:pantau/features/onboarding/presentation/pages/splash/provider/splash_notifier.dart';
 
 class MockGetOnboardingSeenUsecase extends Mock
     implements GetOnboardingSeenUsecase {}

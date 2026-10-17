@@ -1,8 +1,8 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../core/theme/theme.dart';
-import 'dashboard_tab.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/features/dashboard/presentation/widgets/dashboard_tab.dart';
 
 /// Bottom tab bar of the dashboard shell.
 ///

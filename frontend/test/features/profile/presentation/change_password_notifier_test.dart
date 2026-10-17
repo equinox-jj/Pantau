@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pantau/core/error/error.dart';
-import 'package:pantau/features/profile/di/di.dart';
+import 'package:pantau/features/profile/di/profile_di.dart';
 import 'package:pantau/features/profile/domain/usecase/usecase.dart';
-import 'package:pantau/features/profile/presentation/pages/change_password/provider/provider.dart';
+import 'package:pantau/features/profile/presentation/pages/change_password/provider/change_password_notifier.dart';
 
 class MockChangePasswordUsecase extends Mock implements ChangePasswordUsecase {}
 

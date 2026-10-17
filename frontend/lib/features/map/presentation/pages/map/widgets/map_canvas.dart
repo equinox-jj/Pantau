@@ -4,10 +4,10 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../../../../../../core/theme/theme.dart';
-import '../../../../../../core/utils/extensions/extensions.dart';
-import '../../../../domain/entity/entity.dart';
-import '../provider/provider.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/core/utils/extensions/extensions.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
+import 'package:pantau/features/map/presentation/pages/map/provider/map_notifier.dart';
 
 /// Base tiles, clustered report markers, attribution.
 ///

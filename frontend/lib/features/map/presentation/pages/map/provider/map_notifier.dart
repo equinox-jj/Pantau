@@ -2,11 +2,11 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../../../core/di/core_di.dart';
-import '../../../../../../core/service/service.dart';
-import '../../../../di/di.dart';
-import '../../../../domain/entity/entity.dart';
-import '../../../../domain/usecase/usecase.dart';
+import 'package:pantau/core/di/core_di.dart';
+import 'package:pantau/core/service/location_service.dart';
+import 'package:pantau/features/map/di/map_di.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
+import 'package:pantau/features/map/domain/usecase/usecase.dart';
 
 part 'map_notifier.freezed.dart';
 part 'map_notifier.g.dart';

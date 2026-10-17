@@ -1,12 +1,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../../../core/di/core_di.dart';
-import '../../../../../../core/service/service.dart';
-import '../../../../../../core/utils/helpers/helpers.dart';
-import '../../../../di/di.dart';
-import '../../../../domain/entity/entity.dart';
-import '../../../../domain/usecase/usecase.dart';
+import 'package:pantau/core/di/core_di.dart';
+import 'package:pantau/core/service/location_service.dart';
+import 'package:pantau/core/utils/helpers/helpers.dart';
+import 'package:pantau/features/report/di/report_di.dart';
+import 'package:pantau/features/report/domain/entity/feed_report.dart';
+import 'package:pantau/features/report/domain/usecase/usecase.dart';
 
 part 'feed_notifier.freezed.dart';
 part 'feed_notifier.g.dart';

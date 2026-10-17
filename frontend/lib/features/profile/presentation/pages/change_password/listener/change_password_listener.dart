@@ -1,10 +1,10 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../../core/components/dialog/dialog.dart';
-import '../../../../../../core/error/error.dart';
-import '../../profile/provider/provider.dart';
-import '../provider/provider.dart';
+import 'package:pantau/core/components/dialog/loading_dialog.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/features/profile/presentation/pages/profile/provider/provider.dart';
+import 'package:pantau/features/profile/presentation/pages/change_password/provider/change_password_notifier.dart';
 
 class ChangePasswordListener extends ConsumerWidget {
   const ChangePasswordListener({super.key, required this.child});

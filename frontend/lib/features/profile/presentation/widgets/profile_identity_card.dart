@@ -5,10 +5,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../../core/theme/theme.dart';
-import '../../../auth/di/di.dart';
-import '../pages/profile/provider/provider.dart';
-import 'avatar_actions_sheet.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/features/auth/di/auth_di.dart';
+import 'package:pantau/features/profile/presentation/pages/profile/provider/provider.dart';
+import 'package:pantau/features/profile/presentation/widgets/avatar_actions_sheet.dart';
 
 typedef _Identity = ({
   String? name,

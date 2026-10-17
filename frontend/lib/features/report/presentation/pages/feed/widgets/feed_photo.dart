@@ -1,7 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../../../core/theme/theme.dart';
+import 'package:pantau/core/theme/theme.dart';
 
 /// Only the first photo shows — a card in a vertically scrolling list
 /// shouldn't add its own horizontal swipe gesture. When there's more than

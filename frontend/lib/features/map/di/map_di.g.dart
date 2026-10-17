@@ -186,7 +186,7 @@ final class GetNearbyReportsUsecaseProvider
 }
 
 String _$getNearbyReportsUsecaseHash() =>
-    r'fad7724e5306c864d5a7d412fa5153a783794622';
+    r'2ea3db41d741de7072bb795516cd3296aa522a4e';
 
 @ProviderFor(getReportCategoriesUsecase)
 final getReportCategoriesUsecaseProvider =
@@ -235,7 +235,7 @@ final class GetReportCategoriesUsecaseProvider
 }
 
 String _$getReportCategoriesUsecaseHash() =>
-    r'4e93f2adf7512d14e89ce564c56b9f9ecb82a537';
+    r'814e47905040f20907f4d992e2c9a5ca73ff7013';
 
 @ProviderFor(getReportDetailUsecase)
 final getReportDetailUsecaseProvider = GetReportDetailUsecaseProvider._();
@@ -283,7 +283,7 @@ final class GetReportDetailUsecaseProvider
 }
 
 String _$getReportDetailUsecaseHash() =>
-    r'51b36a4991f0d6f77fbeac4b3ef6013f13a3915f';
+    r'a70c692af8d3f660af2dc0d4642e1661002b54bf';
 
 @ProviderFor(getReportHistoryUsecase)
 final getReportHistoryUsecaseProvider = GetReportHistoryUsecaseProvider._();
@@ -331,7 +331,7 @@ final class GetReportHistoryUsecaseProvider
 }
 
 String _$getReportHistoryUsecaseHash() =>
-    r'725b6ffdd92a4d1b44fcf90264cb385431d2143a';
+    r'3a8b917ba75768ab43dd7cefd9f8f3e5614a0f2d';
 
 @ProviderFor(createReportUsecase)
 final createReportUsecaseProvider = CreateReportUsecaseProvider._();
@@ -379,7 +379,7 @@ final class CreateReportUsecaseProvider
 }
 
 String _$createReportUsecaseHash() =>
-    r'4ff4cad9acea345caa2ce02a25ac145ce14cde2c';
+    r'abb1712c0eb53fa2ca968a8b4d1cb4a27638b2e4';
 
 @ProviderFor(updateReportStatusUsecase)
 final updateReportStatusUsecaseProvider = UpdateReportStatusUsecaseProvider._();
@@ -427,7 +427,7 @@ final class UpdateReportStatusUsecaseProvider
 }
 
 String _$updateReportStatusUsecaseHash() =>
-    r'd4f47f4978ac4d755d7befc82467fdc673f6fdd9';
+    r'a0dfd1c968bd02e0e2ed6d2802d8942662a1fcb4';
 
 @ProviderFor(searchPlacesUsecase)
 final searchPlacesUsecaseProvider = SearchPlacesUsecaseProvider._();
@@ -475,7 +475,7 @@ final class SearchPlacesUsecaseProvider
 }
 
 String _$searchPlacesUsecaseHash() =>
-    r'5cede8743bea51a507e24b20d6b6d5cd739cc8ae';
+    r'379fc717f8b1bc228edb63fa272ba65b3763f0c2';
 
 @ProviderFor(reverseGeocodeUsecase)
 final reverseGeocodeUsecaseProvider = ReverseGeocodeUsecaseProvider._();
@@ -523,4 +523,4 @@ final class ReverseGeocodeUsecaseProvider
 }
 
 String _$reverseGeocodeUsecaseHash() =>
-    r'8a0e52623059f3a4d72a991f9245f0af4b3b190f';
+    r'794319433683b1721e75061fb1ce4f4705759798';

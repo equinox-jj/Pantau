@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 
-import '../error/error_mapper.dart';
+import 'package:pantau/core/error/error_mapper.dart';
 
 /// Converts thrown exceptions into a domain [Failure]. The single boundary
 /// where exceptions stop and `Either` begins.

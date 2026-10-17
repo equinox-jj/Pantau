@@ -1,10 +1,10 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../core/di/core_di.dart';
-import '../data/datasources/resolver_remote_datasource.dart';
-import '../data/repository/resolver_repository_impl.dart';
-import '../domain/repository/resolver_repository.dart';
-import '../domain/usecase/resolver_usecase.dart';
+import 'package:pantau/core/di/core_di.dart';
+import 'package:pantau/features/resolver/data/datasources/resolver_remote_datasource.dart';
+import 'package:pantau/features/resolver/data/repository/resolver_repository_impl.dart';
+import 'package:pantau/features/resolver/domain/repository/resolver_repository.dart';
+import 'package:pantau/features/resolver/domain/usecase/resolver_usecase.dart';
 
 part 'resolver_di.g.dart';
 
@@ -27,6 +27,6 @@ ResolverRepository resolverRepository(Ref ref) {
 @Riverpod(keepAlive: true)
 GetQueueUsecase getQueueUsecase(Ref ref) {
   return GetQueueUsecase(
-    resolverRepository: ref.read(resolverRepositoryProvider),
+    resolverRepository: ref.watch(resolverRepositoryProvider),
   );
 }

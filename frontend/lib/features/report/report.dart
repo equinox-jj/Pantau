@@ -1,9 +1,9 @@
-export 'data/datasources/datasources.dart';
-export 'data/mapper/mapper.dart';
-export 'data/model/model.dart';
-export 'data/repository/repository.dart';
-export 'di/di.dart';
-export 'domain/entity/entity.dart';
-export 'domain/repository/repository.dart';
+export 'data/datasources/report_remote_datasource.dart';
+export 'data/mapper/feed_reports_mapper.dart';
+export 'data/model/feed_reports_model.dart';
+export 'data/repository/report_repository_impl.dart';
+export 'di/report_di.dart';
+export 'domain/entity/feed_report.dart';
+export 'domain/repository/report_repository.dart';
 export 'domain/usecase/usecase.dart';
 export 'presentation/pages/feed/feed.dart';

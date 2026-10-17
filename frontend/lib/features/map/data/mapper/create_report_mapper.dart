@@ -1,7 +1,7 @@
-import '../../../../core/utils/enums/enums.dart';
-import '../../../../core/utils/helpers/helpers.dart';
-import '../../domain/entity/entity.dart';
-import '../model/model.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/core/utils/helpers/helpers.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
+import 'package:pantau/features/map/data/model/model.dart';
 
 extension CreateReportModelMapper on CreateReportModel {
   ReportDetail toEntity() {

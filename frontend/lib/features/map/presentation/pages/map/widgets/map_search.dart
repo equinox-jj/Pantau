@@ -1,9 +1,9 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../../core/components/textfield/textfield.dart';
-import '../../../../../../core/theme/theme.dart';
-import '../../../../domain/entity/entity.dart';
+import 'package:pantau/core/components/textfield/app_text_field.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
 
 /// Place-search input above the map.
 ///

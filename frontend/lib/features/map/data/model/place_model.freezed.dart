@@ -29,16 +29,21 @@ $PlaceModelCopyWith<PlaceModel> get copyWith => _$PlaceModelCopyWithImpl<PlaceMo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlaceModel&&(identical(other.placeId, placeId) || other.placeId == placeId)&&(identical(other.lat, lat) || other.lat == lat)&&(identical(other.lon, lon) || other.lon == lon)&&(identical(other.name, name) || other.name == name)&&(identical(other.displayName, displayName) || other.displayName == displayName));
+  final _this = this as PlaceModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlaceModel&&(identical(other.placeId, _this.placeId) || other.placeId == _this.placeId)&&(identical(other.lat, _this.lat) || other.lat == _this.lat)&&(identical(other.lon, _this.lon) || other.lon == _this.lon)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,placeId,lat,lon,name,displayName);
+int get hashCode {
+  final _this = this as PlaceModel;
+  return Object.hash(runtimeType,_this.placeId,_this.lat,_this.lon,_this.name,_this.displayName);
+}
 
 @override
 String toString() {
-  return 'PlaceModel(placeId: $placeId, lat: $lat, lon: $lon, name: $name, displayName: $displayName)';
+  final _this = this as PlaceModel;
+  return 'PlaceModel(placeId: ${_this.placeId}, lat: ${_this.lat}, lon: ${_this.lon}, name: ${_this.name}, displayName: ${_this.displayName})';
 }
 
 
@@ -236,16 +241,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlaceModel&&(identical(other.placeId, placeId) || other.placeId == placeId)&&(identical(other.lat, lat) || other.lat == lat)&&(identical(other.lon, lon) || other.lon == lon)&&(identical(other.name, name) || other.name == name)&&(identical(other.displayName, displayName) || other.displayName == displayName));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlaceModel&&(identical(other.placeId, placeId) || other.placeId == placeId)&&(identical(other.lat, lat) || other.lat == lat)&&(identical(other.lon, lon) || other.lon == lon)&&(identical(other.name, name) || other.name == name)&&(identical(other.displayName, displayName) || other.displayName == displayName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,placeId,lat,lon,name,displayName);
+int get hashCode {
+    return Object.hash(runtimeType,placeId,lat,lon,name,displayName);
+}
 
 @override
 String toString() {
-  return 'PlaceModel(placeId: $placeId, lat: $lat, lon: $lon, name: $name, displayName: $displayName)';
+    return 'PlaceModel(placeId: $placeId, lat: $lat, lon: $lon, name: $name, displayName: $displayName)';
 }
 
 

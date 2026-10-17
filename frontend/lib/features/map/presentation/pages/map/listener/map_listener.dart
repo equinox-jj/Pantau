@@ -1,10 +1,10 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../../core/error/error.dart';
-import '../../../../../../core/service/service.dart';
-import '../../../../../../core/theme/theme.dart';
-import '../provider/provider.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/core/service/location_service.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/features/map/presentation/pages/map/provider/map_notifier.dart';
 
 /// Side effects of the map tab: a snackbar when a fetch fails, a dialog
 /// explaining why location is needed when permission is refused, and the

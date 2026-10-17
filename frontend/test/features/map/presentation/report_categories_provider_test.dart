@@ -4,7 +4,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pantau/core/base/base.dart';
 import 'package:pantau/core/error/error.dart';
-import 'package:pantau/features/map/di/di.dart';
+import 'package:pantau/features/map/di/map_di.dart';
 import 'package:pantau/features/map/domain/entity/entity.dart';
 import 'package:pantau/features/map/domain/usecase/usecase.dart';
 import 'package:pantau/features/map/presentation/provider/report_categories_provider.dart';

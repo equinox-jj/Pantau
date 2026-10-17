@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:path/path.dart' as p;
 
-import '../../../../core/base/base.dart';
-import '../../../../core/network/network.dart';
-import '../model/model.dart';
+import 'package:pantau/core/base/base.dart';
+import 'package:pantau/core/network/network.dart';
+import 'package:pantau/features/map/data/model/model.dart';
 
 abstract class MapRemoteDataSource with BaseRemoteDataSource {
   Future<List<NearbyReportsDataModel>> getNearbyReports({

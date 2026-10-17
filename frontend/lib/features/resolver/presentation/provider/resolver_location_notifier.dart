@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../core/di/core_di.dart';
-import '../../../../core/service/service.dart';
+import 'package:pantau/core/di/core_di.dart';
+import 'package:pantau/core/service/location_service.dart';
 
 part 'resolver_location_notifier.g.dart';
 

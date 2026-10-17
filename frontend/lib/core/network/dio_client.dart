@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 
-import 'api_endpoints.dart';
-import 'interceptors/auth_interceptor.dart';
-import 'interceptors/logger_interceptor.dart';
+import 'package:pantau/core/network/api_endpoints.dart';
+import 'package:pantau/core/network/interceptors/auth_interceptor.dart';
+import 'package:pantau/core/network/interceptors/logger_interceptor.dart';
 
 /// Builds and owns the configured [Dio] instance used across the app.
 class DioClient {

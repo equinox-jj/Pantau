@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pantau/core/error/error.dart';
-import 'package:pantau/features/onboarding/data/datasources/datasources.dart';
-import 'package:pantau/features/onboarding/data/repository/repository.dart';
+import 'package:pantau/features/onboarding/data/datasources/onboarding_local_datasource.dart';
+import 'package:pantau/features/onboarding/data/repository/onboarding_repository_impl.dart';
 
 class MockOnboardingLocalDataSource extends Mock
     implements OnboardingLocalDataSource {}

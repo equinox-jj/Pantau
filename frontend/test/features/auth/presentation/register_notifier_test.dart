@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pantau/core/error/error.dart';
-import 'package:pantau/features/auth/di/di.dart';
+import 'package:pantau/features/auth/di/auth_di.dart';
 import 'package:pantau/features/auth/domain/entity/entity.dart';
 import 'package:pantau/features/auth/domain/usecase/usecase.dart';
 import 'package:pantau/features/auth/presentation/pages/register/provider/register_notifier.dart';

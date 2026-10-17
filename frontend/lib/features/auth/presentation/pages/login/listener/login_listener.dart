@@ -4,13 +4,13 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../../../core/base/base.dart';
-import '../../../../../../core/components/dialog/dialog.dart';
-import '../../../../../../core/error/error.dart';
-import '../../../../../../core/router/app_routes.dart';
-import '../../../../../../core/utils/enums/enums.dart';
-import '../../../../di/di.dart';
-import '../provider/provider.dart';
+import 'package:pantau/core/base/base.dart';
+import 'package:pantau/core/components/dialog/loading_dialog.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/core/router/app_routes.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/features/auth/di/auth_di.dart';
+import 'package:pantau/features/auth/presentation/pages/login/provider/login_notifier.dart';
 
 class LoginListener extends ConsumerWidget {
   const LoginListener({super.key, required this.child});

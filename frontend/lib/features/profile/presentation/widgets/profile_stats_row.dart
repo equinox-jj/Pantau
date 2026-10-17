@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../../core/theme/theme.dart';
-import '../../../auth/di/di.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/features/auth/di/auth_di.dart';
 
 /// Reports / Resolved counts, straight from `GET /users/me` — the same call
 /// that backs [ProfileIdentityCard], so opening Profile costs one round trip

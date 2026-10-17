@@ -1,8 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../di/di.dart';
-import '../../../../domain/entity/entity.dart';
-import '../../../../domain/usecase/usecase.dart';
+import 'package:pantau/features/map/di/map_di.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
+import 'package:pantau/features/map/domain/usecase/usecase.dart';
 
 part 'pin_address_provider.g.dart';
 
@@ -18,7 +18,7 @@ Future<Place?> pinAddress(
   required double latitude,
   required double longitude,
 }) async {
-  final result = await ref.read(reverseGeocodeUsecaseProvider)(
+  final result = await ref.watch(reverseGeocodeUsecaseProvider)(
     ReverseGeocodeParams(latitude: latitude, longitude: longitude),
   );
 

@@ -1,9 +1,9 @@
 import 'package:material_ui/material_ui.dart';
 
-import 'app_colors.dart';
-import 'app_radius.dart';
-import 'app_spacing.dart';
-import 'app_typography.dart';
+import 'package:pantau/core/theme/app_colors.dart';
+import 'package:pantau/core/theme/app_radius.dart';
+import 'package:pantau/core/theme/app_spacing.dart';
+import 'package:pantau/core/theme/app_typography.dart';
 
 /// Assembles the Pantau design tokens into a [ThemeData]. Dark-only by
 /// design — there is no light variant.

@@ -2,9 +2,9 @@ import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/router/app_routes.dart';
-import '../../../../core/theme/theme.dart';
-import 'profile_icon_badge.dart';
+import 'package:pantau/core/router/app_routes.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/features/profile/presentation/widgets/profile_icon_badge.dart';
 
 /// Account actions: currently just "Change password".
 class ProfileAccountCard extends StatelessWidget {

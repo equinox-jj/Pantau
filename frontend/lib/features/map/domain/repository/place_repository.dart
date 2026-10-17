@@ -1,8 +1,8 @@
 import 'package:fpdart/fpdart.dart';
 
-import '../../../../core/base/base.dart';
-import '../../../../core/error/error.dart';
-import '../entity/entity.dart';
+import 'package:pantau/core/base/base.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
 
 abstract class PlaceRepository with BaseRepository {
   /// Forward-geocodes [query], optionally biased toward [viewBox].

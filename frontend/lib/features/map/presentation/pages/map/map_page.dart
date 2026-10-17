@@ -7,14 +7,14 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../../../../../core/components/button/button.dart';
-import '../../../../../core/router/app_routes.dart';
-import '../../../../../core/service/service.dart';
-import '../../../../../core/theme/theme.dart';
-import '../../../domain/entity/entity.dart';
-import 'listener/listener.dart';
-import 'provider/provider.dart';
-import 'widgets/widgets.dart';
+import 'package:pantau/core/components/button/button.dart';
+import 'package:pantau/core/router/app_routes.dart';
+import 'package:pantau/core/service/location_service.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
+import 'package:pantau/features/map/presentation/pages/map/listener/map_listener.dart';
+import 'package:pantau/features/map/presentation/pages/map/provider/map_notifier.dart';
+import 'package:pantau/features/map/presentation/pages/map/widgets/widgets.dart';
 
 /// Nearby reports on an OSM map with clustered markers.
 ///

@@ -1,7 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'app_colors.dart';
+import 'package:pantau/core/theme/app_colors.dart';
 
 /// Type scale from the Pantau design system. Plus Jakarta Sans for UI,
 /// headings and body; IBM Plex Mono for labels, data and coordinates.

@@ -1,7 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 
-import '../../theme/theme.dart';
+import 'package:pantau/core/theme/theme.dart';
 
 /// Icon medallion, headline and supporting copy, with an optional primary
 /// action.

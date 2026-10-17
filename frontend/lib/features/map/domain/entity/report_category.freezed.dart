@@ -26,16 +26,21 @@ $ReportCategoryCopyWith<ReportCategory> get copyWith => _$ReportCategoryCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReportCategory&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.isActive, isActive) || other.isActive == isActive));
+  final _this = this as ReportCategory;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReportCategory&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.slug, _this.slug) || other.slug == _this.slug)&&(identical(other.isActive, _this.isActive) || other.isActive == _this.isActive));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,slug,isActive);
+int get hashCode {
+  final _this = this as ReportCategory;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.slug,_this.isActive);
+}
 
 @override
 String toString() {
-  return 'ReportCategory(id: $id, name: $name, slug: $slug, isActive: $isActive)';
+  final _this = this as ReportCategory;
+  return 'ReportCategory(id: ${_this.id}, name: ${_this.name}, slug: ${_this.slug}, isActive: ${_this.isActive})';
 }
 
 
@@ -228,16 +233,18 @@ _$ReportCategoryCopyWith<_ReportCategory> get copyWith => __$ReportCategoryCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReportCategory&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.isActive, isActive) || other.isActive == isActive));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReportCategory&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.isActive, isActive) || other.isActive == isActive));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,slug,isActive);
+int get hashCode {
+    return Object.hash(runtimeType,id,name,slug,isActive);
+}
 
 @override
 String toString() {
-  return 'ReportCategory(id: $id, name: $name, slug: $slug, isActive: $isActive)';
+    return 'ReportCategory(id: $id, name: $name, slug: $slug, isActive: $isActive)';
 }
 
 

@@ -2,8 +2,8 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../../../core/router/app_routes.dart';
-import '../provider/provider.dart';
+import 'package:pantau/core/router/app_routes.dart';
+import 'package:pantau/features/onboarding/presentation/pages/onboarding/provider/onboarding_notifier.dart';
 
 class OnboardingListener extends ConsumerWidget {
   const OnboardingListener({super.key, required this.child});

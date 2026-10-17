@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
 
-import '../../../../core/base/base.dart';
-import '../../../../core/error/error.dart';
-import '../entity/entity.dart';
-import '../repository/repository.dart';
+import 'package:pantau/core/base/base.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/features/report/domain/entity/feed_report.dart';
+import 'package:pantau/features/report/domain/repository/report_repository.dart';
 
 class GetFeedReportsParams extends Equatable {
   const GetFeedReportsParams({

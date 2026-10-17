@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 
-import '../../local_storage/local_storage.dart';
-import '../api_endpoints.dart';
-import '../../router/session_manager.dart';
+import 'package:pantau/core/local_storage/local_storage.dart';
+import 'package:pantau/core/network/api_endpoints.dart';
+import 'package:pantau/core/router/session_manager.dart';
 
 /// Attaches the `x-api-key` header to every request and a
 /// `Authorization: Bearer` header unless the request is flagged `noAuth`.

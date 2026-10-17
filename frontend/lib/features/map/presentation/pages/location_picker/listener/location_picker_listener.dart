@@ -1,8 +1,8 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../../core/service/service.dart';
-import '../provider/provider.dart';
+import 'package:pantau/core/service/location_service.dart';
+import 'package:pantau/features/map/presentation/pages/location_picker/provider/provider.dart';
 
 /// Side effect of a location attempt: hands every settled [LocationResult] to
 /// the page so it can move the pin, and shows a snackbar for a transient

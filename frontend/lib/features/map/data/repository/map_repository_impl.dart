@@ -1,11 +1,11 @@
 import 'package:fpdart/fpdart.dart';
 
-import '../../../../core/error/error.dart';
-import '../../../../core/utils/enums/enums.dart';
-import '../../domain/entity/entity.dart';
-import '../../domain/repository/repository.dart';
-import '../datasources/datasources.dart';
-import '../mapper/mapper.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
+import 'package:pantau/features/map/domain/repository/repository.dart';
+import 'package:pantau/features/map/data/datasources/map_remote_datasource.dart';
+import 'package:pantau/features/map/data/mapper/mapper.dart';
 
 class MapRepositoryImpl extends MapRepository implements PlaceRepository {
   MapRepositoryImpl({required this._mapRemoteDataSource});

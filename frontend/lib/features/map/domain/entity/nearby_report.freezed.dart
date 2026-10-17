@@ -26,16 +26,21 @@ $NearbyReportCopyWith<NearbyReport> get copyWith => _$NearbyReportCopyWithImpl<N
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NearbyReport&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.status, status) || other.status == status)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  final _this = this as NearbyReport;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NearbyReport&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.category, _this.category) || other.category == _this.category)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.photoUrl, _this.photoUrl) || other.photoUrl == _this.photoUrl)&&(identical(other.latitude, _this.latitude) || other.latitude == _this.latitude)&&(identical(other.longitude, _this.longitude) || other.longitude == _this.longitude)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,category,status,photoUrl,latitude,longitude,createdAt);
+int get hashCode {
+  final _this = this as NearbyReport;
+  return Object.hash(runtimeType,_this.id,_this.category,_this.status,_this.photoUrl,_this.latitude,_this.longitude,_this.createdAt);
+}
 
 @override
 String toString() {
-  return 'NearbyReport(id: $id, category: $category, status: $status, photoUrl: $photoUrl, latitude: $latitude, longitude: $longitude, createdAt: $createdAt)';
+  final _this = this as NearbyReport;
+  return 'NearbyReport(id: ${_this.id}, category: ${_this.category}, status: ${_this.status}, photoUrl: ${_this.photoUrl}, latitude: ${_this.latitude}, longitude: ${_this.longitude}, createdAt: ${_this.createdAt})';
 }
 
 
@@ -246,16 +251,18 @@ _$NearbyReportCopyWith<_NearbyReport> get copyWith => __$NearbyReportCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NearbyReport&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.status, status) || other.status == status)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _NearbyReport&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.status, status) || other.status == status)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,category,status,photoUrl,latitude,longitude,createdAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,category,status,photoUrl,latitude,longitude,createdAt);
+}
 
 @override
 String toString() {
-  return 'NearbyReport(id: $id, category: $category, status: $status, photoUrl: $photoUrl, latitude: $latitude, longitude: $longitude, createdAt: $createdAt)';
+    return 'NearbyReport(id: $id, category: $category, status: $status, photoUrl: $photoUrl, latitude: $latitude, longitude: $longitude, createdAt: $createdAt)';
 }
 
 

@@ -1,8 +1,8 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../core/theme/theme.dart';
-import 'onboarding_slide_data.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/features/onboarding/presentation/widgets/onboarding_slide_data.dart';
 
 /// One onboarding carousel slide: illustration + heading + body copy.
 class OnboardingSlideView extends StatelessWidget {

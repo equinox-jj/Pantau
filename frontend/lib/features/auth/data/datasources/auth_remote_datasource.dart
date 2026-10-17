@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:pantau/features/auth/data/model/model.dart';
 
-import '../../../../core/base/base.dart';
-import '../../../../core/network/network.dart';
+import 'package:pantau/core/base/base.dart';
+import 'package:pantau/core/network/network.dart';
 
 abstract class AuthRemoteDataSource with BaseRemoteDataSource {
   Future<RegisterModel> register({

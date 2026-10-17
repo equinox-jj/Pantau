@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import '../error/exceptions.dart';
+import 'package:pantau/core/error/exceptions.dart';
 
 /// Centralizes cache-error translation for local data sources.
 mixin BaseLocalDataSource {

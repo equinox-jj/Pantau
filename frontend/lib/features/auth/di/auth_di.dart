@@ -1,12 +1,12 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../core/base/base.dart';
-import '../../../core/di/core_di.dart';
-import '../data/datasources/datasources.dart';
-import '../data/repository/repository.dart';
-import '../domain/entity/entity.dart';
-import '../domain/repository/repository.dart';
-import '../domain/usecase/usecase.dart';
+import 'package:pantau/core/base/base.dart';
+import 'package:pantau/core/di/core_di.dart';
+import 'package:pantau/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:pantau/features/auth/data/repository/auth_repository_impl.dart';
+import 'package:pantau/features/auth/domain/entity/entity.dart';
+import 'package:pantau/features/auth/domain/repository/auth_repository.dart';
+import 'package:pantau/features/auth/domain/usecase/usecase.dart';
 
 part 'auth_di.g.dart';
 
@@ -32,35 +32,35 @@ AuthRepository authRepository(Ref ref) {
 
 @Riverpod(keepAlive: true)
 LoginUsecase loginUsecase(Ref ref) {
-  final authRepository = ref.read(authRepositoryProvider);
+  final authRepository = ref.watch(authRepositoryProvider);
 
   return LoginUsecase(authRepository: authRepository);
 }
 
 @Riverpod(keepAlive: true)
 LogoutUsecase logoutUsecase(Ref ref) {
-  final authRepository = ref.read(authRepositoryProvider);
+  final authRepository = ref.watch(authRepositoryProvider);
 
   return LogoutUsecase(authRepository: authRepository);
 }
 
 @Riverpod(keepAlive: true)
 RegisterUsecase registerUsecase(Ref ref) {
-  final authRepository = ref.read(authRepositoryProvider);
+  final authRepository = ref.watch(authRepositoryProvider);
 
   return RegisterUsecase(authRepository: authRepository);
 }
 
 @Riverpod(keepAlive: true)
 GetCurrentUserUsecase getCurrentUserUsecase(Ref ref) {
-  final authRepository = ref.read(authRepositoryProvider);
+  final authRepository = ref.watch(authRepositoryProvider);
 
   return GetCurrentUserUsecase(authRepository: authRepository);
 }
 
 @Riverpod(keepAlive: true)
 GetCachedRoleUsecase getCachedRoleUsecase(Ref ref) {
-  final authRepository = ref.read(authRepositoryProvider);
+  final authRepository = ref.watch(authRepositoryProvider);
 
   return GetCachedRoleUsecase(authRepository: authRepository);
 }
@@ -70,7 +70,7 @@ GetCachedRoleUsecase getCachedRoleUsecase(Ref ref) {
 /// way every other screen in this app reads a failed call.
 @riverpod
 Future<CurrentUser?> currentUser(Ref ref) async {
-  final usecase = ref.read(getCurrentUserUsecaseProvider);
+  final usecase = ref.watch(getCurrentUserUsecaseProvider);
   final result = await usecase(const NoParams());
 
   return result.fold((failure) => throw failure, (user) => user);

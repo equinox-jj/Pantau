@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../../core/utils/enums/enums.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
 
 part 'status_history_entry.freezed.dart';
 

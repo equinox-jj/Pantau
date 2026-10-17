@@ -48,7 +48,7 @@ final class SessionManagerProvider
   }
 }
 
-String _$sessionManagerHash() => r'589198793f9a487002d1ab3e7748fe6cb0b03e96';
+String _$sessionManagerHash() => r'ea6a8bf1138ca19b3a50fa4697907ba24be2ce00';
 
 @ProviderFor(dioClient)
 final dioClientProvider = DioClientProvider._();

@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
 
-import '../../../../core/base/base.dart';
-import '../../../../core/error/error.dart';
-import '../repository/repository.dart';
+import 'package:pantau/core/base/base.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/features/profile/domain/repository/profile_repository.dart';
 
 class ChangePasswordParams extends Equatable {
   const ChangePasswordParams({

@@ -66,16 +66,21 @@ $MapPageStateCopyWith<MapPageState> get copyWith => _$MapPageStateCopyWithImpl<M
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapPageState&&(identical(other.currentLocation, currentLocation) || other.currentLocation == currentLocation)&&(identical(other.loadedArea, loadedArea) || other.loadedArea == loadedArea)&&(identical(other.categoryFilter, categoryFilter) || other.categoryFilter == categoryFilter)&&(identical(other.mapLocation, mapLocation) || other.mapLocation == mapLocation)&&(identical(other.nearbyReports, nearbyReports) || other.nearbyReports == nearbyReports)&&const DeepCollectionEquality().equals(other.visibleReports, visibleReports)&&const DeepCollectionEquality().equals(other.filteredReports, filteredReports)&&(identical(other.placeSearch, placeSearch) || other.placeSearch == placeSearch)&&(identical(other.searchedPlace, searchedPlace) || other.searchedPlace == searchedPlace));
+  final _this = this as MapPageState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapPageState&&(identical(other.currentLocation, _this.currentLocation) || other.currentLocation == _this.currentLocation)&&(identical(other.loadedArea, _this.loadedArea) || other.loadedArea == _this.loadedArea)&&(identical(other.categoryFilter, _this.categoryFilter) || other.categoryFilter == _this.categoryFilter)&&(identical(other.mapLocation, _this.mapLocation) || other.mapLocation == _this.mapLocation)&&(identical(other.nearbyReports, _this.nearbyReports) || other.nearbyReports == _this.nearbyReports)&&const DeepCollectionEquality().equals(other.visibleReports, _this.visibleReports)&&const DeepCollectionEquality().equals(other.filteredReports, _this.filteredReports)&&(identical(other.placeSearch, _this.placeSearch) || other.placeSearch == _this.placeSearch)&&(identical(other.searchedPlace, _this.searchedPlace) || other.searchedPlace == _this.searchedPlace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,currentLocation,loadedArea,categoryFilter,mapLocation,nearbyReports,const DeepCollectionEquality().hash(visibleReports),const DeepCollectionEquality().hash(filteredReports),placeSearch,searchedPlace);
+int get hashCode {
+  final _this = this as MapPageState;
+  return Object.hash(runtimeType,_this.currentLocation,_this.loadedArea,_this.categoryFilter,_this.mapLocation,_this.nearbyReports,const DeepCollectionEquality().hash(_this.visibleReports),const DeepCollectionEquality().hash(_this.filteredReports),_this.placeSearch,_this.searchedPlace);
+}
 
 @override
 String toString() {
-  return 'MapPageState(currentLocation: $currentLocation, loadedArea: $loadedArea, categoryFilter: $categoryFilter, mapLocation: $mapLocation, nearbyReports: $nearbyReports, visibleReports: $visibleReports, filteredReports: $filteredReports, placeSearch: $placeSearch, searchedPlace: $searchedPlace)';
+  final _this = this as MapPageState;
+  return 'MapPageState(currentLocation: ${_this.currentLocation}, loadedArea: ${_this.loadedArea}, categoryFilter: ${_this.categoryFilter}, mapLocation: ${_this.mapLocation}, nearbyReports: ${_this.nearbyReports}, visibleReports: ${_this.visibleReports}, filteredReports: ${_this.filteredReports}, placeSearch: ${_this.placeSearch}, searchedPlace: ${_this.searchedPlace})';
 }
 
 
@@ -357,16 +362,18 @@ _$MapPageStateCopyWith<_MapPageState> get copyWith => __$MapPageStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapPageState&&(identical(other.currentLocation, currentLocation) || other.currentLocation == currentLocation)&&(identical(other.loadedArea, loadedArea) || other.loadedArea == loadedArea)&&(identical(other.categoryFilter, categoryFilter) || other.categoryFilter == categoryFilter)&&(identical(other.mapLocation, mapLocation) || other.mapLocation == mapLocation)&&(identical(other.nearbyReports, nearbyReports) || other.nearbyReports == nearbyReports)&&const DeepCollectionEquality().equals(other._visibleReports, _visibleReports)&&const DeepCollectionEquality().equals(other._filteredReports, _filteredReports)&&(identical(other.placeSearch, placeSearch) || other.placeSearch == placeSearch)&&(identical(other.searchedPlace, searchedPlace) || other.searchedPlace == searchedPlace));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapPageState&&(identical(other.currentLocation, currentLocation) || other.currentLocation == currentLocation)&&(identical(other.loadedArea, loadedArea) || other.loadedArea == loadedArea)&&(identical(other.categoryFilter, categoryFilter) || other.categoryFilter == categoryFilter)&&(identical(other.mapLocation, mapLocation) || other.mapLocation == mapLocation)&&(identical(other.nearbyReports, nearbyReports) || other.nearbyReports == nearbyReports)&&const DeepCollectionEquality().equals(other.visibleReports, _visibleReports)&&const DeepCollectionEquality().equals(other.filteredReports, _filteredReports)&&(identical(other.placeSearch, placeSearch) || other.placeSearch == placeSearch)&&(identical(other.searchedPlace, searchedPlace) || other.searchedPlace == searchedPlace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,currentLocation,loadedArea,categoryFilter,mapLocation,nearbyReports,const DeepCollectionEquality().hash(_visibleReports),const DeepCollectionEquality().hash(_filteredReports),placeSearch,searchedPlace);
+int get hashCode {
+    return Object.hash(runtimeType,currentLocation,loadedArea,categoryFilter,mapLocation,nearbyReports,const DeepCollectionEquality().hash(_visibleReports),const DeepCollectionEquality().hash(_filteredReports),placeSearch,searchedPlace);
+}
 
 @override
 String toString() {
-  return 'MapPageState(currentLocation: $currentLocation, loadedArea: $loadedArea, categoryFilter: $categoryFilter, mapLocation: $mapLocation, nearbyReports: $nearbyReports, visibleReports: $visibleReports, filteredReports: $filteredReports, placeSearch: $placeSearch, searchedPlace: $searchedPlace)';
+    return 'MapPageState(currentLocation: $currentLocation, loadedArea: $loadedArea, categoryFilter: $categoryFilter, mapLocation: $mapLocation, nearbyReports: $nearbyReports, visibleReports: $visibleReports, filteredReports: $filteredReports, placeSearch: $placeSearch, searchedPlace: $searchedPlace)';
 }
 
 

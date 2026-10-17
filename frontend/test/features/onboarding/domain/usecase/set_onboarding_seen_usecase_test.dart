@@ -3,7 +3,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pantau/core/base/base.dart';
 import 'package:pantau/core/error/error.dart';
-import 'package:pantau/features/onboarding/domain/repository/repository.dart';
+import 'package:pantau/features/onboarding/domain/repository/onboarding_repository.dart';
 import 'package:pantau/features/onboarding/domain/usecase/usecase.dart';
 
 class MockOnboardingRepository extends Mock implements OnboardingRepository {}

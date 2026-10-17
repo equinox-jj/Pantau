@@ -26,16 +26,21 @@ $PlaceCopyWith<Place> get copyWith => _$PlaceCopyWithImpl<Place>(this as Place, 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Place&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.address, address) || other.address == address)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude));
+  final _this = this as Place;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Place&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.address, _this.address) || other.address == _this.address)&&(identical(other.latitude, _this.latitude) || other.latitude == _this.latitude)&&(identical(other.longitude, _this.longitude) || other.longitude == _this.longitude));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,address,latitude,longitude);
+int get hashCode {
+  final _this = this as Place;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.address,_this.latitude,_this.longitude);
+}
 
 @override
 String toString() {
-  return 'Place(id: $id, name: $name, address: $address, latitude: $latitude, longitude: $longitude)';
+  final _this = this as Place;
+  return 'Place(id: ${_this.id}, name: ${_this.name}, address: ${_this.address}, latitude: ${_this.latitude}, longitude: ${_this.longitude})';
 }
 
 
@@ -230,16 +235,18 @@ _$PlaceCopyWith<_Place> get copyWith => __$PlaceCopyWithImpl<_Place>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Place&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.address, address) || other.address == address)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Place&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.address, address) || other.address == address)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,address,latitude,longitude);
+int get hashCode {
+    return Object.hash(runtimeType,id,name,address,latitude,longitude);
+}
 
 @override
 String toString() {
-  return 'Place(id: $id, name: $name, address: $address, latitude: $latitude, longitude: $longitude)';
+    return 'Place(id: $id, name: $name, address: $address, latitude: $latitude, longitude: $longitude)';
 }
 
 
@@ -295,16 +302,21 @@ $PlaceViewBoxCopyWith<PlaceViewBox> get copyWith => _$PlaceViewBoxCopyWithImpl<P
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlaceViewBox&&(identical(other.minLatitude, minLatitude) || other.minLatitude == minLatitude)&&(identical(other.minLongitude, minLongitude) || other.minLongitude == minLongitude)&&(identical(other.maxLatitude, maxLatitude) || other.maxLatitude == maxLatitude)&&(identical(other.maxLongitude, maxLongitude) || other.maxLongitude == maxLongitude));
+  final _this = this as PlaceViewBox;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlaceViewBox&&(identical(other.minLatitude, _this.minLatitude) || other.minLatitude == _this.minLatitude)&&(identical(other.minLongitude, _this.minLongitude) || other.minLongitude == _this.minLongitude)&&(identical(other.maxLatitude, _this.maxLatitude) || other.maxLatitude == _this.maxLatitude)&&(identical(other.maxLongitude, _this.maxLongitude) || other.maxLongitude == _this.maxLongitude));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,minLatitude,minLongitude,maxLatitude,maxLongitude);
+int get hashCode {
+  final _this = this as PlaceViewBox;
+  return Object.hash(runtimeType,_this.minLatitude,_this.minLongitude,_this.maxLatitude,_this.maxLongitude);
+}
 
 @override
 String toString() {
-  return 'PlaceViewBox(minLatitude: $minLatitude, minLongitude: $minLongitude, maxLatitude: $maxLatitude, maxLongitude: $maxLongitude)';
+  final _this = this as PlaceViewBox;
+  return 'PlaceViewBox(minLatitude: ${_this.minLatitude}, minLongitude: ${_this.minLongitude}, maxLatitude: ${_this.maxLatitude}, maxLongitude: ${_this.maxLongitude})';
 }
 
 
@@ -497,16 +509,18 @@ _$PlaceViewBoxCopyWith<_PlaceViewBox> get copyWith => __$PlaceViewBoxCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlaceViewBox&&(identical(other.minLatitude, minLatitude) || other.minLatitude == minLatitude)&&(identical(other.minLongitude, minLongitude) || other.minLongitude == minLongitude)&&(identical(other.maxLatitude, maxLatitude) || other.maxLatitude == maxLatitude)&&(identical(other.maxLongitude, maxLongitude) || other.maxLongitude == maxLongitude));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlaceViewBox&&(identical(other.minLatitude, minLatitude) || other.minLatitude == minLatitude)&&(identical(other.minLongitude, minLongitude) || other.minLongitude == minLongitude)&&(identical(other.maxLatitude, maxLatitude) || other.maxLatitude == maxLatitude)&&(identical(other.maxLongitude, maxLongitude) || other.maxLongitude == maxLongitude));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,minLatitude,minLongitude,maxLatitude,maxLongitude);
+int get hashCode {
+    return Object.hash(runtimeType,minLatitude,minLongitude,maxLatitude,maxLongitude);
+}
 
 @override
 String toString() {
-  return 'PlaceViewBox(minLatitude: $minLatitude, minLongitude: $minLongitude, maxLatitude: $maxLatitude, maxLongitude: $maxLongitude)';
+    return 'PlaceViewBox(minLatitude: $minLatitude, minLongitude: $minLongitude, maxLatitude: $maxLatitude, maxLongitude: $maxLongitude)';
 }
 
 

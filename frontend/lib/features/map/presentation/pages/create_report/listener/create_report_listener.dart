@@ -2,10 +2,10 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../../../core/error/error.dart';
-import '../../../../../../core/theme/theme.dart';
-import '../../map/provider/provider.dart';
-import '../provider/provider.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/features/map/presentation/pages/map/provider/map_notifier.dart';
+import 'package:pantau/features/map/presentation/pages/create_report/provider/create_report_notifier.dart';
 
 /// Side effects of the compose flow: success snackbar, pop back to the map,
 /// and a refresh so the new marker appears.

@@ -5,20 +5,20 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../../../../../core/components/button/button.dart';
-import '../../../../../core/components/empty_state/empty_state.dart';
-import '../../../../../core/router/app_routes.dart';
-import '../../../../../core/service/service.dart';
-import '../../../../../core/theme/theme.dart';
-import '../../../../../core/utils/enums/enums.dart';
-import '../../../../map/domain/entity/entity.dart';
-import '../../../../map/presentation/pages/map/widgets/map_search.dart';
-import '../../../domain/entity/resolver_entity.dart';
-import '../../provider/provider.dart';
-import '../queue/widgets/queue_widgets.dart';
-import 'listener/listener.dart';
-import 'provider/provider.dart';
-import 'widgets/widgets.dart';
+import 'package:pantau/core/components/button/button.dart';
+import 'package:pantau/core/components/empty_state/app_empty_state.dart';
+import 'package:pantau/core/router/app_routes.dart';
+import 'package:pantau/core/service/location_service.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
+import 'package:pantau/features/map/presentation/pages/map/widgets/map_search.dart';
+import 'package:pantau/features/resolver/domain/entity/resolver_entity.dart';
+import 'package:pantau/features/resolver/presentation/provider/resolver_location_notifier.dart';
+import 'package:pantau/features/resolver/presentation/pages/queue/widgets/queue_widgets.dart';
+import 'package:pantau/features/resolver/presentation/pages/map/listener/resolver_map_listener.dart';
+import 'package:pantau/features/resolver/presentation/pages/map/provider/resolver_map_notifier.dart';
+import 'package:pantau/features/resolver/presentation/pages/map/widgets/widgets.dart';
 
 /// Map tab — the same queue reports as the Queue page, plotted as clustered
 /// markers. Tapping a marker opens a small preview card with an "advance

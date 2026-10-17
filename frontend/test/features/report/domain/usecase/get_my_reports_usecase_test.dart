@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pantau/core/error/error.dart';
-import 'package:pantau/features/report/domain/entity/entity.dart';
-import 'package:pantau/features/report/domain/repository/repository.dart';
+import 'package:pantau/features/report/domain/entity/feed_report.dart';
+import 'package:pantau/features/report/domain/repository/report_repository.dart';
 import 'package:pantau/features/report/domain/usecase/usecase.dart';
 
 class MockReportRepository extends Mock implements ReportRepository {}

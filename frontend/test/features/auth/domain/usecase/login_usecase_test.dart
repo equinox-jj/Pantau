@@ -3,7 +3,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pantau/core/error/error.dart';
 import 'package:pantau/features/auth/domain/entity/entity.dart';
-import 'package:pantau/features/auth/domain/repository/repository.dart';
+import 'package:pantau/features/auth/domain/repository/auth_repository.dart';
 import 'package:pantau/features/auth/domain/usecase/usecase.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}

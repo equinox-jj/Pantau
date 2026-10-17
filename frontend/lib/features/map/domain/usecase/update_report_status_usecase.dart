@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
 
-import '../../../../core/base/base.dart';
-import '../../../../core/error/error.dart';
-import '../../../../core/utils/enums/enums.dart';
-import '../entity/entity.dart';
-import '../repository/repository.dart';
+import 'package:pantau/core/base/base.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
+import 'package:pantau/features/map/domain/repository/repository.dart';
 
 class UpdateReportStatusParams extends Equatable {
   const UpdateReportStatusParams({

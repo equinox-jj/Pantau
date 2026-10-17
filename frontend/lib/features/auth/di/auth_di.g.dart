@@ -137,7 +137,7 @@ final class LoginUsecaseProvider
   }
 }
 
-String _$loginUsecaseHash() => r'f62760df14c3e853f959fc5c11504bc3684436e8';
+String _$loginUsecaseHash() => r'e5d4ac0dfff8fdfd4de4f4d0eee4c8b2b7e101c4';
 
 @ProviderFor(logoutUsecase)
 final logoutUsecaseProvider = LogoutUsecaseProvider._();
@@ -178,7 +178,7 @@ final class LogoutUsecaseProvider
   }
 }
 
-String _$logoutUsecaseHash() => r'389267b6db4e22e721261c34c6a6a3c4b183181a';
+String _$logoutUsecaseHash() => r'9454cdcc107ab4545a4de0295c17bf956b25db01';
 
 @ProviderFor(registerUsecase)
 final registerUsecaseProvider = RegisterUsecaseProvider._();
@@ -220,7 +220,7 @@ final class RegisterUsecaseProvider
   }
 }
 
-String _$registerUsecaseHash() => r'f6d2f7e2cb633d1332fa8dc1f559adc0c943abe0';
+String _$registerUsecaseHash() => r'9885b4374b365e9b0909db09ecc7cfde2a1a28d2';
 
 @ProviderFor(getCurrentUserUsecase)
 final getCurrentUserUsecaseProvider = GetCurrentUserUsecaseProvider._();
@@ -268,7 +268,7 @@ final class GetCurrentUserUsecaseProvider
 }
 
 String _$getCurrentUserUsecaseHash() =>
-    r'c22f820f5c872a838b14353a8b1e3ab4fea3ff3e';
+    r'8d2242003e69e02e41714061634e178c46228ec4';
 
 @ProviderFor(getCachedRoleUsecase)
 final getCachedRoleUsecaseProvider = GetCachedRoleUsecaseProvider._();
@@ -316,7 +316,7 @@ final class GetCachedRoleUsecaseProvider
 }
 
 String _$getCachedRoleUsecaseHash() =>
-    r'6d66f9f8aeba2c4fd0221eedb3b37ae30646bc79';
+    r'f4ab4ebec7e313cc102e4390ec94cf7fe1f5a7a7';
 
 /// The cached identity of the signed-in user. Throws the [Failure] rather
 /// than folding it to `null`, so it surfaces through `AsyncError` the same
@@ -366,4 +366,4 @@ final class CurrentUserProvider
   }
 }
 
-String _$currentUserHash() => r'032e65acf013c0cf70e01bfc4c99ce732702372e';
+String _$currentUserHash() => r'133ef0e084b1c42027fa6a1b335262246bf05347';

@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pantau/core/error/error.dart';
 import 'package:pantau/features/auth/data/model/model.dart';
-import 'package:pantau/features/profile/data/datasources/datasources.dart';
-import 'package:pantau/features/profile/data/repository/repository.dart';
+import 'package:pantau/features/profile/data/datasources/profile_remote_datasource.dart';
+import 'package:pantau/features/profile/data/repository/profile_repository_impl.dart';
 
 class MockProfileRemoteDataSource extends Mock
     implements ProfileRemoteDataSource {}

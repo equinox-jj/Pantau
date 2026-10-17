@@ -1,10 +1,10 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../core/di/core_di.dart';
-import '../data/datasources/datasources.dart';
-import '../data/repository/repository.dart';
-import '../domain/repository/repository.dart';
-import '../domain/usecase/usecase.dart';
+import 'package:pantau/core/di/core_di.dart';
+import 'package:pantau/features/report/data/datasources/report_remote_datasource.dart';
+import 'package:pantau/features/report/data/repository/report_repository_impl.dart';
+import 'package:pantau/features/report/domain/repository/report_repository.dart';
+import 'package:pantau/features/report/domain/usecase/usecase.dart';
 
 part 'report_di.g.dart';
 
@@ -25,13 +25,13 @@ ReportRepository reportRepository(Ref ref) {
 @Riverpod(keepAlive: true)
 GetFeedReportsUsecase getFeedReportsUsecase(Ref ref) {
   return GetFeedReportsUsecase(
-    reportRepository: ref.read(reportRepositoryProvider),
+    reportRepository: ref.watch(reportRepositoryProvider),
   );
 }
 
 @Riverpod(keepAlive: true)
 GetMyReportsUsecase getMyReportsUsecase(Ref ref) {
   return GetMyReportsUsecase(
-    reportRepository: ref.read(reportRepositoryProvider),
+    reportRepository: ref.watch(reportRepositoryProvider),
   );
 }

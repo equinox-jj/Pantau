@@ -2,13 +2,13 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../../../core/error/error.dart';
-import '../../../../../../core/theme/theme.dart';
-import '../../../../../../core/utils/helpers/helpers.dart';
-import '../../../../domain/entity/entity.dart';
-import '../../../provider/provider.dart';
-import '../../location_picker/location_picker.dart';
-import '../../location_picker/provider/provider.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/core/utils/helpers/helpers.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
+import 'package:pantau/features/map/presentation/provider/report_categories_provider.dart';
+import 'package:pantau/features/map/presentation/pages/location_picker/location_picker.dart';
+import 'package:pantau/features/map/presentation/pages/location_picker/provider/provider.dart';
 
 /// Choice chips for the category taxonomy, with their own loading and error
 /// states.

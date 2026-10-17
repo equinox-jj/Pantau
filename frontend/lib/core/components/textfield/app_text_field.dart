@@ -1,7 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
-import '../../theme/theme.dart';
-import '../../utils/extensions/extensions.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/core/utils/extensions/extensions.dart';
 
 enum InputBorderType { outline, underline, none }
 

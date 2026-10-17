@@ -1,8 +1,8 @@
 import 'package:fpdart/fpdart.dart';
 
-import '../../../../core/error/error.dart';
-import '../../domain/repository/onboarding_repository.dart';
-import '../datasources/onboarding_local_datasource.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/features/onboarding/domain/repository/onboarding_repository.dart';
+import 'package:pantau/features/onboarding/data/datasources/onboarding_local_datasource.dart';
 
 class OnboardingRepositoryImpl extends OnboardingRepository {
   OnboardingRepositoryImpl({required this._localDataSource});

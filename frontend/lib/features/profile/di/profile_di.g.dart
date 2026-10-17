@@ -150,7 +150,7 @@ final class ChangePasswordUsecaseProvider
 }
 
 String _$changePasswordUsecaseHash() =>
-    r'765026e63aaeb507b815adb0d486fbe80b26d35b';
+    r'bda61bae5cdf60f9a461a88c7a0db4f47359b0fd';
 
 @ProviderFor(uploadAvatarUsecase)
 final uploadAvatarUsecaseProvider = UploadAvatarUsecaseProvider._();
@@ -198,7 +198,7 @@ final class UploadAvatarUsecaseProvider
 }
 
 String _$uploadAvatarUsecaseHash() =>
-    r'5fc3857ca4209551eeefdb4ac3c95c575d6018f0';
+    r'7732f90ff0bdcaa218b9b5a631a3bfd59672a117';
 
 @ProviderFor(removeAvatarUsecase)
 final removeAvatarUsecaseProvider = RemoveAvatarUsecaseProvider._();
@@ -246,4 +246,4 @@ final class RemoveAvatarUsecaseProvider
 }
 
 String _$removeAvatarUsecaseHash() =>
-    r'9a2d7beecd081f0608a8e37317a8a75beb97d375';
+    r'91dff7693e678ef499036c53c62ca78702c6e438';

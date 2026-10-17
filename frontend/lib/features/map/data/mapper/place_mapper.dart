@@ -1,5 +1,5 @@
-import '../../domain/entity/entity.dart';
-import '../model/model.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
+import 'package:pantau/features/map/data/model/model.dart';
 
 extension PlaceModelListMapper on List<PlaceModel> {
   /// Drops hits without usable coordinates — a row the map cannot move to is

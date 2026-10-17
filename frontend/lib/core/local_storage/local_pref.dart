@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../utils/constants/constants.dart';
+import 'package:pantau/core/utils/constants/constants.dart';
 
 class LocalPref {
   const LocalPref(this._prefs);

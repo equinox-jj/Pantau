@@ -4,9 +4,9 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pantau/core/base/base.dart';
 import 'package:pantau/core/error/error.dart';
-import 'package:pantau/features/onboarding/di/di.dart';
+import 'package:pantau/features/onboarding/di/onboarding_di.dart';
 import 'package:pantau/features/onboarding/domain/usecase/usecase.dart';
-import 'package:pantau/features/onboarding/presentation/pages/onboarding/provider/provider.dart';
+import 'package:pantau/features/onboarding/presentation/pages/onboarding/provider/onboarding_notifier.dart';
 import 'package:pantau/features/onboarding/presentation/widgets/onboarding_slide_data.dart';
 
 class MockSetOnboardingSeenUsecase extends Mock

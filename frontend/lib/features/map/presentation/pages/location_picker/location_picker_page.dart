@@ -7,15 +7,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../../../../../core/components/button/button.dart';
-import '../../../../../core/service/service.dart';
-import '../../../../../core/theme/theme.dart';
-import '../../../../../core/utils/helpers/helpers.dart';
-import 'listener/listener.dart';
-import 'picked_location.dart';
-import 'provider/provider.dart';
-import 'widgets/location_picker_permission_overlay.dart';
-import 'widgets/location_picker_widgets.dart';
+import 'package:pantau/core/components/button/button.dart';
+import 'package:pantau/core/service/location_service.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/core/utils/helpers/helpers.dart';
+import 'package:pantau/features/map/presentation/pages/location_picker/listener/location_picker_listener.dart';
+import 'package:pantau/features/map/presentation/pages/location_picker/picked_location.dart';
+import 'package:pantau/features/map/presentation/pages/location_picker/provider/provider.dart';
+import 'package:pantau/features/map/presentation/pages/location_picker/widgets/location_picker_permission_overlay.dart';
+import 'package:pantau/features/map/presentation/pages/location_picker/widgets/location_picker_widgets.dart';
 
 /// Full-screen pin placement for the compose flow.
 ///

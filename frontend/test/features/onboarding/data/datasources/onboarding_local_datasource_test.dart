@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pantau/core/error/exceptions.dart';
 import 'package:pantau/core/local_storage/local_storage.dart';
-import 'package:pantau/features/onboarding/data/datasources/datasources.dart';
+import 'package:pantau/features/onboarding/data/datasources/onboarding_local_datasource.dart';
 
 class MockLocalPref extends Mock implements LocalPref {}
 

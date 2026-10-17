@@ -2,9 +2,9 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../../../core/theme/theme.dart';
-import '../../../../../../core/utils/enums/enums.dart';
-import '../provider/provider.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/features/map/presentation/pages/report_detail/provider/report_detail_notifier.dart';
 
 /// Resolver's rejection note (design 21), surfaced as its own callout above
 /// the status timeline rather than buried inside a timeline row — the one

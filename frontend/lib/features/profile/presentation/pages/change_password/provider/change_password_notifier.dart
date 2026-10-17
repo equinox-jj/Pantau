@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../di/di.dart';
-import '../../../../domain/usecase/usecase.dart';
+import 'package:pantau/features/profile/di/profile_di.dart';
+import 'package:pantau/features/profile/domain/usecase/usecase.dart';
 
 part 'change_password_notifier.g.dart';
 

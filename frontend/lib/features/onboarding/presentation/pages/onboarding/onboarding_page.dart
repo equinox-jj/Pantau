@@ -2,10 +2,10 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../../core/theme/theme.dart';
-import '../../widgets/widgets.dart';
-import 'listener/listener.dart';
-import 'provider/provider.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/features/onboarding/presentation/widgets/widgets.dart';
+import 'package:pantau/features/onboarding/presentation/pages/onboarding/listener/onboarding_listener.dart';
+import 'package:pantau/features/onboarding/presentation/pages/onboarding/provider/onboarding_notifier.dart';
 
 class OnboardingPage extends ConsumerStatefulWidget {
   const OnboardingPage({super.key});

@@ -1,10 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../../../core/utils/enums/enums.dart';
-import '../../../../di/resolver_di.dart';
-import '../../../../domain/entity/resolver_entity.dart';
-import '../../../../domain/usecase/resolver_usecase.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/features/resolver/di/resolver_di.dart';
+import 'package:pantau/features/resolver/domain/entity/resolver_entity.dart';
+import 'package:pantau/features/resolver/domain/usecase/resolver_usecase.dart';
 
 part 'queue_notifier.freezed.dart';
 part 'queue_notifier.g.dart';

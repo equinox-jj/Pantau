@@ -6,9 +6,9 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pantau/core/di/core_di.dart';
 import 'package:pantau/core/error/error.dart';
-import 'package:pantau/core/service/service.dart';
-import 'package:pantau/features/report/di/di.dart';
-import 'package:pantau/features/report/domain/entity/entity.dart';
+import 'package:pantau/core/service/location_service.dart';
+import 'package:pantau/features/report/di/report_di.dart';
+import 'package:pantau/features/report/domain/entity/feed_report.dart';
 import 'package:pantau/features/report/domain/usecase/usecase.dart';
 import 'package:pantau/features/report/presentation/pages/feed/provider/feed_notifier.dart';
 

@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../../../core/theme/theme.dart';
+import 'package:pantau/core/theme/theme.dart';
 
 /// Fills the box it is given; the hero owns the sizing and the clipping.
 class ReportDetailPhoto extends StatefulWidget {

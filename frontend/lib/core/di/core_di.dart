@@ -2,17 +2,20 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../local_storage/local_storage.dart';
-import '../network/interceptors/interceptors.dart';
-import '../network/network.dart';
-import '../router/router.dart';
-import '../service/service.dart';
+import 'package:pantau/core/local_storage/local_storage.dart';
+import 'package:pantau/core/network/interceptors/interceptors.dart';
+import 'package:pantau/core/network/network.dart';
+import 'package:pantau/core/router/router.dart';
+import 'package:pantau/core/service/location_service.dart';
 
 part 'core_di.g.dart';
 
 @Riverpod(keepAlive: true)
 SessionManager sessionManager(Ref ref) {
-  return SessionManager();
+  final manager = SessionManager();
+  ref.onDispose(manager.dispose);
+
+  return manager;
 }
 
 @Riverpod(keepAlive: true)

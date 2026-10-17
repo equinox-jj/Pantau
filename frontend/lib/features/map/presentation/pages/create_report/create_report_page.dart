@@ -5,17 +5,17 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../../core/components/button/button.dart';
-import '../../../../../core/components/textfield/textfield.dart';
-import '../../../../../core/di/core_di.dart';
-import '../../../../../core/router/app_routes.dart';
-import '../../../../../core/service/service.dart';
-import '../../../../../core/theme/theme.dart';
-import '../../../domain/entity/entity.dart';
-import '../location_picker/location_picker.dart';
-import 'listener/listener.dart';
-import 'provider/provider.dart';
-import 'widgets/widgets.dart';
+import 'package:pantau/core/components/button/button.dart';
+import 'package:pantau/core/components/textfield/app_text_field.dart';
+import 'package:pantau/core/di/core_di.dart';
+import 'package:pantau/core/router/app_routes.dart';
+import 'package:pantau/core/service/location_service.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
+import 'package:pantau/features/map/presentation/pages/location_picker/location_picker.dart';
+import 'package:pantau/features/map/presentation/pages/create_report/listener/create_report_listener.dart';
+import 'package:pantau/features/map/presentation/pages/create_report/provider/create_report_notifier.dart';
+import 'package:pantau/features/map/presentation/pages/create_report/widgets/widgets.dart';
 
 typedef _PhotoField = ({List<String> paths, String? error});
 

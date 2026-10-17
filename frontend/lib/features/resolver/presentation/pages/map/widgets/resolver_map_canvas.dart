@@ -5,10 +5,10 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../../../../../../core/theme/theme.dart';
-import '../../../../domain/entity/resolver_entity.dart';
-import '../provider/provider.dart';
-import 'resolver_report_marker.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/features/resolver/domain/entity/resolver_entity.dart';
+import 'package:pantau/features/resolver/presentation/pages/map/provider/resolver_map_notifier.dart';
+import 'package:pantau/features/resolver/presentation/pages/map/widgets/resolver_report_marker.dart';
 
 /// Base tiles, clustered queue markers, current-location pin. The resolver
 /// map never pan-refetches (unlike the citizen map), so the camera is free

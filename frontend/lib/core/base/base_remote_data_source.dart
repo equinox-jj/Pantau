@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-import '../error/error_mapper.dart';
-import '../error/exceptions.dart';
+import 'package:pantau/core/error/error_mapper.dart';
+import 'package:pantau/core/error/exceptions.dart';
 
 /// Centralizes DioException-to-AppException translation. Data sources wrap
 /// each request in [safeApiCall].

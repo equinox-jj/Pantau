@@ -1,9 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../../../core/base/base.dart';
-import '../../../../di/di.dart';
-import '../../../widgets/onboarding_slide_data.dart';
+import 'package:pantau/core/base/base.dart';
+import 'package:pantau/features/onboarding/di/onboarding_di.dart';
+import 'package:pantau/features/onboarding/presentation/widgets/onboarding_slide_data.dart';
 
 part 'onboarding_notifier.freezed.dart';
 part 'onboarding_notifier.g.dart';

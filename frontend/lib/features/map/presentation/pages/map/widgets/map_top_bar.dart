@@ -2,11 +2,11 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../../../../core/theme/theme.dart';
-import '../../../../domain/entity/entity.dart';
-import '../../../provider/provider.dart';
-import '../provider/provider.dart';
-import 'map_search.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
+import 'package:pantau/features/map/presentation/provider/report_categories_provider.dart';
+import 'package:pantau/features/map/presentation/pages/map/provider/map_notifier.dart';
+import 'package:pantau/features/map/presentation/pages/map/widgets/map_search.dart';
 
 /// The place-search field, and below it either the search results or the
 /// category filter chips.

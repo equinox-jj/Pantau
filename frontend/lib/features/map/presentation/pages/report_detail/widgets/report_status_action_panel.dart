@@ -2,12 +2,12 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../../../core/components/button/button.dart';
-import '../../../../../../core/components/textfield/textfield.dart';
-import '../../../../../../core/theme/theme.dart';
-import '../../../../../../core/utils/enums/enums.dart';
-import '../../../../../../core/utils/extensions/extensions.dart';
-import '../provider/provider.dart';
+import 'package:pantau/core/components/button/button.dart';
+import 'package:pantau/core/components/textfield/app_text_field.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/core/utils/extensions/extensions.dart';
+import 'package:pantau/features/map/presentation/pages/report_detail/provider/report_detail_notifier.dart';
 
 /// Valid next statuses for [current] in the fixed pipeline a resolver may
 /// advance a report through. An empty list means the report is in a

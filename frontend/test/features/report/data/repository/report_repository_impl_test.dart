@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pantau/core/error/error.dart';
-import 'package:pantau/features/report/data/datasources/datasources.dart';
-import 'package:pantau/features/report/data/model/model.dart';
-import 'package:pantau/features/report/data/repository/repository.dart';
+import 'package:pantau/features/report/data/datasources/report_remote_datasource.dart';
+import 'package:pantau/features/report/data/model/feed_reports_model.dart';
+import 'package:pantau/features/report/data/repository/report_repository_impl.dart';
 
 class MockReportRemoteDataSource extends Mock
     implements ReportRemoteDataSource {}

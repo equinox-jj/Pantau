@@ -1,7 +1,7 @@
-import '../../../../core/utils/enums/enums.dart';
-import '../../../../core/utils/helpers/helpers.dart';
-import '../../domain/entity/entity.dart';
-import '../model/model.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/core/utils/helpers/helpers.dart';
+import 'package:pantau/features/report/domain/entity/feed_report.dart';
+import 'package:pantau/features/report/data/model/feed_reports_model.dart';
 
 extension FeedReportsModelMapper on List<FeedReportsDataModel> {
   List<FeedReport> toEntities() =>

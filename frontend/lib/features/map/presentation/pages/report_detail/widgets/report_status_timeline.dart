@@ -4,13 +4,13 @@ import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../../../../core/components/button/button.dart';
-import '../../../../../../core/error/error.dart';
-import '../../../../../../core/theme/theme.dart';
-import '../../../../../../core/utils/enums/enums.dart';
-import '../../../../../../core/utils/extensions/extensions.dart';
-import '../../../../../../core/utils/helpers/helpers.dart';
-import '../provider/provider.dart';
+import 'package:pantau/core/components/button/button.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/core/utils/extensions/extensions.dart';
+import 'package:pantau/core/utils/helpers/helpers.dart';
+import 'package:pantau/features/map/presentation/pages/report_detail/provider/report_detail_notifier.dart';
 
 /// "Status timeline" card: the reported → resolved loop, made visible.
 ///

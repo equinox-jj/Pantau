@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 
-import '../../../../core/theme/theme.dart';
+import 'package:pantau/core/theme/theme.dart';
 
 /// Rounded square icon used at the start of profile action rows.
 class ProfileIconBadge extends StatelessWidget {

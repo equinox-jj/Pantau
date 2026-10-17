@@ -2,9 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pantau/core/error/error.dart';
 import 'package:pantau/core/utils/enums/enums.dart';
-import 'package:pantau/features/map/data/datasources/datasources.dart';
+import 'package:pantau/features/map/data/datasources/map_remote_datasource.dart';
 import 'package:pantau/features/map/data/model/model.dart';
-import 'package:pantau/features/map/data/repository/repository.dart';
+import 'package:pantau/features/map/data/repository/map_repository_impl.dart';
 import 'package:pantau/features/map/domain/entity/entity.dart';
 
 class MockMapRemoteDataSource extends Mock implements MapRemoteDataSource {}

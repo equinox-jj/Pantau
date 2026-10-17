@@ -6,16 +6,16 @@ import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../../../core/components/button/button.dart';
-import '../../../../../core/error/error.dart';
-import '../../../../../core/router/app_routes.dart';
-import '../../../../../core/theme/theme.dart';
-import '../../../../../core/utils/enums/enums.dart';
-import '../../../../../core/utils/helpers/helpers.dart';
-import '../../../domain/entity/entity.dart';
-import 'listener/listener.dart';
-import 'provider/provider.dart';
-import 'widgets/widgets.dart';
+import 'package:pantau/core/components/button/button.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/core/router/app_routes.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/core/utils/helpers/helpers.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
+import 'package:pantau/features/map/presentation/pages/report_detail/listener/report_status_listener.dart';
+import 'package:pantau/features/map/presentation/pages/report_detail/provider/report_detail_notifier.dart';
+import 'package:pantau/features/map/presentation/pages/report_detail/widgets/widgets.dart';
 
 /// Full-screen report detail: photo hero, the report's own copy, and the
 /// status timeline (design 11).

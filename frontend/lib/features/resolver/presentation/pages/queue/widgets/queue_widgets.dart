@@ -2,11 +2,11 @@ import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../../../../core/theme/theme.dart';
-import '../../../../../../core/utils/enums/enums.dart';
-import '../../../../../../core/utils/extensions/extensions.dart';
-import '../../../../../../core/utils/helpers/helpers.dart';
-import '../../../../domain/entity/resolver_entity.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/core/utils/extensions/extensions.dart';
+import 'package:pantau/core/utils/helpers/helpers.dart';
+import 'package:pantau/features/resolver/domain/entity/resolver_entity.dart';
 
 /// Segmented control switching the queue between its three tabs, each
 /// labelled with its count from the most recent response.

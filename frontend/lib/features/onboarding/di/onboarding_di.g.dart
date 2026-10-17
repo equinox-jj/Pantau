@@ -151,7 +151,7 @@ final class GetOnboardingSeenUsecaseProvider
 }
 
 String _$getOnboardingSeenUsecaseHash() =>
-    r'd2a8730a12ef00e2b07c9c525cc67ce68ce4b940';
+    r'0b12f4b6dbfd229946726928771278c3f5a3599a';
 
 @ProviderFor(setOnboardingSeenUsecase)
 final setOnboardingSeenUsecaseProvider = SetOnboardingSeenUsecaseProvider._();
@@ -199,4 +199,4 @@ final class SetOnboardingSeenUsecaseProvider
 }
 
 String _$setOnboardingSeenUsecaseHash() =>
-    r'2939f87690d6ab8e79562d57457680e4cb81a8d2';
+    r'e853ee39e0fe74f55a5ad47a30d51d15f24ccf17';

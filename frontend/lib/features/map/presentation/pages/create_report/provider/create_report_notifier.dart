@@ -1,8 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../di/di.dart';
-import '../../../../domain/entity/entity.dart';
-import '../../../../domain/usecase/usecase.dart';
+import 'package:pantau/features/map/di/map_di.dart';
+import 'package:pantau/features/map/domain/entity/entity.dart';
+import 'package:pantau/features/map/domain/usecase/usecase.dart';
 
 part 'create_report_notifier.g.dart';
 

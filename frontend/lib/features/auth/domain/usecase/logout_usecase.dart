@@ -1,8 +1,8 @@
 import 'package:fpdart/fpdart.dart';
 
-import '../../../../core/base/base.dart';
-import '../../../../core/error/error.dart';
-import '../repository/repository.dart';
+import 'package:pantau/core/base/base.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/features/auth/domain/repository/auth_repository.dart';
 
 class LogoutUsecase extends UseCase<void, NoParams> {
   LogoutUsecase({required this._authRepository});

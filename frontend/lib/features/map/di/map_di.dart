@@ -1,10 +1,10 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../core/di/core_di.dart';
-import '../data/datasources/datasources.dart';
-import '../data/repository/repository.dart';
-import '../domain/repository/repository.dart';
-import '../domain/usecase/usecase.dart';
+import 'package:pantau/core/di/core_di.dart';
+import 'package:pantau/features/map/data/datasources/map_remote_datasource.dart';
+import 'package:pantau/features/map/data/repository/map_repository_impl.dart';
+import 'package:pantau/features/map/domain/repository/repository.dart';
+import 'package:pantau/features/map/domain/usecase/usecase.dart';
 
 part 'map_di.g.dart';
 
@@ -32,51 +32,51 @@ PlaceRepository placeRepository(Ref ref) {
 @Riverpod(keepAlive: true)
 GetNearbyReportsUsecase getNearbyReportsUsecase(Ref ref) {
   return GetNearbyReportsUsecase(
-    mapRepository: ref.read(mapRepositoryProvider),
+    mapRepository: ref.watch(mapRepositoryProvider),
   );
 }
 
 @Riverpod(keepAlive: true)
 GetReportCategoriesUsecase getReportCategoriesUsecase(Ref ref) {
   return GetReportCategoriesUsecase(
-    mapRepository: ref.read(mapRepositoryProvider),
+    mapRepository: ref.watch(mapRepositoryProvider),
   );
 }
 
 @Riverpod(keepAlive: true)
 GetReportDetailUsecase getReportDetailUsecase(Ref ref) {
-  return GetReportDetailUsecase(mapRepository: ref.read(mapRepositoryProvider));
+  return GetReportDetailUsecase(mapRepository: ref.watch(mapRepositoryProvider));
 }
 
 @Riverpod(keepAlive: true)
 GetReportHistoryUsecase getReportHistoryUsecase(Ref ref) {
   return GetReportHistoryUsecase(
-    mapRepository: ref.read(mapRepositoryProvider),
+    mapRepository: ref.watch(mapRepositoryProvider),
   );
 }
 
 @Riverpod(keepAlive: true)
 CreateReportUsecase createReportUsecase(Ref ref) {
-  return CreateReportUsecase(mapRepository: ref.read(mapRepositoryProvider));
+  return CreateReportUsecase(mapRepository: ref.watch(mapRepositoryProvider));
 }
 
 @Riverpod(keepAlive: true)
 UpdateReportStatusUsecase updateReportStatusUsecase(Ref ref) {
   return UpdateReportStatusUsecase(
-    mapRepository: ref.read(mapRepositoryProvider),
+    mapRepository: ref.watch(mapRepositoryProvider),
   );
 }
 
 @Riverpod(keepAlive: true)
 SearchPlacesUsecase searchPlacesUsecase(Ref ref) {
   return SearchPlacesUsecase(
-    placeRepository: ref.read(placeRepositoryProvider),
+    placeRepository: ref.watch(placeRepositoryProvider),
   );
 }
 
 @Riverpod(keepAlive: true)
 ReverseGeocodeUsecase reverseGeocodeUsecase(Ref ref) {
   return ReverseGeocodeUsecase(
-    placeRepository: ref.read(placeRepositoryProvider),
+    placeRepository: ref.watch(placeRepositoryProvider),
   );
 }

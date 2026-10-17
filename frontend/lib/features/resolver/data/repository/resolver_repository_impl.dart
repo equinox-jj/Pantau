@@ -1,11 +1,11 @@
 import 'package:fpdart/fpdart.dart';
 
-import '../../../../core/error/error.dart';
-import '../../../../core/utils/enums/enums.dart';
-import '../../domain/entity/resolver_entity.dart';
-import '../../domain/repository/resolver_repository.dart';
-import '../datasources/resolver_remote_datasource.dart';
-import '../mapper/resolver_mapper.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/features/resolver/domain/entity/resolver_entity.dart';
+import 'package:pantau/features/resolver/domain/repository/resolver_repository.dart';
+import 'package:pantau/features/resolver/data/datasources/resolver_remote_datasource.dart';
+import 'package:pantau/features/resolver/data/mapper/resolver_mapper.dart';
 
 class ResolverRepositoryImpl extends ResolverRepository {
   ResolverRepositoryImpl({required this._resolverRemoteDataSource});

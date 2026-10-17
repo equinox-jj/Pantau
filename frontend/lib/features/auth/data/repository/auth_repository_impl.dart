@@ -1,12 +1,12 @@
 import 'package:fpdart/fpdart.dart';
 
-import '../../../../core/error/error.dart';
-import '../../../../core/local_storage/local_storage.dart';
-import '../../../../core/utils/enums/enums.dart';
-import '../../domain/entity/entity.dart';
-import '../../domain/repository/auth_repository.dart';
-import '../datasources/datasources.dart';
-import '../mapper/mapper.dart';
+import 'package:pantau/core/error/error.dart';
+import 'package:pantau/core/local_storage/local_storage.dart';
+import 'package:pantau/core/utils/enums/enums.dart';
+import 'package:pantau/features/auth/domain/entity/entity.dart';
+import 'package:pantau/features/auth/domain/repository/auth_repository.dart';
+import 'package:pantau/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:pantau/features/auth/data/mapper/mapper.dart';
 
 class AuthRepositoryImpl extends AuthRepository {
   AuthRepositoryImpl({

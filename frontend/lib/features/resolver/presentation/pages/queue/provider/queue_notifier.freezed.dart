@@ -28,16 +28,21 @@ $QueueListStateCopyWith<QueueListState> get copyWith => _$QueueListStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is QueueListState&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.counts, counts) || other.counts == counts)&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext)&&(identical(other.isLoadingMore, isLoadingMore) || other.isLoadingMore == isLoadingMore)&&(identical(other.loadMoreFailed, loadMoreFailed) || other.loadMoreFailed == loadMoreFailed));
+  final _this = this as QueueListState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is QueueListState&&const DeepCollectionEquality().equals(other.items, _this.items)&&(identical(other.counts, _this.counts) || other.counts == _this.counts)&&(identical(other.hasNext, _this.hasNext) || other.hasNext == _this.hasNext)&&(identical(other.isLoadingMore, _this.isLoadingMore) || other.isLoadingMore == _this.isLoadingMore)&&(identical(other.loadMoreFailed, _this.loadMoreFailed) || other.loadMoreFailed == _this.loadMoreFailed));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(items),counts,hasNext,isLoadingMore,loadMoreFailed);
+int get hashCode {
+  final _this = this as QueueListState;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.items),_this.counts,_this.hasNext,_this.isLoadingMore,_this.loadMoreFailed);
+}
 
 @override
 String toString() {
-  return 'QueueListState(items: $items, counts: $counts, hasNext: $hasNext, isLoadingMore: $isLoadingMore, loadMoreFailed: $loadMoreFailed)';
+  final _this = this as QueueListState;
+  return 'QueueListState(items: ${_this.items}, counts: ${_this.counts}, hasNext: ${_this.hasNext}, isLoadingMore: ${_this.isLoadingMore}, loadMoreFailed: ${_this.loadMoreFailed})';
 }
 
 
@@ -240,16 +245,18 @@ _$QueueListStateCopyWith<_QueueListState> get copyWith => __$QueueListStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _QueueListState&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.counts, counts) || other.counts == counts)&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext)&&(identical(other.isLoadingMore, isLoadingMore) || other.isLoadingMore == isLoadingMore)&&(identical(other.loadMoreFailed, loadMoreFailed) || other.loadMoreFailed == loadMoreFailed));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _QueueListState&&const DeepCollectionEquality().equals(other.items, _items)&&(identical(other.counts, counts) || other.counts == counts)&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext)&&(identical(other.isLoadingMore, isLoadingMore) || other.isLoadingMore == isLoadingMore)&&(identical(other.loadMoreFailed, loadMoreFailed) || other.loadMoreFailed == loadMoreFailed));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),counts,hasNext,isLoadingMore,loadMoreFailed);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),counts,hasNext,isLoadingMore,loadMoreFailed);
+}
 
 @override
 String toString() {
-  return 'QueueListState(items: $items, counts: $counts, hasNext: $hasNext, isLoadingMore: $isLoadingMore, loadMoreFailed: $loadMoreFailed)';
+    return 'QueueListState(items: $items, counts: $counts, hasNext: $hasNext, isLoadingMore: $isLoadingMore, loadMoreFailed: $loadMoreFailed)';
 }
 
 
@@ -307,16 +314,21 @@ $QueuePageStateCopyWith<QueuePageState> get copyWith => _$QueuePageStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is QueuePageState&&(identical(other.tab, tab) || other.tab == tab)&&(identical(other.queue, queue) || other.queue == queue));
+  final _this = this as QueuePageState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is QueuePageState&&(identical(other.tab, _this.tab) || other.tab == _this.tab)&&(identical(other.queue, _this.queue) || other.queue == _this.queue));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,tab,queue);
+int get hashCode {
+  final _this = this as QueuePageState;
+  return Object.hash(runtimeType,_this.tab,_this.queue);
+}
 
 @override
 String toString() {
-  return 'QueuePageState(tab: $tab, queue: $queue)';
+  final _this = this as QueuePageState;
+  return 'QueuePageState(tab: ${_this.tab}, queue: ${_this.queue})';
 }
 
 
@@ -507,16 +519,18 @@ _$QueuePageStateCopyWith<_QueuePageState> get copyWith => __$QueuePageStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _QueuePageState&&(identical(other.tab, tab) || other.tab == tab)&&(identical(other.queue, queue) || other.queue == queue));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _QueuePageState&&(identical(other.tab, tab) || other.tab == tab)&&(identical(other.queue, queue) || other.queue == queue));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,tab,queue);
+int get hashCode {
+    return Object.hash(runtimeType,tab,queue);
+}
 
 @override
 String toString() {
-  return 'QueuePageState(tab: $tab, queue: $queue)';
+    return 'QueuePageState(tab: $tab, queue: $queue)';
 }
 
 

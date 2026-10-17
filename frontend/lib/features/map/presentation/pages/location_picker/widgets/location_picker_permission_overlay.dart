@@ -1,11 +1,11 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../../core/components/button/button.dart';
-import '../../../../../../core/components/empty_state/empty_state.dart';
-import '../../../../../../core/service/service.dart';
-import '../../../../../../core/theme/theme.dart';
-import '../provider/provider.dart';
+import 'package:pantau/core/components/button/button.dart';
+import 'package:pantau/core/components/empty_state/app_empty_state.dart';
+import 'package:pantau/core/service/location_service.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/features/map/presentation/pages/location_picker/provider/provider.dart';
 
 /// Copy and recovery action for a permission-related picker overlay.
 typedef _PermissionOverlay = ({

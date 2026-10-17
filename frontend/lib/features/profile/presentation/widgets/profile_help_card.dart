@@ -1,8 +1,8 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../core/theme/theme.dart';
-import 'profile_icon_badge.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/features/profile/presentation/widgets/profile_icon_badge.dart';
 
 /// Single row that opens a static contact dialog. No backend, no
 /// dependency — the app has no support ticketing or `url_launcher`.

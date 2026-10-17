@@ -1,7 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
-import '../../../../core/theme/theme.dart';
-import '../../../../core/utils/extensions/extensions.dart';
+import 'package:pantau/core/theme/theme.dart';
+import 'package:pantau/core/utils/extensions/extensions.dart';
 
 /// Screen title + subtitle used at the top of the login and register pages.
 class AuthHeader extends StatelessWidget {

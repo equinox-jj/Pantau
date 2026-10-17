@@ -1,6 +1,6 @@
-import '../../../../core/base/base.dart';
-import '../../../../core/network/network.dart';
-import '../model/model.dart';
+import 'package:pantau/core/base/base.dart';
+import 'package:pantau/core/network/network.dart';
+import 'package:pantau/features/report/data/model/feed_reports_model.dart';
 
 abstract class ReportRemoteDataSource with BaseRemoteDataSource {
   /// Reports within [radiusInMeters] of the point, nearest first.

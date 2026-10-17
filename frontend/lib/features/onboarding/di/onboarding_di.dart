@@ -1,10 +1,10 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../core/di/core_di.dart';
-import '../data/datasources/datasources.dart';
-import '../data/repository/repository.dart';
-import '../domain/repository/repository.dart';
-import '../domain/usecase/usecase.dart';
+import 'package:pantau/core/di/core_di.dart';
+import 'package:pantau/features/onboarding/data/datasources/onboarding_local_datasource.dart';
+import 'package:pantau/features/onboarding/data/repository/onboarding_repository_impl.dart';
+import 'package:pantau/features/onboarding/domain/repository/onboarding_repository.dart';
+import 'package:pantau/features/onboarding/domain/usecase/usecase.dart';
 
 part 'onboarding_di.g.dart';
 
@@ -24,14 +24,14 @@ OnboardingRepository onboardingRepository(Ref ref) {
 
 @Riverpod(keepAlive: true)
 GetOnboardingSeenUsecase getOnboardingSeenUsecase(Ref ref) {
-  final repository = ref.read(onboardingRepositoryProvider);
+  final repository = ref.watch(onboardingRepositoryProvider);
 
   return GetOnboardingSeenUsecase(repository: repository);
 }
 
 @Riverpod(keepAlive: true)
 SetOnboardingSeenUsecase setOnboardingSeenUsecase(Ref ref) {
-  final repository = ref.read(onboardingRepositoryProvider);
+  final repository = ref.watch(onboardingRepositoryProvider);
 
   return SetOnboardingSeenUsecase(repository: repository);
 }

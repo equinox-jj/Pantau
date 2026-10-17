@@ -46,7 +46,9 @@ GetReportCategoriesUsecase getReportCategoriesUsecase(Ref ref) {
 
 @Riverpod(keepAlive: true)
 GetReportDetailUsecase getReportDetailUsecase(Ref ref) {
-  return GetReportDetailUsecase(mapRepository: ref.watch(mapRepositoryProvider));
+  return GetReportDetailUsecase(
+    mapRepository: ref.watch(mapRepositoryProvider),
+  );
 }
 
 @Riverpod(keepAlive: true)

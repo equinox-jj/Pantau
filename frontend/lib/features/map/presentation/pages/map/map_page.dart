@@ -15,6 +15,7 @@ import 'package:pantau/features/map/domain/entity/entity.dart';
 import 'package:pantau/features/map/presentation/pages/map/listener/map_listener.dart';
 import 'package:pantau/features/map/presentation/pages/map/provider/map_notifier.dart';
 import 'package:pantau/features/map/presentation/pages/map/widgets/widgets.dart';
+import 'package:pantau/features/map/presentation/pages/place_search/place_search.dart';
 
 /// Nearby reports on an OSM map with clustered markers.
 ///
@@ -130,40 +131,35 @@ class _MapPageState extends ConsumerState<MapPage> {
     _loadReportsAround(center);
   }
 
-  /// Runs a place search biased toward the visible bounds, so "Gambir"
+  /// Opens the place search biased toward the visible bounds, so "Gambir"
   /// resolves to the one on screen first.
-  void _searchPlaces(String query) {
+  Future<void> _openSearch() async {
     final bounds = _mapController.camera.visibleBounds;
 
-    ref
-        .read(mapProvider.notifier)
-        .searchPlaces(
-          query,
-          viewBox: PlaceViewBox(
-            minLatitude: bounds.south,
-            minLongitude: bounds.west,
-            maxLatitude: bounds.north,
-            maxLongitude: bounds.east,
-          ),
-        );
+    final place = await context.push<Place>(
+      AppRoutes.placeSearch,
+      extra: PlaceSearchArgs(
+        viewBox: PlaceViewBox(
+          minLatitude: bounds.south,
+          minLongitude: bounds.west,
+          maxLatitude: bounds.north,
+          maxLongitude: bounds.east,
+        ),
+        initialQuery: ref.read(mapProvider).searchedPlace?.name,
+      ),
+    );
+    if (place == null || !mounted) return;
+
+    _handlePlaceSelected(place);
   }
 
-  /// Clears both the results panel and the pin.
-  void _clearSearch() {
-    final notifier = ref.read(mapProvider.notifier);
-    notifier.clearSearch();
-    notifier.clearSearchedPlace();
-  }
+  /// Drops the searched-place pin.
+  void _clearSearch() => ref.read(mapProvider.notifier).clearSearchedPlace();
 
   /// Moves the camera to [place], marks it, and loads the reports around it.
   void _handlePlaceSelected(Place place) {
-    FocusScope.of(context).unfocus();
-
     final center = LatLng(place.latitude, place.longitude);
-    final notifier = ref.read(mapProvider.notifier);
-    notifier.selectPlace(place);
-    // Close the panel but keep the pin — the field still shows the query.
-    notifier.clearSearch();
+    ref.read(mapProvider.notifier).selectPlace(place);
 
     _mapController.move(center, _initialZoom);
     _loadReportsAround(center);
@@ -206,8 +202,8 @@ class _MapPageState extends ConsumerState<MapPage> {
               onReportTap: _openReport,
               tileProvider: _tileProvider,
             ),
-            // Below the top bar in paint order: their offset assumes the
-            // collapsed bar, so an open results panel must cover them.
+            // Offset past the whole top bar, scrim included, so the two
+            // never overlap.
             _SearchAreaControl(
               topOffset: MediaQuery.paddingOf(context).top + MapTopBar.height,
               canSearch: _canSearchArea,
@@ -216,11 +212,7 @@ class _MapPageState extends ConsumerState<MapPage> {
             _ReportsLoadingIndicator(
               topOffset: MediaQuery.paddingOf(context).top + MapTopBar.height,
             ),
-            MapTopBar(
-              onSearchSubmitted: _searchPlaces,
-              onSearchCleared: _clearSearch,
-              onPlaceSelected: _handlePlaceSelected,
-            ),
+            MapTopBar(onSearchTap: _openSearch, onSearchCleared: _clearSearch),
             _BottomStack(
               onStartReport: _startReport,
               onRetry: () => _loadReportsForCamera(_mapController.camera),

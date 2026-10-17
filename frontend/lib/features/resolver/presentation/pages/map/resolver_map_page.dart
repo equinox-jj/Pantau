@@ -13,6 +13,7 @@ import 'package:pantau/core/theme/theme.dart';
 import 'package:pantau/core/utils/enums/enums.dart';
 import 'package:pantau/features/map/domain/entity/entity.dart';
 import 'package:pantau/features/map/presentation/pages/map/widgets/map_search.dart';
+import 'package:pantau/features/map/presentation/pages/place_search/place_search.dart';
 import 'package:pantau/features/resolver/domain/entity/resolver_entity.dart';
 import 'package:pantau/features/resolver/presentation/provider/resolver_location_notifier.dart';
 import 'package:pantau/features/resolver/presentation/pages/queue/widgets/queue_widgets.dart';
@@ -124,41 +125,38 @@ class _ResolverMapPageState extends ConsumerState<ResolverMapPage> {
     );
   }
 
-  /// Runs a place search biased toward the visible bounds, so "Gambir"
+  /// Opens the place search biased toward the visible bounds, so "Gambir"
   /// resolves to the one on screen first.
-  void _searchPlaces(String query) {
+  Future<void> _openSearch() async {
     final bounds = _mapController.camera.visibleBounds;
 
-    ref
-        .read(resolverMapProvider.notifier)
-        .searchPlaces(
-          query,
-          viewBox: PlaceViewBox(
-            minLatitude: bounds.south,
-            minLongitude: bounds.west,
-            maxLatitude: bounds.north,
-            maxLongitude: bounds.east,
-          ),
-        );
+    final place = await context.push<Place>(
+      AppRoutes.placeSearch,
+      extra: PlaceSearchArgs(
+        viewBox: PlaceViewBox(
+          minLatitude: bounds.south,
+          minLongitude: bounds.west,
+          maxLatitude: bounds.north,
+          maxLongitude: bounds.east,
+        ),
+        initialQuery: ref.read(resolverMapProvider).searchedPlace?.name,
+      ),
+    );
+    if (place == null || !mounted) return;
+
+    await _handlePlaceSelected(place);
   }
 
-  /// Clears both the results panel and the pin.
-  void _clearSearch() {
-    final notifier = ref.read(resolverMapProvider.notifier);
-    notifier.clearSearch();
-    notifier.clearSearchedPlace();
-  }
+  /// Drops the searched-place pin.
+  void _clearSearch() =>
+      ref.read(resolverMapProvider.notifier).clearSearchedPlace();
 
   /// Moves the camera to [place], marks it, and reloads the active tab's
   /// reports around it.
   Future<void> _handlePlaceSelected(Place place) async {
-    FocusScope.of(context).unfocus();
-
     final center = LatLng(place.latitude, place.longitude);
     final notifier = ref.read(resolverMapProvider.notifier);
     notifier.selectPlace(place);
-    // Close the panel but keep the pin — the field still shows the query.
-    notifier.clearSearch();
 
     setState(() => _center = center);
     _mapController.move(center, ResolverMapCanvas.initialZoom);
@@ -259,9 +257,8 @@ class _ResolverMapPageState extends ConsumerState<ResolverMapPage> {
                   ),
                   _MapHeader(
                     onTabSelected: _selectTab,
-                    onSearchSubmitted: _searchPlaces,
+                    onSearchTap: _openSearch,
                     onSearchCleared: _clearSearch,
-                    onPlaceSelected: _handlePlaceSelected,
                   ),
                   Positioned(
                     left: 0,
@@ -292,26 +289,22 @@ class _ResolverMapPageState extends ConsumerState<ResolverMapPage> {
   }
 }
 
-/// Search field, then either the tab selector or the search results panel,
-/// scrimmed over the map tiles so both stay legible regardless of what's
-/// underneath.
+/// Search bar, then the tab selector, scrimmed over the map tiles so both
+/// stay legible regardless of what's underneath.
 class _MapHeader extends StatelessWidget {
   const _MapHeader({
     required this.onTabSelected,
-    required this.onSearchSubmitted,
+    required this.onSearchTap,
     required this.onSearchCleared,
-    required this.onPlaceSelected,
   });
 
   final ValueChanged<QueueTab> onTabSelected;
 
-  /// The trimmed query from the keyboard's search action.
-  final ValueChanged<String> onSearchSubmitted;
+  /// Opens the full-screen place search.
+  final VoidCallback onSearchTap;
 
-  /// Fired by the field's clear button.
+  /// Fired by the search bar's clear button.
   final VoidCallback onSearchCleared;
-
-  final ValueChanged<Place> onPlaceSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -341,65 +334,38 @@ class _MapHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              MapSearchField(
-                onSubmitted: onSearchSubmitted,
-                onCleared: onSearchCleared,
+              Consumer(
+                builder: (context, ref, _) {
+                  return MapSearchBar(
+                    placeName: ref.watch(
+                      resolverMapProvider.select(
+                        (state) => state.searchedPlace?.name,
+                      ),
+                    ),
+                    onTap: onSearchTap,
+                    onCleared: onSearchCleared,
+                  );
+                },
               ),
               const Gap(AppSpacing.xs2),
-              _TabSelectorOrSearchResults(
-                onTabSelected: onTabSelected,
-                onPlaceSelected: onPlaceSelected,
+              Consumer(
+                builder: (context, ref, _) {
+                  return QueueTabSelector(
+                    currentTab: ref.watch(
+                      resolverMapProvider.select((state) => state.tab),
+                    ),
+                    counts: ref.watch(
+                      resolverMapProvider.select(
+                        (state) => state.reports.value?.counts,
+                      ),
+                    ),
+                    onTabSelected: onTabSelected,
+                  );
+                },
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-/// The row under the search field: the tab selector while no search is open,
-/// the results panel while one is — never both, so nothing overlaps.
-class _TabSelectorOrSearchResults extends StatelessWidget {
-  const _TabSelectorOrSearchResults({
-    required this.onTabSelected,
-    required this.onPlaceSelected,
-  });
-
-  final ValueChanged<QueueTab> onTabSelected;
-  final ValueChanged<Place> onPlaceSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, child) {
-        final state = ref.watch(
-          resolverMapProvider.select((state) => state.placeSearch),
-        );
-        // Null means the panel is closed; loading, failed, and empty
-        // searches all still have something to show.
-        if (state == null) return child!;
-
-        return MapSearchResults(
-          state: state,
-          onSelected: onPlaceSelected,
-          onRetry: () => ref.read(resolverMapProvider.notifier).retrySearch(),
-        );
-      },
-      child: Consumer(
-        builder: (context, ref, _) {
-          return QueueTabSelector(
-            currentTab: ref.watch(
-              resolverMapProvider.select((state) => state.tab),
-            ),
-            counts: ref.watch(
-              resolverMapProvider.select(
-                (state) => state.reports.value?.counts,
-              ),
-            ),
-            onTabSelected: onTabSelected,
-          );
-        },
       ),
     );
   }

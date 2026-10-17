@@ -14,6 +14,10 @@ abstract final class AppRoutes {
   static const String locationPickerSegment = 'location';
   static const String locationPicker = '$createReport/$locationPickerSegment';
 
+  /// Full-screen place search, pushed over either map tab. Pops the chosen
+  /// place.
+  static const String placeSearch = '/place-search';
+
   /// Full-screen change password form, pushed over either dashboard shell.
   static const String changePassword = '/change-password';
 
@@ -47,6 +51,7 @@ abstract final class AppRoutes {
     register,
     createReport,
     locationPicker,
+    placeSearch,
     reportDetail,
     changePassword,
     map,

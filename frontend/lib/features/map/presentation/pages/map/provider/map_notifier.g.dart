@@ -44,7 +44,7 @@ final class MapNotifierProvider
   }
 }
 
-String _$mapNotifierHash() => r'e25fca7abca410556d279aa463099c9ab809b498';
+String _$mapNotifierHash() => r'b0337b036535f41655b07b6628a20ee8f752a98d';
 
 /// Owns every piece of state the map tab shows.
 

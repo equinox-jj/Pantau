@@ -16,8 +16,6 @@ import 'package:pantau/features/map/presentation/pages/map/provider/map_notifier
 class MockGetNearbyReportsUsecase extends Mock
     implements GetNearbyReportsUsecase {}
 
-class MockSearchPlacesUsecase extends Mock implements SearchPlacesUsecase {}
-
 class MockLocationService extends Mock implements LocationService {}
 
 void main() {
@@ -29,22 +27,18 @@ void main() {
         radiusInMeters: 0,
       ),
     );
-    registerFallbackValue(const SearchPlacesParams(query: 'x'));
   });
 
   late MockGetNearbyReportsUsecase nearbyUsecase;
-  late MockSearchPlacesUsecase searchUsecase;
   late MockLocationService locationService;
   late ProviderContainer container;
 
   setUp(() {
     nearbyUsecase = MockGetNearbyReportsUsecase();
-    searchUsecase = MockSearchPlacesUsecase();
     locationService = MockLocationService();
     container = ProviderContainer(
       overrides: [
         getNearbyReportsUsecaseProvider.overrideWithValue(nearbyUsecase),
-        searchPlacesUsecaseProvider.overrideWithValue(searchUsecase),
         locationServiceProvider.overrideWithValue(locationService),
       ],
     );
@@ -62,7 +56,6 @@ void main() {
     expect(state.nearbyReports, const AsyncData<List<NearbyReport>>([]));
     expect(state.visibleReports, isEmpty);
     expect(state.filteredReports, isEmpty);
-    expect(state.placeSearch, isNull);
     expect(state.searchedPlace, isNull);
   });
 
@@ -262,133 +255,6 @@ void main() {
       }
     });
   });
-
-  group('searchPlaces', () {
-    test('an empty (post-trim) query clears the search instead of calling the usecase', () async {
-      await notifier().searchPlaces('   ');
-
-      expect(container.read(mapProvider).placeSearch, isNull);
-      verifyNever(() => searchUsecase(any()));
-    });
-
-    test('success stores the results', () async {
-      const place = Place(
-        id: '1',
-        name: 'Monas',
-        address: '',
-        latitude: -6.2,
-        longitude: 106.8,
-      );
-      when(() => searchUsecase(any()))
-          .thenAnswer((_) async => const Right([place]));
-
-      await notifier().searchPlaces('Monas');
-
-      final state = container.read(mapProvider).placeSearch;
-      expect(state?.value, [place]);
-    });
-
-    test('failure surfaces an AsyncError carrying the Failure', () async {
-      when(() => searchUsecase(any()))
-          .thenAnswer((_) async => const Left(Failure.network()));
-
-      await notifier().searchPlaces('Monas');
-
-      final state = container.read(mapProvider).placeSearch;
-      expect(state?.hasError, isTrue);
-      expect(state?.error, const Failure.network());
-    });
-
-    test(
-      'a superseded response is dropped in favour of the newer one',
-      () async {
-        final firstCompleter = Completer<Either<Failure, List<Place>>>();
-        final secondCompleter = Completer<Either<Failure, List<Place>>>();
-        var callCount = 0;
-        when(() => searchUsecase(any())).thenAnswer((_) {
-          callCount++;
-          return callCount == 1
-              ? firstCompleter.future
-              : secondCompleter.future;
-        });
-
-        final firstSearch = notifier().searchPlaces('first');
-        final secondSearch = notifier().searchPlaces('second');
-
-        secondCompleter.complete(
-          const Right([
-            Place(
-              id: '2',
-              name: 'second',
-              address: '',
-              latitude: 0,
-              longitude: 0,
-            ),
-          ]),
-        );
-        await secondSearch;
-        firstCompleter.complete(
-          const Right([
-            Place(
-              id: '1',
-              name: 'first',
-              address: '',
-              latitude: 0,
-              longitude: 0,
-            ),
-          ]),
-        );
-        await firstSearch;
-
-        final state = container.read(mapProvider).placeSearch;
-        expect(state?.value!.single.name, 'second');
-      },
-    );
-  });
-
-  group('retrySearch', () {
-    test('is a no-op before searchPlaces() has ever run', () async {
-      await notifier().retrySearch();
-      verifyNever(() => searchUsecase(any()));
-    });
-
-    test('replays the last query', () async {
-      when(() => searchUsecase(any())).thenAnswer((_) async => const Right([]));
-
-      await notifier().searchPlaces('Monas');
-      await notifier().retrySearch();
-
-      final captured = verify(() => searchUsecase(captureAny())).captured;
-      expect(captured, hasLength(2));
-      for (final params in captured) {
-        expect((params as SearchPlacesParams).query, 'Monas');
-      }
-    });
-  });
-
-  test('clearSearch resets placeSearch to null', () async {
-    when(() => searchUsecase(any())).thenAnswer((_) async => const Right([]));
-    await notifier().searchPlaces('Monas');
-
-    notifier().clearSearch();
-
-    expect(container.read(mapProvider).placeSearch, isNull);
-  });
-
-  test(
-    'clearSearch orphans an in-flight search so its late response is ignored',
-    () async {
-      final completer = Completer<Either<Failure, List<Place>>>();
-      when(() => searchUsecase(any())).thenAnswer((_) => completer.future);
-
-      final search = notifier().searchPlaces('Monas');
-      notifier().clearSearch();
-      completer.complete(const Right([]));
-      await search;
-
-      expect(container.read(mapProvider).placeSearch, isNull);
-    },
-  );
 
   test('selectPlace stores the searched place', () {
     const place = Place(

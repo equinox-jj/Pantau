@@ -10,6 +10,7 @@ import 'package:pantau/features/map/domain/entity/entity.dart';
 import 'package:pantau/features/map/presentation/pages/create_report/create_report.dart';
 import 'package:pantau/features/map/presentation/pages/location_picker/location_picker.dart';
 import 'package:pantau/features/map/presentation/pages/map/map.dart';
+import 'package:pantau/features/map/presentation/pages/place_search/place_search.dart';
 import 'package:pantau/features/map/presentation/pages/report_detail/report_detail.dart';
 import 'package:pantau/features/onboarding/presentation/pages/onboarding/onboarding_page.dart';
 import 'package:pantau/features/onboarding/presentation/pages/splash/splash_page.dart';
@@ -71,6 +72,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             ),
           ),
         ],
+      ),
+      GoRoute(
+        path: AppRoutes.placeSearch,
+        parentNavigatorKey: _rootNavigatorKey,
+        // `extra` carries the map's visible bounds and the place it already
+        // shows; a cold deep link has none and searches unbiased.
+        builder: (context, state) {
+          final args = state.extra is PlaceSearchArgs
+              ? state.extra as PlaceSearchArgs
+              : const PlaceSearchArgs();
+
+          return PlaceSearchPage(
+            viewBox: args.viewBox,
+            initialQuery: args.initialQuery,
+          );
+        },
       ),
       GoRoute(
         path: AppRoutes.changePassword,

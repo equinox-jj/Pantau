@@ -126,7 +126,7 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
     // Field names follow docs/API_REQUEST.md: scalars as form-data text parts,
     // the photos as repeated `photos` file parts (1-4 images).
     final formData = FormData.fromMap({
-      'categoryId': '$categoryId',
+      'category_id': '$categoryId',
       'description': description,
       'latitude': '$latitude',
       'longitude': '$longitude',

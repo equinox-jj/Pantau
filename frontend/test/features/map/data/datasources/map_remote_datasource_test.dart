@@ -354,7 +354,7 @@ void main() {
                 ).captured.single
                 as FormData;
         final fields = {for (final f in captured.fields) f.key: f.value};
-        expect(fields['categoryId'], '3');
+        expect(fields['category_id'], '3');
         expect(fields['description'], 'Big hole');
         expect(fields['latitude'], '-6.2');
         expect(fields['longitude'], '106.8');

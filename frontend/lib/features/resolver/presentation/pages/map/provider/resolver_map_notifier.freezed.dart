@@ -24,14 +24,8 @@ mixin _$ResolverMapPageState {
 /// selected. Set by a marker tap, replaced by the next marker tap,
 /// cleared when the active tab changes (the previous selection may not
 /// even be in the new tab's result set).
- QueueReport? get selectedReport;/// Results of the place-search field above the map.
-///
-/// `null` means the panel is closed — distinct from `AsyncData([])`,
-/// which means "searched, found nothing".
- AsyncValue<List<Place>>? get placeSearch;/// The place the resolver jumped to, marked with a pin on the map.
-///
-/// Separate from [placeSearch] for lifetime: the result list dies with
-/// the panel, the pin stays until the search field is cleared.
+ QueueReport? get selectedReport;/// The place the resolver jumped to from the place search, marked with a
+/// pin on the map until the search bar is cleared.
  Place? get searchedPlace;
 /// Create a copy of ResolverMapPageState
 /// with the given fields replaced by the non-null parameter values.
@@ -44,20 +38,20 @@ $ResolverMapPageStateCopyWith<ResolverMapPageState> get copyWith => _$ResolverMa
 @override
 bool operator ==(Object other) {
   final _this = this as ResolverMapPageState;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ResolverMapPageState&&(identical(other.tab, _this.tab) || other.tab == _this.tab)&&(identical(other.reports, _this.reports) || other.reports == _this.reports)&&(identical(other.selectedReport, _this.selectedReport) || other.selectedReport == _this.selectedReport)&&(identical(other.placeSearch, _this.placeSearch) || other.placeSearch == _this.placeSearch)&&(identical(other.searchedPlace, _this.searchedPlace) || other.searchedPlace == _this.searchedPlace));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ResolverMapPageState&&(identical(other.tab, _this.tab) || other.tab == _this.tab)&&(identical(other.reports, _this.reports) || other.reports == _this.reports)&&(identical(other.selectedReport, _this.selectedReport) || other.selectedReport == _this.selectedReport)&&(identical(other.searchedPlace, _this.searchedPlace) || other.searchedPlace == _this.searchedPlace));
 }
 
 
 @override
 int get hashCode {
   final _this = this as ResolverMapPageState;
-  return Object.hash(runtimeType,_this.tab,_this.reports,_this.selectedReport,_this.placeSearch,_this.searchedPlace);
+  return Object.hash(runtimeType,_this.tab,_this.reports,_this.selectedReport,_this.searchedPlace);
 }
 
 @override
 String toString() {
   final _this = this as ResolverMapPageState;
-  return 'ResolverMapPageState(tab: ${_this.tab}, reports: ${_this.reports}, selectedReport: ${_this.selectedReport}, placeSearch: ${_this.placeSearch}, searchedPlace: ${_this.searchedPlace})';
+  return 'ResolverMapPageState(tab: ${_this.tab}, reports: ${_this.reports}, selectedReport: ${_this.selectedReport}, searchedPlace: ${_this.searchedPlace})';
 }
 
 
@@ -68,7 +62,7 @@ abstract mixin class $ResolverMapPageStateCopyWith<$Res>  {
   factory $ResolverMapPageStateCopyWith(ResolverMapPageState value, $Res Function(ResolverMapPageState) _then) = _$ResolverMapPageStateCopyWithImpl;
 @useResult
 $Res call({
- QueueTab tab, AsyncValue<QueueResult> reports, QueueReport? selectedReport, AsyncValue<List<Place>>? placeSearch, Place? searchedPlace
+ QueueTab tab, AsyncValue<QueueResult> reports, QueueReport? selectedReport, Place? searchedPlace
 });
 
 
@@ -85,13 +79,12 @@ class _$ResolverMapPageStateCopyWithImpl<$Res>
 
 /// Create a copy of ResolverMapPageState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? tab = null,Object? reports = null,Object? selectedReport = freezed,Object? placeSearch = freezed,Object? searchedPlace = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? tab = null,Object? reports = null,Object? selectedReport = freezed,Object? searchedPlace = freezed,}) {
   return _then(ResolverMapPageState(
 tab: null == tab ? _self.tab : tab // ignore: cast_nullable_to_non_nullable
 as QueueTab,reports: null == reports ? _self.reports : reports // ignore: cast_nullable_to_non_nullable
 as AsyncValue<QueueResult>,selectedReport: freezed == selectedReport ? _self.selectedReport : selectedReport // ignore: cast_nullable_to_non_nullable
-as QueueReport?,placeSearch: freezed == placeSearch ? _self.placeSearch : placeSearch // ignore: cast_nullable_to_non_nullable
-as AsyncValue<List<Place>>?,searchedPlace: freezed == searchedPlace ? _self.searchedPlace : searchedPlace // ignore: cast_nullable_to_non_nullable
+as QueueReport?,searchedPlace: freezed == searchedPlace ? _self.searchedPlace : searchedPlace // ignore: cast_nullable_to_non_nullable
 as Place?,
   ));
 }
@@ -189,10 +182,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( QueueTab tab,  AsyncValue<QueueResult> reports,  QueueReport? selectedReport,  AsyncValue<List<Place>>? placeSearch,  Place? searchedPlace)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( QueueTab tab,  AsyncValue<QueueResult> reports,  QueueReport? selectedReport,  Place? searchedPlace)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ResolverMapPageState() when $default != null:
-return $default(_that.tab,_that.reports,_that.selectedReport,_that.placeSearch,_that.searchedPlace);case _:
+return $default(_that.tab,_that.reports,_that.selectedReport,_that.searchedPlace);case _:
   return orElse();
 
 }
@@ -210,10 +203,10 @@ return $default(_that.tab,_that.reports,_that.selectedReport,_that.placeSearch,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( QueueTab tab,  AsyncValue<QueueResult> reports,  QueueReport? selectedReport,  AsyncValue<List<Place>>? placeSearch,  Place? searchedPlace)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( QueueTab tab,  AsyncValue<QueueResult> reports,  QueueReport? selectedReport,  Place? searchedPlace)  $default,) {final _that = this;
 switch (_that) {
 case _ResolverMapPageState():
-return $default(_that.tab,_that.reports,_that.selectedReport,_that.placeSearch,_that.searchedPlace);case _:
+return $default(_that.tab,_that.reports,_that.selectedReport,_that.searchedPlace);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -230,10 +223,10 @@ return $default(_that.tab,_that.reports,_that.selectedReport,_that.placeSearch,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( QueueTab tab,  AsyncValue<QueueResult> reports,  QueueReport? selectedReport,  AsyncValue<List<Place>>? placeSearch,  Place? searchedPlace)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( QueueTab tab,  AsyncValue<QueueResult> reports,  QueueReport? selectedReport,  Place? searchedPlace)?  $default,) {final _that = this;
 switch (_that) {
 case _ResolverMapPageState() when $default != null:
-return $default(_that.tab,_that.reports,_that.selectedReport,_that.placeSearch,_that.searchedPlace);case _:
+return $default(_that.tab,_that.reports,_that.selectedReport,_that.searchedPlace);case _:
   return null;
 
 }
@@ -245,7 +238,7 @@ return $default(_that.tab,_that.reports,_that.selectedReport,_that.placeSearch,_
 
 
 class _ResolverMapPageState implements ResolverMapPageState {
-  const _ResolverMapPageState({this.tab = QueueTab.open, this.reports = const AsyncLoading(), this.selectedReport, this.placeSearch, this.searchedPlace});
+  const _ResolverMapPageState({this.tab = QueueTab.open, this.reports = const AsyncLoading(), this.selectedReport, this.searchedPlace});
   
 
 /// Independent of `QueueNotifier`'s tab — switching tabs on the map never
@@ -260,15 +253,8 @@ class _ResolverMapPageState implements ResolverMapPageState {
 /// cleared when the active tab changes (the previous selection may not
 /// even be in the new tab's result set).
 @override final  QueueReport? selectedReport;
-/// Results of the place-search field above the map.
-///
-/// `null` means the panel is closed — distinct from `AsyncData([])`,
-/// which means "searched, found nothing".
-@override final  AsyncValue<List<Place>>? placeSearch;
-/// The place the resolver jumped to, marked with a pin on the map.
-///
-/// Separate from [placeSearch] for lifetime: the result list dies with
-/// the panel, the pin stays until the search field is cleared.
+/// The place the resolver jumped to from the place search, marked with a
+/// pin on the map until the search bar is cleared.
 @override final  Place? searchedPlace;
 
 /// Create a copy of ResolverMapPageState
@@ -281,18 +267,18 @@ _$ResolverMapPageStateCopyWith<_ResolverMapPageState> get copyWith => __$Resolve
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ResolverMapPageState&&(identical(other.tab, tab) || other.tab == tab)&&(identical(other.reports, reports) || other.reports == reports)&&(identical(other.selectedReport, selectedReport) || other.selectedReport == selectedReport)&&(identical(other.placeSearch, placeSearch) || other.placeSearch == placeSearch)&&(identical(other.searchedPlace, searchedPlace) || other.searchedPlace == searchedPlace));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ResolverMapPageState&&(identical(other.tab, tab) || other.tab == tab)&&(identical(other.reports, reports) || other.reports == reports)&&(identical(other.selectedReport, selectedReport) || other.selectedReport == selectedReport)&&(identical(other.searchedPlace, searchedPlace) || other.searchedPlace == searchedPlace));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,tab,reports,selectedReport,placeSearch,searchedPlace);
+    return Object.hash(runtimeType,tab,reports,selectedReport,searchedPlace);
 }
 
 @override
 String toString() {
-    return 'ResolverMapPageState(tab: $tab, reports: $reports, selectedReport: $selectedReport, placeSearch: $placeSearch, searchedPlace: $searchedPlace)';
+    return 'ResolverMapPageState(tab: $tab, reports: $reports, selectedReport: $selectedReport, searchedPlace: $searchedPlace)';
 }
 
 
@@ -303,7 +289,7 @@ abstract mixin class _$ResolverMapPageStateCopyWith<$Res> implements $ResolverMa
   factory _$ResolverMapPageStateCopyWith(_ResolverMapPageState value, $Res Function(_ResolverMapPageState) _then) = __$ResolverMapPageStateCopyWithImpl;
 @override @useResult
 $Res call({
- QueueTab tab, AsyncValue<QueueResult> reports, QueueReport? selectedReport, AsyncValue<List<Place>>? placeSearch, Place? searchedPlace
+ QueueTab tab, AsyncValue<QueueResult> reports, QueueReport? selectedReport, Place? searchedPlace
 });
 
 
@@ -320,13 +306,12 @@ class __$ResolverMapPageStateCopyWithImpl<$Res>
 
 /// Create a copy of ResolverMapPageState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? tab = null,Object? reports = null,Object? selectedReport = freezed,Object? placeSearch = freezed,Object? searchedPlace = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? tab = null,Object? reports = null,Object? selectedReport = freezed,Object? searchedPlace = freezed,}) {
   return _then(_ResolverMapPageState(
 tab: null == tab ? _self.tab : tab // ignore: cast_nullable_to_non_nullable
 as QueueTab,reports: null == reports ? _self.reports : reports // ignore: cast_nullable_to_non_nullable
 as AsyncValue<QueueResult>,selectedReport: freezed == selectedReport ? _self.selectedReport : selectedReport // ignore: cast_nullable_to_non_nullable
-as QueueReport?,placeSearch: freezed == placeSearch ? _self.placeSearch : placeSearch // ignore: cast_nullable_to_non_nullable
-as AsyncValue<List<Place>>?,searchedPlace: freezed == searchedPlace ? _self.searchedPlace : searchedPlace // ignore: cast_nullable_to_non_nullable
+as QueueReport?,searchedPlace: freezed == searchedPlace ? _self.searchedPlace : searchedPlace // ignore: cast_nullable_to_non_nullable
 as Place?,
   ));
 }

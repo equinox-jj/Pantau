@@ -47,14 +47,8 @@ mixin _$MapPageState {
 /// list identity on every access, which would defeat `select()` and
 /// repaint the marker layer on any unrelated state change (e.g. a
 /// re-locate).
- List<NearbyReport> get filteredReports;/// Results of the place-search field above the map.
-///
-/// `null` means the panel is closed — distinct from `AsyncData([])`,
-/// which means "searched, found nothing".
- AsyncValue<List<Place>>? get placeSearch;/// The place the user jumped to, marked with a pin on the map.
-///
-/// Separate from [placeSearch] for lifetime: the result list dies with
-/// the panel, the pin stays until the search field is cleared.
+ List<NearbyReport> get filteredReports;/// The place the user jumped to from the place search, marked with a pin
+/// on the map until the search bar is cleared.
  Place? get searchedPlace;
 /// Create a copy of MapPageState
 /// with the given fields replaced by the non-null parameter values.
@@ -67,20 +61,20 @@ $MapPageStateCopyWith<MapPageState> get copyWith => _$MapPageStateCopyWithImpl<M
 @override
 bool operator ==(Object other) {
   final _this = this as MapPageState;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapPageState&&(identical(other.currentLocation, _this.currentLocation) || other.currentLocation == _this.currentLocation)&&(identical(other.loadedArea, _this.loadedArea) || other.loadedArea == _this.loadedArea)&&(identical(other.categoryFilter, _this.categoryFilter) || other.categoryFilter == _this.categoryFilter)&&(identical(other.mapLocation, _this.mapLocation) || other.mapLocation == _this.mapLocation)&&(identical(other.nearbyReports, _this.nearbyReports) || other.nearbyReports == _this.nearbyReports)&&const DeepCollectionEquality().equals(other.visibleReports, _this.visibleReports)&&const DeepCollectionEquality().equals(other.filteredReports, _this.filteredReports)&&(identical(other.placeSearch, _this.placeSearch) || other.placeSearch == _this.placeSearch)&&(identical(other.searchedPlace, _this.searchedPlace) || other.searchedPlace == _this.searchedPlace));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapPageState&&(identical(other.currentLocation, _this.currentLocation) || other.currentLocation == _this.currentLocation)&&(identical(other.loadedArea, _this.loadedArea) || other.loadedArea == _this.loadedArea)&&(identical(other.categoryFilter, _this.categoryFilter) || other.categoryFilter == _this.categoryFilter)&&(identical(other.mapLocation, _this.mapLocation) || other.mapLocation == _this.mapLocation)&&(identical(other.nearbyReports, _this.nearbyReports) || other.nearbyReports == _this.nearbyReports)&&const DeepCollectionEquality().equals(other.visibleReports, _this.visibleReports)&&const DeepCollectionEquality().equals(other.filteredReports, _this.filteredReports)&&(identical(other.searchedPlace, _this.searchedPlace) || other.searchedPlace == _this.searchedPlace));
 }
 
 
 @override
 int get hashCode {
   final _this = this as MapPageState;
-  return Object.hash(runtimeType,_this.currentLocation,_this.loadedArea,_this.categoryFilter,_this.mapLocation,_this.nearbyReports,const DeepCollectionEquality().hash(_this.visibleReports),const DeepCollectionEquality().hash(_this.filteredReports),_this.placeSearch,_this.searchedPlace);
+  return Object.hash(runtimeType,_this.currentLocation,_this.loadedArea,_this.categoryFilter,_this.mapLocation,_this.nearbyReports,const DeepCollectionEquality().hash(_this.visibleReports),const DeepCollectionEquality().hash(_this.filteredReports),_this.searchedPlace);
 }
 
 @override
 String toString() {
   final _this = this as MapPageState;
-  return 'MapPageState(currentLocation: ${_this.currentLocation}, loadedArea: ${_this.loadedArea}, categoryFilter: ${_this.categoryFilter}, mapLocation: ${_this.mapLocation}, nearbyReports: ${_this.nearbyReports}, visibleReports: ${_this.visibleReports}, filteredReports: ${_this.filteredReports}, placeSearch: ${_this.placeSearch}, searchedPlace: ${_this.searchedPlace})';
+  return 'MapPageState(currentLocation: ${_this.currentLocation}, loadedArea: ${_this.loadedArea}, categoryFilter: ${_this.categoryFilter}, mapLocation: ${_this.mapLocation}, nearbyReports: ${_this.nearbyReports}, visibleReports: ${_this.visibleReports}, filteredReports: ${_this.filteredReports}, searchedPlace: ${_this.searchedPlace})';
 }
 
 
@@ -91,7 +85,7 @@ abstract mixin class $MapPageStateCopyWith<$Res>  {
   factory $MapPageStateCopyWith(MapPageState value, $Res Function(MapPageState) _then) = _$MapPageStateCopyWithImpl;
 @useResult
 $Res call({
- LatLng? currentLocation, LatLng? loadedArea, int? categoryFilter, AsyncValue<LocationResult?> mapLocation, AsyncValue<List<NearbyReport>> nearbyReports, List<NearbyReport> visibleReports, List<NearbyReport> filteredReports, AsyncValue<List<Place>>? placeSearch, Place? searchedPlace
+ LatLng? currentLocation, LatLng? loadedArea, int? categoryFilter, AsyncValue<LocationResult?> mapLocation, AsyncValue<List<NearbyReport>> nearbyReports, List<NearbyReport> visibleReports, List<NearbyReport> filteredReports, Place? searchedPlace
 });
 
 
@@ -108,7 +102,7 @@ class _$MapPageStateCopyWithImpl<$Res>
 
 /// Create a copy of MapPageState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? currentLocation = freezed,Object? loadedArea = freezed,Object? categoryFilter = freezed,Object? mapLocation = null,Object? nearbyReports = null,Object? visibleReports = null,Object? filteredReports = null,Object? placeSearch = freezed,Object? searchedPlace = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? currentLocation = freezed,Object? loadedArea = freezed,Object? categoryFilter = freezed,Object? mapLocation = null,Object? nearbyReports = null,Object? visibleReports = null,Object? filteredReports = null,Object? searchedPlace = freezed,}) {
   return _then(MapPageState(
 currentLocation: freezed == currentLocation ? _self.currentLocation : currentLocation // ignore: cast_nullable_to_non_nullable
 as LatLng?,loadedArea: freezed == loadedArea ? _self.loadedArea : loadedArea // ignore: cast_nullable_to_non_nullable
@@ -117,8 +111,7 @@ as int?,mapLocation: null == mapLocation ? _self.mapLocation : mapLocation // ig
 as AsyncValue<LocationResult?>,nearbyReports: null == nearbyReports ? _self.nearbyReports : nearbyReports // ignore: cast_nullable_to_non_nullable
 as AsyncValue<List<NearbyReport>>,visibleReports: null == visibleReports ? _self.visibleReports : visibleReports // ignore: cast_nullable_to_non_nullable
 as List<NearbyReport>,filteredReports: null == filteredReports ? _self.filteredReports : filteredReports // ignore: cast_nullable_to_non_nullable
-as List<NearbyReport>,placeSearch: freezed == placeSearch ? _self.placeSearch : placeSearch // ignore: cast_nullable_to_non_nullable
-as AsyncValue<List<Place>>?,searchedPlace: freezed == searchedPlace ? _self.searchedPlace : searchedPlace // ignore: cast_nullable_to_non_nullable
+as List<NearbyReport>,searchedPlace: freezed == searchedPlace ? _self.searchedPlace : searchedPlace // ignore: cast_nullable_to_non_nullable
 as Place?,
   ));
 }
@@ -216,10 +209,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( LatLng? currentLocation,  LatLng? loadedArea,  int? categoryFilter,  AsyncValue<LocationResult?> mapLocation,  AsyncValue<List<NearbyReport>> nearbyReports,  List<NearbyReport> visibleReports,  List<NearbyReport> filteredReports,  AsyncValue<List<Place>>? placeSearch,  Place? searchedPlace)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( LatLng? currentLocation,  LatLng? loadedArea,  int? categoryFilter,  AsyncValue<LocationResult?> mapLocation,  AsyncValue<List<NearbyReport>> nearbyReports,  List<NearbyReport> visibleReports,  List<NearbyReport> filteredReports,  Place? searchedPlace)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MapPageState() when $default != null:
-return $default(_that.currentLocation,_that.loadedArea,_that.categoryFilter,_that.mapLocation,_that.nearbyReports,_that.visibleReports,_that.filteredReports,_that.placeSearch,_that.searchedPlace);case _:
+return $default(_that.currentLocation,_that.loadedArea,_that.categoryFilter,_that.mapLocation,_that.nearbyReports,_that.visibleReports,_that.filteredReports,_that.searchedPlace);case _:
   return orElse();
 
 }
@@ -237,10 +230,10 @@ return $default(_that.currentLocation,_that.loadedArea,_that.categoryFilter,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( LatLng? currentLocation,  LatLng? loadedArea,  int? categoryFilter,  AsyncValue<LocationResult?> mapLocation,  AsyncValue<List<NearbyReport>> nearbyReports,  List<NearbyReport> visibleReports,  List<NearbyReport> filteredReports,  AsyncValue<List<Place>>? placeSearch,  Place? searchedPlace)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( LatLng? currentLocation,  LatLng? loadedArea,  int? categoryFilter,  AsyncValue<LocationResult?> mapLocation,  AsyncValue<List<NearbyReport>> nearbyReports,  List<NearbyReport> visibleReports,  List<NearbyReport> filteredReports,  Place? searchedPlace)  $default,) {final _that = this;
 switch (_that) {
 case _MapPageState():
-return $default(_that.currentLocation,_that.loadedArea,_that.categoryFilter,_that.mapLocation,_that.nearbyReports,_that.visibleReports,_that.filteredReports,_that.placeSearch,_that.searchedPlace);case _:
+return $default(_that.currentLocation,_that.loadedArea,_that.categoryFilter,_that.mapLocation,_that.nearbyReports,_that.visibleReports,_that.filteredReports,_that.searchedPlace);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -257,10 +250,10 @@ return $default(_that.currentLocation,_that.loadedArea,_that.categoryFilter,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( LatLng? currentLocation,  LatLng? loadedArea,  int? categoryFilter,  AsyncValue<LocationResult?> mapLocation,  AsyncValue<List<NearbyReport>> nearbyReports,  List<NearbyReport> visibleReports,  List<NearbyReport> filteredReports,  AsyncValue<List<Place>>? placeSearch,  Place? searchedPlace)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( LatLng? currentLocation,  LatLng? loadedArea,  int? categoryFilter,  AsyncValue<LocationResult?> mapLocation,  AsyncValue<List<NearbyReport>> nearbyReports,  List<NearbyReport> visibleReports,  List<NearbyReport> filteredReports,  Place? searchedPlace)?  $default,) {final _that = this;
 switch (_that) {
 case _MapPageState() when $default != null:
-return $default(_that.currentLocation,_that.loadedArea,_that.categoryFilter,_that.mapLocation,_that.nearbyReports,_that.visibleReports,_that.filteredReports,_that.placeSearch,_that.searchedPlace);case _:
+return $default(_that.currentLocation,_that.loadedArea,_that.categoryFilter,_that.mapLocation,_that.nearbyReports,_that.visibleReports,_that.filteredReports,_that.searchedPlace);case _:
   return null;
 
 }
@@ -272,7 +265,7 @@ return $default(_that.currentLocation,_that.loadedArea,_that.categoryFilter,_tha
 
 
 class _MapPageState implements MapPageState {
-  const _MapPageState({this.currentLocation, this.loadedArea, this.categoryFilter, this.mapLocation = const AsyncData(null), this.nearbyReports = const AsyncData([]),  List<NearbyReport> visibleReports = const [],  List<NearbyReport> filteredReports = const [], this.placeSearch, this.searchedPlace}): _visibleReports = visibleReports,_filteredReports = filteredReports;
+  const _MapPageState({this.currentLocation, this.loadedArea, this.categoryFilter, this.mapLocation = const AsyncData(null), this.nearbyReports = const AsyncData([]),  List<NearbyReport> visibleReports = const [],  List<NearbyReport> filteredReports = const [], this.searchedPlace}): _visibleReports = visibleReports,_filteredReports = filteredReports;
   
 
 /// The last device position that resolved, for the pin marking it on the
@@ -341,15 +334,8 @@ class _MapPageState implements MapPageState {
   return EqualUnmodifiableListView(_filteredReports);
 }
 
-/// Results of the place-search field above the map.
-///
-/// `null` means the panel is closed — distinct from `AsyncData([])`,
-/// which means "searched, found nothing".
-@override final  AsyncValue<List<Place>>? placeSearch;
-/// The place the user jumped to, marked with a pin on the map.
-///
-/// Separate from [placeSearch] for lifetime: the result list dies with
-/// the panel, the pin stays until the search field is cleared.
+/// The place the user jumped to from the place search, marked with a pin
+/// on the map until the search bar is cleared.
 @override final  Place? searchedPlace;
 
 /// Create a copy of MapPageState
@@ -362,18 +348,18 @@ _$MapPageStateCopyWith<_MapPageState> get copyWith => __$MapPageStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapPageState&&(identical(other.currentLocation, currentLocation) || other.currentLocation == currentLocation)&&(identical(other.loadedArea, loadedArea) || other.loadedArea == loadedArea)&&(identical(other.categoryFilter, categoryFilter) || other.categoryFilter == categoryFilter)&&(identical(other.mapLocation, mapLocation) || other.mapLocation == mapLocation)&&(identical(other.nearbyReports, nearbyReports) || other.nearbyReports == nearbyReports)&&const DeepCollectionEquality().equals(other.visibleReports, _visibleReports)&&const DeepCollectionEquality().equals(other.filteredReports, _filteredReports)&&(identical(other.placeSearch, placeSearch) || other.placeSearch == placeSearch)&&(identical(other.searchedPlace, searchedPlace) || other.searchedPlace == searchedPlace));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapPageState&&(identical(other.currentLocation, currentLocation) || other.currentLocation == currentLocation)&&(identical(other.loadedArea, loadedArea) || other.loadedArea == loadedArea)&&(identical(other.categoryFilter, categoryFilter) || other.categoryFilter == categoryFilter)&&(identical(other.mapLocation, mapLocation) || other.mapLocation == mapLocation)&&(identical(other.nearbyReports, nearbyReports) || other.nearbyReports == nearbyReports)&&const DeepCollectionEquality().equals(other.visibleReports, _visibleReports)&&const DeepCollectionEquality().equals(other.filteredReports, _filteredReports)&&(identical(other.searchedPlace, searchedPlace) || other.searchedPlace == searchedPlace));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,currentLocation,loadedArea,categoryFilter,mapLocation,nearbyReports,const DeepCollectionEquality().hash(_visibleReports),const DeepCollectionEquality().hash(_filteredReports),placeSearch,searchedPlace);
+    return Object.hash(runtimeType,currentLocation,loadedArea,categoryFilter,mapLocation,nearbyReports,const DeepCollectionEquality().hash(_visibleReports),const DeepCollectionEquality().hash(_filteredReports),searchedPlace);
 }
 
 @override
 String toString() {
-    return 'MapPageState(currentLocation: $currentLocation, loadedArea: $loadedArea, categoryFilter: $categoryFilter, mapLocation: $mapLocation, nearbyReports: $nearbyReports, visibleReports: $visibleReports, filteredReports: $filteredReports, placeSearch: $placeSearch, searchedPlace: $searchedPlace)';
+    return 'MapPageState(currentLocation: $currentLocation, loadedArea: $loadedArea, categoryFilter: $categoryFilter, mapLocation: $mapLocation, nearbyReports: $nearbyReports, visibleReports: $visibleReports, filteredReports: $filteredReports, searchedPlace: $searchedPlace)';
 }
 
 
@@ -384,7 +370,7 @@ abstract mixin class _$MapPageStateCopyWith<$Res> implements $MapPageStateCopyWi
   factory _$MapPageStateCopyWith(_MapPageState value, $Res Function(_MapPageState) _then) = __$MapPageStateCopyWithImpl;
 @override @useResult
 $Res call({
- LatLng? currentLocation, LatLng? loadedArea, int? categoryFilter, AsyncValue<LocationResult?> mapLocation, AsyncValue<List<NearbyReport>> nearbyReports, List<NearbyReport> visibleReports, List<NearbyReport> filteredReports, AsyncValue<List<Place>>? placeSearch, Place? searchedPlace
+ LatLng? currentLocation, LatLng? loadedArea, int? categoryFilter, AsyncValue<LocationResult?> mapLocation, AsyncValue<List<NearbyReport>> nearbyReports, List<NearbyReport> visibleReports, List<NearbyReport> filteredReports, Place? searchedPlace
 });
 
 
@@ -401,7 +387,7 @@ class __$MapPageStateCopyWithImpl<$Res>
 
 /// Create a copy of MapPageState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? currentLocation = freezed,Object? loadedArea = freezed,Object? categoryFilter = freezed,Object? mapLocation = null,Object? nearbyReports = null,Object? visibleReports = null,Object? filteredReports = null,Object? placeSearch = freezed,Object? searchedPlace = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? currentLocation = freezed,Object? loadedArea = freezed,Object? categoryFilter = freezed,Object? mapLocation = null,Object? nearbyReports = null,Object? visibleReports = null,Object? filteredReports = null,Object? searchedPlace = freezed,}) {
   return _then(_MapPageState(
 currentLocation: freezed == currentLocation ? _self.currentLocation : currentLocation // ignore: cast_nullable_to_non_nullable
 as LatLng?,loadedArea: freezed == loadedArea ? _self.loadedArea : loadedArea // ignore: cast_nullable_to_non_nullable
@@ -410,8 +396,7 @@ as int?,mapLocation: null == mapLocation ? _self.mapLocation : mapLocation // ig
 as AsyncValue<LocationResult?>,nearbyReports: null == nearbyReports ? _self.nearbyReports : nearbyReports // ignore: cast_nullable_to_non_nullable
 as AsyncValue<List<NearbyReport>>,visibleReports: null == visibleReports ? _self._visibleReports : visibleReports // ignore: cast_nullable_to_non_nullable
 as List<NearbyReport>,filteredReports: null == filteredReports ? _self._filteredReports : filteredReports // ignore: cast_nullable_to_non_nullable
-as List<NearbyReport>,placeSearch: freezed == placeSearch ? _self.placeSearch : placeSearch // ignore: cast_nullable_to_non_nullable
-as AsyncValue<List<Place>>?,searchedPlace: freezed == searchedPlace ? _self.searchedPlace : searchedPlace // ignore: cast_nullable_to_non_nullable
+as List<NearbyReport>,searchedPlace: freezed == searchedPlace ? _self.searchedPlace : searchedPlace // ignore: cast_nullable_to_non_nullable
 as Place?,
   ));
 }

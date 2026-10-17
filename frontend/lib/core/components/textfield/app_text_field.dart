@@ -31,6 +31,7 @@ class AppTextField extends StatefulWidget {
     this.onFieldSubmitted,
     this.enabled = true,
     this.focusNode,
+    this.autofocus = false,
     this.maxLines = 1,
     this.minLines,
     this.maxLength,
@@ -65,6 +66,7 @@ class AppTextField extends StatefulWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final bool enabled;
   final FocusNode? focusNode;
+  final bool autofocus;
   final int? maxLines;
   final int? minLines;
   final int? maxLength;
@@ -110,6 +112,7 @@ class _AppTextFieldState extends State<AppTextField> {
       child: TextFormField(
         controller: widget.controller,
         focusNode: _focusNode,
+        autofocus: widget.autofocus,
         obscureText: _obscured,
         maxLines: _obscured ? 1 : widget.maxLines,
         minLines: widget.minLines,

@@ -69,16 +69,8 @@ abstract class MapPageState with _$MapPageState {
     /// re-locate).
     @Default([]) List<NearbyReport> filteredReports,
 
-    /// Results of the place-search field above the map.
-    ///
-    /// `null` means the panel is closed — distinct from `AsyncData([])`,
-    /// which means "searched, found nothing".
-    AsyncValue<List<Place>>? placeSearch,
-
-    /// The place the user jumped to, marked with a pin on the map.
-    ///
-    /// Separate from [placeSearch] for lifetime: the result list dies with
-    /// the panel, the pin stays until the search field is cleared.
+    /// The place the user jumped to from the place search, marked with a pin
+    /// on the map until the search bar is cleared.
     Place? searchedPlace,
   }) = _MapPageState;
 }
@@ -106,13 +98,6 @@ class MapNotifier extends _$MapNotifier {
   /// Guards against out-of-order nearby-reports responses: a superseded
   /// request must not overwrite a newer one's state.
   int _nearbyRequestId = 0;
-
-  /// Query of the most recent [searchPlaces], replayed by [retrySearch].
-  String? _searchQuery;
-  PlaceViewBox? _searchViewBox;
-
-  /// Guards against out-of-order place-search responses.
-  int _searchRequestId = 0;
 
   @override
   MapPageState build() => const MapPageState();
@@ -201,55 +186,6 @@ class MapNotifier extends _$MapNotifier {
       longitude: longitude,
       radiusInMeters: radiusInMeters,
     );
-  }
-
-  /// Runs on submit only, never per keystroke: public Nominatim asks callers
-  /// not to drive autocomplete off `/search`, and one request per submit
-  /// stays inside its 1 request/second policy.
-  Future<void> searchPlaces(String query, {PlaceViewBox? viewBox}) async {
-    final trimmed = query.trim();
-    if (trimmed.isEmpty) {
-      clearSearch();
-      return;
-    }
-
-    _searchQuery = trimmed;
-    _searchViewBox = viewBox;
-
-    final requestId = ++_searchRequestId;
-    state = state.copyWith(placeSearch: const AsyncLoading());
-
-    final usecase = ref.read(searchPlacesUsecaseProvider);
-    final result = await usecase(
-      SearchPlacesParams(query: trimmed, viewBox: viewBox),
-    );
-    if (!ref.mounted) return;
-    // A newer search owns the state now — drop this stale result.
-    if (requestId != _searchRequestId) return;
-
-    result.fold(
-      (l) => state = state.copyWith(
-        placeSearch: AsyncError<List<Place>>(l, StackTrace.current),
-      ),
-      (r) => state = state.copyWith(placeSearch: AsyncData(r)),
-    );
-  }
-
-  /// Replays the last query. No-op if [searchPlaces] never ran.
-  Future<void> retrySearch() {
-    final query = _searchQuery;
-    if (query == null) return Future<void>.value();
-
-    return searchPlaces(query, viewBox: _searchViewBox);
-  }
-
-  /// Closes the results panel. Any in-flight request is orphaned by the id
-  /// bump, so a late response cannot reopen it.
-  void clearSearch() {
-    _searchRequestId++;
-    _searchQuery = null;
-    _searchViewBox = null;
-    state = state.copyWith(placeSearch: null);
   }
 
   void selectPlace(Place place) => state = state.copyWith(searchedPlace: place);

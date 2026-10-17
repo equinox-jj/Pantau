@@ -8,36 +8,31 @@ import 'package:pantau/features/map/presentation/provider/report_categories_prov
 import 'package:pantau/features/map/presentation/pages/map/provider/map_notifier.dart';
 import 'package:pantau/features/map/presentation/pages/map/widgets/map_search.dart';
 
-/// The place-search field, and below it either the search results or the
-/// category filter chips.
+/// The place-search bar, and below it the category filter chips.
 ///
 /// Owns the scrim and the safe area for both, so the strip fades into the map
 /// as one surface.
 class MapTopBar extends StatelessWidget {
   const MapTopBar({
     super.key,
-    required this.onSearchSubmitted,
+    required this.onSearchTap,
     required this.onSearchCleared,
-    required this.onPlaceSelected,
   });
 
-  /// The trimmed query from the keyboard's search action.
-  final ValueChanged<String> onSearchSubmitted;
+  /// Opens the full-screen place search.
+  final VoidCallback onSearchTap;
 
-  /// Fired by the field's clear button.
+  /// Fired by the search bar's clear button.
   final VoidCallback onSearchCleared;
-
-  final ValueChanged<Place> onPlaceSelected;
 
   /// Scrim below the content, so the bar fades out instead of ending on a
   /// hard edge.
   static const _scrimFade = AppSpacing.xl2;
 
   /// Height below the status bar, for anything the map stacks under the bar.
-  /// Measured against the chip row, not the taller results panel.
   static const height =
       AppSpacing.xs2 +
-      MapSearchField.height +
+      MapSearchBar.height +
       AppSpacing.xs2 +
       _MapFilterBar.height +
       _scrimFade;
@@ -64,13 +59,22 @@ class MapTopBar extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppSpacing.md,
                   ),
-                  child: MapSearchField(
-                    onSubmitted: onSearchSubmitted,
-                    onCleared: onSearchCleared,
+                  child: Consumer(
+                    builder: (context, ref, _) {
+                      return MapSearchBar(
+                        placeName: ref.watch(
+                          mapProvider.select(
+                            (state) => state.searchedPlace?.name,
+                          ),
+                        ),
+                        onTap: onSearchTap,
+                        onCleared: onSearchCleared,
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xs2),
-                _SearchResultsOrFilters(onPlaceSelected: onPlaceSelected),
+                const _MapFilterBar(),
               ],
             ),
           ),
@@ -82,7 +86,7 @@ class MapTopBar extends StatelessWidget {
 
 /// Scrim behind the bar. Opaque only where the status bar text sits, then
 /// stepped through partial alphas — a single hard stop to transparent read as
-/// a dark slab under the search field.
+/// a dark slab under the search bar.
 const _scrim = LinearGradient(
   begin: Alignment.topCenter,
   end: Alignment.bottomCenter,
@@ -95,38 +99,6 @@ const _scrim = LinearGradient(
   ],
   stops: [0, 0.35, 0.62, 0.82, 1],
 );
-
-/// The second row of the bar. Shows the results panel while a search is open
-/// and the chips otherwise — never both, so nothing overlaps.
-class _SearchResultsOrFilters extends StatelessWidget {
-  const _SearchResultsOrFilters({required this.onPlaceSelected});
-
-  final ValueChanged<Place> onPlaceSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, child) {
-        final state = ref.watch(
-          mapProvider.select((state) => state.placeSearch),
-        );
-        // Null means the panel is closed; loading, failed, and empty searches
-        // all still have something to show.
-        if (state == null) return child!;
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-          child: MapSearchResults(
-            state: state,
-            onSelected: onPlaceSelected,
-            onRetry: () => ref.read(mapProvider.notifier).retrySearch(),
-          ),
-        );
-      },
-      child: const _MapFilterBar(),
-    );
-  }
-}
 
 /// The category filter chips across the top of the map (FR-10).
 ///
